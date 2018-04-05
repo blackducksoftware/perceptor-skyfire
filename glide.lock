@@ -1,5 +1,5 @@
-hash: bf3baa2c8b7f5912f261ec0e4e96775cc82d72b336230a763d207db9e27a2e8b
-updated: 2018-04-05T11:59:30.359535356-04:00
+hash: 5ec5144cc9aed79b4232c8d8bd2ebe9ff4a070d0a7c0fbae21f7210a95f33621
+updated: 2018-04-05T12:15:48.239902763-04:00
 imports:
 - name: github.com/blackducksoftware/hub-client-go
   version: 0a45c9b235d6b5dfe73bcc1e17537eac2b302490
@@ -8,10 +8,18 @@ imports:
   subpackages:
   - hubapi
   - hubclient
+- name: github.com/blackducksoftware/perceptor
+  version: 9d840e26a250c72b7da4ef8c08cd013037c49a94
+  repo: git@github.com:blackducksoftware/perceptor.git
+  vcs: git
+  subpackages:
+  - pkg/api
 - name: github.com/fsnotify/fsnotify
   version: c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9
 - name: github.com/ghodss/yaml
   version: 73d445a93680fa1a78ae23a5839bad48f32ba1ee
+- name: github.com/go-resty/resty
+  version: f8815663de1e64d57cdd4ee9e2b2fa96977a030e
 - name: github.com/gogo/protobuf
   version: c0656edd0d9eab7c66d1eb0c568f9039345796f7
   subpackages:
@@ -40,6 +48,7 @@ imports:
   subpackages:
   - hcl/ast
   - hcl/parser
+  - hcl/printer
   - hcl/scanner
   - hcl/strconv
   - hcl/token
@@ -71,9 +80,9 @@ imports:
 - name: github.com/spf13/pflag
   version: 4c012f6dcd9546820e378d0bdda4d8fc772cdfea
 - name: github.com/spf13/viper
-  version: 25b30aa063fc18e48662b86996252eabdcf2f0c7
+  version: 8dc2790b029dc41e2b8ff772c63c26adbb1db70d
 - name: golang.org/x/crypto
-  version: 81e90905daefcd6fd217b62423c0908922eadb30
+  version: b2aa35443fbc700ab74c586ae79b81c171851023
   subpackages:
   - ssh/terminal
 - name: golang.org/x/net
@@ -84,6 +93,7 @@ imports:
   - http2/hpack
   - idna
   - lex/httplex
+  - publicsuffix
 - name: golang.org/x/sys
   version: 95c6576299259db960f6c5b9b69ea52422860fce
   subpackages:
@@ -136,7 +146,7 @@ imports:
   - storage/v1alpha1
   - storage/v1beta1
 - name: k8s.io/apimachinery
-  version: 302974c03f7e50f16561ba237db776ab93594ef6
+  version: 0ed326127d3068118ef128c76673dad6005736ba
   subpackages:
   - pkg/api/errors
   - pkg/api/meta
