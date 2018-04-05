@@ -24,9 +24,11 @@ package e2e
 import (
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
+	"github.com/blackducksoftware/perceptor/pkg/api"
 )
 
 type Dump struct {
-	KubePods    []*kube.Pod
-	HubProjects []*hub.Project
+	KubePods             []*kube.Pod
+	HubProjects          []*hub.Project
+	PerceptorScanResults *api.ScanResults
 }

@@ -27,10 +27,16 @@ import (
 
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/perceptor"
 )
 
 func RunDumper(configPath string) {
 	config := ReadConfig(configPath)
+
+	perceptorScanResults, err := perceptor.RunDumper(config.PerceptorHost, config.PerceptorPort)
+	if err != nil {
+		panic(err)
+	}
 
 	kubePods, err := kube.RunDumper(config.UseInClusterConfig, config.MasterURL, config.KubeConfigPath)
 	if err != nil {
@@ -41,7 +47,8 @@ func RunDumper(configPath string) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(dumpJson(&Dump{HubProjects: hubProjects, KubePods: kubePods}))
+
+	fmt.Println(dumpJson(&Dump{HubProjects: hubProjects, KubePods: kubePods, PerceptorScanResults: perceptorScanResults}))
 }
 
 func dumpJson(object interface{}) string {

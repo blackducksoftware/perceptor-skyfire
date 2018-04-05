@@ -57,12 +57,18 @@ func (hd *HubDumper) DumpAllProjects() ([]*Project, error) {
 		return nil, err
 	}
 	projects := []*Project{}
-	for _, project := range projectList.Items {
-		project, err := hd.DumpProject(&project)
-		if err != nil {
-			return nil, err
+	for _, hubProject := range projectList.Items {
+		var project *Project
+		for {
+			project, err = hd.DumpProject(&hubProject)
+			if err == nil {
+				break
+			}
+			log.Errorf("unable to dump project %+v: %s", hubProject, err.Error())
+			time.Sleep(2 * time.Second)
 		}
 		projects = append(projects, project)
+		time.Sleep(1 * time.Second)
 	}
 	return projects, nil
 }

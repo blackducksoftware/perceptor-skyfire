@@ -19,41 +19,13 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package e2e
+package perceptor
 
 import (
-	"github.com/spf13/viper"
+	api "github.com/blackducksoftware/perceptor/pkg/api"
 )
 
-// Config contains all configuration for Perceptor
-type Config struct {
-	UseInClusterConfig bool
-	MasterURL          string
-	KubeConfigPath     string
-	//	LogLevel              string
-
-	HubURL      string
-	HubUser     string
-	HubPassword string
-
-	PerceptorHost string
-	PerceptorPort int
-}
-
-// func (config *Config) GetLogLevel() (log.Level, error) {
-// 	return log.ParseLevel(config.LogLevel)
-// }
-
-func ReadConfig(configPath string) *Config {
-	viper.SetConfigFile(configPath)
-	config := &Config{}
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(err)
-	}
-	err = viper.Unmarshal(config)
-	if err != nil {
-		panic(err)
-	}
-	return config
+func RunDumper(host string, port int) (*api.ScanResults, error) {
+	perceptorDumper := NewPerceptorDumper(host, port)
+	return perceptorDumper.DumpScanResults()
 }
