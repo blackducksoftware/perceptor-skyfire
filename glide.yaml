@@ -1,0 +1,23 @@
+package: github.com/blackducksoftware/perceptor-skyfire
+import:
+- package: github.com/sirupsen/logrus
+  version: v1.0.5
+- package: github.com/blackducksoftware/hub-client-go
+  repo: git@github.com:blackducksoftware/hub-client-go.git
+  vcs: git
+  version: v0.9.1
+  subpackages:
+  - hubapi
+  - hubclient
+- package: k8s.io/api
+  subpackages:
+  - core/v1
+- package: k8s.io/apimachinery
+  subpackages:
+  - pkg/apis/meta/v1
+- package: k8s.io/client-go
+  version: v7.0.0
+  subpackages:
+  - kubernetes
+  - rest
+  - tools/clientcmd
