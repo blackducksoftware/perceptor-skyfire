@@ -24,10 +24,10 @@ package main
 import (
 	"os"
 
-	kube "github.com/blackducksoftware/perceptor-testing/pkg/kube"
+	e2e "github.com/blackducksoftware/perceptor-skyfire/pkg/e2e"
 )
 
 func main() {
 	configPath := os.Args[1]
-	kube.RunDumper(configPath)
+	e2e.RunDumper(configPath)
 }

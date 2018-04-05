@@ -21,32 +21,17 @@ under the License.
 
 package kube
 
-import (
-	"encoding/json"
-	"fmt"
-)
-
-func RunDumper(configPath string) {
-	config := ReadConfig(configPath)
-
+func RunDumper(useInClusterConfig bool, masterURL string, kubeConfigPath string) ([]*Pod, error) {
 	var kubeClient *KubeClient
 	var err error
-	if config.UseInClusterConfig {
+	if useInClusterConfig {
 		kubeClient, err = NewKubeClientFromCluster()
 	} else {
-		kubeClient, err = NewKubeClient(config.MasterURL, config.KubeConfigPath)
+		kubeClient, err = NewKubeClient(masterURL, kubeConfigPath)
 	}
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	pods, err := kubeClient.GetAllPods()
-	if err != nil {
-		panic(err)
-	}
-	bytes, err := json.MarshalIndent(pods, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%s\n", string(bytes))
+	return kubeClient.GetAllPods()
 }

@@ -19,21 +19,14 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package hub
+package e2e
 
 import (
-	"fmt"
-
-	log "github.com/sirupsen/logrus"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 )
 
-func RunDumper(hubURL string, hubUsername string, hubPassword string) ([]*Project, error) {
-	var baseURL = fmt.Sprintf("https://%s", hubURL)
-	dumper, err := NewHubDumper(baseURL, hubUsername, hubPassword)
-	if err != nil {
-		log.Errorf("unable to log in to hub: %s", err.Error())
-		return nil, err
-	}
-
-	return dumper.DumpAllProjects()
+type Dump struct {
+	KubePods    []*kube.Pod
+	HubProjects []*hub.Project
 }

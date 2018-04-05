@@ -19,21 +19,38 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package hub
+package e2e
 
 import (
-	"fmt"
-
-	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
-func RunDumper(hubURL string, hubUsername string, hubPassword string) ([]*Project, error) {
-	var baseURL = fmt.Sprintf("https://%s", hubURL)
-	dumper, err := NewHubDumper(baseURL, hubUsername, hubPassword)
-	if err != nil {
-		log.Errorf("unable to log in to hub: %s", err.Error())
-		return nil, err
-	}
+// Config contains all configuration for Perceptor
+type Config struct {
+	UseInClusterConfig bool
+	MasterURL          string
+	KubeConfigPath     string
+	//	LogLevel              string
 
-	return dumper.DumpAllProjects()
+	HubURL      string
+	HubUser     string
+	HubPassword string
+}
+
+// func (config *Config) GetLogLevel() (log.Level, error) {
+// 	return log.ParseLevel(config.LogLevel)
+// }
+
+func ReadConfig(configPath string) *Config {
+	viper.SetConfigFile(configPath)
+	config := &Config{}
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(err)
+	}
+	err = viper.Unmarshal(config)
+	if err != nil {
+		panic(err)
+	}
+	return config
 }

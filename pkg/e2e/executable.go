@@ -19,34 +19,35 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package kube
+package e2e
 
 import (
-	"github.com/spf13/viper"
+	"encoding/json"
+	"fmt"
+
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 )
 
-// Config contains all configuration for Perceptor
-type Config struct {
-	UseInClusterConfig bool
-	MasterURL          string
-	KubeConfigPath     string
-	//	LogLevel              string
+func RunDumper(configPath string) {
+	config := ReadConfig(configPath)
+
+	kubePods, err := kube.RunDumper(config.UseInClusterConfig, config.MasterURL, config.KubeConfigPath)
+	if err != nil {
+		panic(err)
+	}
+
+	hubProjects, err := hub.RunDumper(config.HubURL, config.HubUser, config.HubPassword)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(dumpJson(&Dump{HubProjects: hubProjects, KubePods: kubePods}))
 }
 
-// func (config *Config) GetLogLevel() (log.Level, error) {
-// 	return log.ParseLevel(config.LogLevel)
-// }
-
-func ReadConfig(configPath string) *Config {
-	viper.SetConfigFile(configPath)
-	config := &Config{}
-	err := viper.ReadInConfig()
+func dumpJson(object interface{}) string {
+	bytes, err := json.MarshalIndent(object, "", "  ")
 	if err != nil {
 		panic(err)
 	}
-	err = viper.Unmarshal(config)
-	if err != nil {
-		panic(err)
-	}
-	return config
+	return string(bytes)
 }

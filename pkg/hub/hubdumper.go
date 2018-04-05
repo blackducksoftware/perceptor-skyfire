@@ -33,7 +33,7 @@ type HubDumper struct {
 	HubClient *hubclient.Client
 }
 
-func NewHubDumper() (*HubDumper, error) {
+func NewHubDumper(baseURL string, username string, password string) (*HubDumper, error) {
 	hubClient, err := hubclient.NewWithSession(baseURL, hubclient.HubClientDebugTimings, 5000*time.Second)
 	if err != nil {
 		log.Errorf("unable to get hub client: %s", err.Error())
@@ -48,19 +48,38 @@ func NewHubDumper() (*HubDumper, error) {
 	return dumper, nil
 }
 
-func dumpProject(hubProject *hubapi.Project, hubClient *hubclient.Client) (*Project, error) {
+func (hd *HubDumper) DumpAllProjects() ([]*Project, error) {
+	limit := 20000 // totally arbitrary number, just needs to be higher than the
+	// number of projects in the hub.  20000 is so high as to be effectively
+	// infinite, due to the amount of time it takes to issue 20000 * 5 http requests
+	projectList, err := hd.HubClient.ListProjects(&hubapi.GetListOptions{Limit: &limit})
+	if err != nil {
+		return nil, err
+	}
+	projects := []*Project{}
+	for _, project := range projectList.Items {
+		project, err := hd.DumpProject(&project)
+		if err != nil {
+			return nil, err
+		}
+		projects = append(projects, project)
+	}
+	return projects, nil
+}
+
+func (hd *HubDumper) DumpProject(hubProject *hubapi.Project) (*Project, error) {
 	log.Infof("looking for project %s at url %s", hubProject.Name, hubProject.Meta.Href)
 	versions := []*Version{}
 	versionsLink, err := hubProject.GetProjectVersionsLink()
 	if err != nil {
 		return nil, err
 	}
-	versionsList, err := hubClient.ListProjectVersions(*versionsLink, nil)
+	versionsList, err := hd.HubClient.ListProjectVersions(*versionsLink, nil)
 	if err != nil {
 		return nil, err
 	}
 	for _, hubVersion := range versionsList.Items {
-		version, err := dumpVersion(&hubVersion, hubClient)
+		version, err := hd.DumpVersion(&hubVersion)
 		if err != nil {
 			return nil, err
 		}
@@ -75,28 +94,28 @@ func dumpProject(hubProject *hubapi.Project, hubClient *hubclient.Client) (*Proj
 	return project, nil
 }
 
-func dumpVersion(hubVersion *hubapi.ProjectVersion, client *hubclient.Client) (*Version, error) {
+func (hd *HubDumper) DumpVersion(hubVersion *hubapi.ProjectVersion) (*Version, error) {
 	riskProfileLink, err := hubVersion.GetProjectVersionRiskProfileLink()
 	if err != nil {
 		return nil, err
 	}
-	hubRiskProfile, err := client.GetProjectVersionRiskProfile(*riskProfileLink)
+	hubRiskProfile, err := hd.HubClient.GetProjectVersionRiskProfile(*riskProfileLink)
 	if err != nil {
 		return nil, err
 	}
-	riskProfile, err := dumpRiskProfile(hubRiskProfile)
+	riskProfile, err := hd.DumpRiskProfile(hubRiskProfile)
 
 	codeLocations := []*CodeLocation{}
 	codeLocationsLink, err := hubVersion.GetCodeLocationsLink()
 	if err != nil {
 		return nil, err
 	}
-	hubCodeLocations, err := client.ListCodeLocations(*codeLocationsLink)
+	hubCodeLocations, err := hd.HubClient.ListCodeLocations(*codeLocationsLink)
 	if err != nil {
 		return nil, err
 	}
 	for _, hubCodeLocation := range hubCodeLocations.Items {
-		codeLocation, err := dumpCodeLocation(&hubCodeLocation, client)
+		codeLocation, err := hd.DumpCodeLocation(&hubCodeLocation)
 		if err != nil {
 			return nil, err
 		}
@@ -107,11 +126,11 @@ func dumpVersion(hubVersion *hubapi.ProjectVersion, client *hubclient.Client) (*
 	if err != nil {
 		return nil, err
 	}
-	hubPolicyStatus, err := client.GetProjectVersionPolicyStatus(*policyStatusLink)
+	hubPolicyStatus, err := hd.HubClient.GetProjectVersionPolicyStatus(*policyStatusLink)
 	if err != nil {
 		return nil, err
 	}
-	policyStatus, err := dumpPolicyStatus(hubPolicyStatus)
+	policyStatus, err := hd.DumpPolicyStatus(hubPolicyStatus)
 
 	version := &Version{
 		Name:            hubVersion.VersionName,
@@ -128,7 +147,7 @@ func dumpVersion(hubVersion *hubapi.ProjectVersion, client *hubclient.Client) (*
 	return version, nil
 }
 
-func dumpPolicyStatus(hubPolicyStatus *hubapi.ProjectVersionPolicyStatus) (*PolicyStatus, error) {
+func (hd *HubDumper) DumpPolicyStatus(hubPolicyStatus *hubapi.ProjectVersionPolicyStatus) (*PolicyStatus, error) {
 	statusCounts := []*ComponentVersionStatusCount{}
 	for _, hubStatusCount := range hubPolicyStatus.ComponentVersionStatusCounts {
 		statusCount := &ComponentVersionStatusCount{
@@ -146,18 +165,18 @@ func dumpPolicyStatus(hubPolicyStatus *hubapi.ProjectVersionPolicyStatus) (*Poli
 	return policyStatus, nil
 }
 
-func dumpCodeLocation(hubCodeLocation *hubapi.CodeLocation, client *hubclient.Client) (*CodeLocation, error) {
+func (hd *HubDumper) DumpCodeLocation(hubCodeLocation *hubapi.CodeLocation) (*CodeLocation, error) {
 	scanSummaries := []*ScanSummary{}
 	link, err := hubCodeLocation.GetScanSummariesLink()
 	if err != nil {
 		return nil, err
 	}
-	hubScanSummaries, err := client.ListScanSummaries(*link)
+	hubScanSummaries, err := hd.HubClient.ListScanSummaries(*link)
 	if err != nil {
 		return nil, err
 	}
 	for _, hubScanSummary := range hubScanSummaries.Items {
-		scanSummary, err := dumpScanSummary(&hubScanSummary, client)
+		scanSummary, err := hd.DumpScanSummary(&hubScanSummary)
 		if err != nil {
 			return nil, err
 		}
@@ -176,7 +195,7 @@ func dumpCodeLocation(hubCodeLocation *hubapi.CodeLocation, client *hubclient.Cl
 	return codeLocation, nil
 }
 
-func dumpRiskProfile(hubRiskProfile *hubapi.ProjectVersionRiskProfile) (*RiskProfile, error) {
+func (hd *HubDumper) DumpRiskProfile(hubRiskProfile *hubapi.ProjectVersionRiskProfile) (*RiskProfile, error) {
 	riskProfile := &RiskProfile{
 		BomLastUpdatedAt: hubRiskProfile.BomLastUpdatedAt,
 		Categories:       hubRiskProfile.Categories,
@@ -185,7 +204,7 @@ func dumpRiskProfile(hubRiskProfile *hubapi.ProjectVersionRiskProfile) (*RiskPro
 	return riskProfile, nil
 }
 
-func dumpScanSummary(hubScanSummary *hubapi.ScanSummary, client *hubclient.Client) (*ScanSummary, error) {
+func (hd *HubDumper) DumpScanSummary(hubScanSummary *hubapi.ScanSummary) (*ScanSummary, error) {
 	scanSummary := &ScanSummary{
 		CreatedAt: hubScanSummary.CreatedAt,
 		Meta:      hubScanSummary.Meta,
