@@ -26,6 +26,6 @@ import:
 - package: github.com/blackducksoftware/perceptor
   repo: git@github.com:blackducksoftware/perceptor.git
   vcs: git
-  version: v0.0.16
+  version: v0.0.17
   subpackages:
   - pkg/api

@@ -43,7 +43,7 @@ type HTTPResponder struct {
 	PostNextImageChannel          chan func(*model.Image)
 	PostFinishScanJobChannel      chan *a.FinishScanClient
 	SetConcurrentScanLimitChannel chan int
-	GetModelChannel               chan func(json string)
+	GetModelChannel               chan func(api.Model)
 	GetScanResultsChannel         chan func(scanResults api.ScanResults)
 }
 
@@ -58,20 +58,20 @@ func NewHTTPResponder() *HTTPResponder {
 		PostNextImageChannel:          make(chan func(*model.Image)),
 		PostFinishScanJobChannel:      make(chan *a.FinishScanClient),
 		SetConcurrentScanLimitChannel: make(chan int),
-		GetModelChannel:               make(chan func(json string)),
+		GetModelChannel:               make(chan func(api.Model)),
 		GetScanResultsChannel:         make(chan func(api.ScanResults))}
 }
 
-func (hr *HTTPResponder) GetModel() string {
+func (hr *HTTPResponder) GetModel() api.Model {
 	var wg sync.WaitGroup
 	wg.Add(1)
-	var modelString string
-	hr.GetModelChannel <- func(json string) {
-		modelString = json
+	var model api.Model
+	hr.GetModelChannel <- func(tempModel api.Model) {
+		model = tempModel
 		wg.Done()
 	}
 	wg.Wait()
-	return modelString
+	return model
 }
 
 func (hr *HTTPResponder) AddPod(apiPod api.Pod) {
@@ -98,7 +98,7 @@ func (hr *HTTPResponder) AddImage(apiImage api.Image) {
 	recordAddImage()
 	image := *model.ApiImageToCoreImage(apiImage)
 	hr.AddImageChannel <- image
-	log.Debugf("handled add image %s", image.HumanReadableName())
+	log.Debugf("handled add image %s", image.PullSpec())
 }
 
 func (hr *HTTPResponder) UpdateAllPods(allPods api.AllPods) {

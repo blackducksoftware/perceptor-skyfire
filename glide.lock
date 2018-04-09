@@ -1,6 +1,10 @@
-hash: 5ec5144cc9aed79b4232c8d8bd2ebe9ff4a070d0a7c0fbae21f7210a95f33621
-updated: 2018-04-05T12:15:48.239902763-04:00
+hash: f7b0c20f4c67894a093ca0af97c8c799db5e0f8c8852c471e300c5132fedbd61
+updated: 2018-04-09T14:10:25.351099879-04:00
 imports:
+- name: github.com/beorn7/perks
+  version: 3a771d992973f24aa725d07868b467d1ddfceafb
+  subpackages:
+  - quantile
 - name: github.com/blackducksoftware/hub-client-go
   version: 0a45c9b235d6b5dfe73bcc1e17537eac2b302490
   repo: git@github.com:blackducksoftware/hub-client-go.git
@@ -9,13 +13,14 @@ imports:
   - hubapi
   - hubclient
 - name: github.com/blackducksoftware/perceptor
-  version: 9d840e26a250c72b7da4ef8c08cd013037c49a94
+  version: 5ec5672c55583ce97db458b964414ab5f402ebcd
   repo: git@github.com:blackducksoftware/perceptor.git
   vcs: git
   subpackages:
   - pkg/api
+  - pkg/hub
 - name: github.com/fsnotify/fsnotify
-  version: c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9
+  version: 629574ca2a5df945712d3079857300b5e4da0236
 - name: github.com/ghodss/yaml
   version: 73d445a93680fa1a78ae23a5839bad48f32ba1ee
 - name: github.com/go-resty/resty
@@ -63,10 +68,34 @@ imports:
   version: 13f86432b882000a51c6e610c620974462691a97
 - name: github.com/magiconair/properties
   version: 2c9e9502788518c97fe44e8955cd069417ee89df
+- name: github.com/matttproud/golang_protobuf_extensions
+  version: c12348ce28de40eed0136aa2b644d0ee0650e56c
+  subpackages:
+  - pbutil
 - name: github.com/mitchellh/mapstructure
   version: 00c29f56e2386353d58c599509e8dc3801b0d716
 - name: github.com/pelletier/go-toml
   version: 66540cf1fcd2c3aee6f6787dfa32a6ae9a870f12
+- name: github.com/prometheus/client_golang
+  version: 967789050ba94deca04a5e84cce8ad472ce313c1
+  subpackages:
+  - prometheus
+- name: github.com/prometheus/client_model
+  version: 99fa1f4be8e564e8a6b613da7fa6f46c9edafc6c
+  subpackages:
+  - go
+- name: github.com/prometheus/common
+  version: 38c53a9f4bfcd932d1b00bfc65e256a7fba6b37a
+  subpackages:
+  - expfmt
+  - internal/bitbucket.org/ww/goautoneg
+  - model
+- name: github.com/prometheus/procfs
+  version: 8b1c2da0d56deffdbb9e48d4414b4e674bd8083e
+  subpackages:
+  - internal/util
+  - nfs
+  - xfs
 - name: github.com/sirupsen/logrus
   version: c155da19408a8799da419ed3eeb0cb5db0ad5dbc
 - name: github.com/spf13/afero
@@ -82,7 +111,7 @@ imports:
 - name: github.com/spf13/viper
   version: 8dc2790b029dc41e2b8ff772c63c26adbb1db70d
 - name: golang.org/x/crypto
-  version: b2aa35443fbc700ab74c586ae79b81c171851023
+  version: beb2a9779c3b677077c41673505f150149fce895
   subpackages:
   - ssh/terminal
 - name: golang.org/x/net
@@ -146,7 +175,7 @@ imports:
   - storage/v1alpha1
   - storage/v1beta1
 - name: k8s.io/apimachinery
-  version: 0ed326127d3068118ef128c76673dad6005736ba
+  version: d65938ce76da251a09c2fe861fb066c468571c47
   subpackages:
   - pkg/api/errors
   - pkg/api/meta
