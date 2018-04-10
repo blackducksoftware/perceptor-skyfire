@@ -1,12 +1,12 @@
-hash: 8edbc4bf39699278b8a0681a0e4f11e6bb895c4e397ec3370aa009f65783bf7a
-updated: 2018-04-09T16:01:49.509520363-04:00
+hash: 1b7f482c8c7cacad79362b6af210eaad22050f2908f5a20312acf9ab3c41e4f3
+updated: 2018-04-10T18:25:13.449368015-04:00
 imports:
 - name: github.com/beorn7/perks
   version: 3a771d992973f24aa725d07868b467d1ddfceafb
   subpackages:
   - quantile
 - name: github.com/blackducksoftware/hub-client-go
-  version: 0a45c9b235d6b5dfe73bcc1e17537eac2b302490
+  version: 2a8f3fb460e113ce9d2fabcbc1099ddf1d17c656
   repo: git@github.com:blackducksoftware/hub-client-go.git
   vcs: git
   subpackages:
@@ -111,7 +111,7 @@ imports:
 - name: github.com/spf13/viper
   version: 8dc2790b029dc41e2b8ff772c63c26adbb1db70d
 - name: golang.org/x/crypto
-  version: beb2a9779c3b677077c41673505f150149fce895
+  version: f70185d77e8278766928032ee1355e3da47e7181
   subpackages:
   - ssh/terminal
 - name: golang.org/x/net
@@ -175,7 +175,7 @@ imports:
   - storage/v1alpha1
   - storage/v1beta1
 - name: k8s.io/apimachinery
-  version: 302974c03f7e50f16561ba237db776ab93594ef6
+  version: 5d4f0da8e5fde7cbadf8ab3ce5cfb76f86dd854e
   subpackages:
   - pkg/api/errors
   - pkg/api/meta
