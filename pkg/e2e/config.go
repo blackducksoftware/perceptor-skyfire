@@ -25,7 +25,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Config contains all configuration for Perceptor
 type Config struct {
 	UseInClusterConfig bool
 	MasterURL          string

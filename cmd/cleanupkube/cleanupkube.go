@@ -19,37 +19,48 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package kube
+package main
 
-func RunDumper(useInClusterConfig bool, masterURL string, kubeConfigPath string) ([]*Pod, error) {
-	var kubeClient *KubeClient
-	var err error
-	if useInClusterConfig {
-		kubeClient, err = NewKubeClientFromCluster()
-	} else {
-		kubeClient, err = NewKubeClient(masterURL, kubeConfigPath)
-	}
+import (
+	"os"
+
+	kube "github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
+)
+
+func main() {
+	configPath := os.Args[1]
+	config := ReadConfig(configPath)
+	logLevel, err := config.GetLogLevel()
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
-
-	return kubeClient.GetAllPods()
+	log.SetLevel(logLevel)
+	kube.RunPodCleaner(config.UseInClusterConfig, config.MasterURL, config.KubeConfigPath)
 }
 
-func RunPodCleaner(useInClusterConfig bool, masterURL string, kubeConfigPath string) {
-	var kubeClient *KubeClient
-	var err error
-	if useInClusterConfig {
-		kubeClient, err = NewKubeClientFromCluster()
-	} else {
-		kubeClient, err = NewKubeClient(masterURL, kubeConfigPath)
-	}
-	if err != nil {
-		panic(err)
-	}
+type Config struct {
+	UseInClusterConfig bool
+	MasterURL          string
+	KubeConfigPath     string
+	LogLevel           string
+}
 
-	err = kubeClient.CleanupAllPods()
+func (config *Config) GetLogLevel() (log.Level, error) {
+	return log.ParseLevel(config.LogLevel)
+}
+
+func ReadConfig(configPath string) *Config {
+	viper.SetConfigFile(configPath)
+	config := &Config{}
+	err := viper.ReadInConfig()
 	if err != nil {
 		panic(err)
 	}
+	err = viper.Unmarshal(config)
+	if err != nil {
+		panic(err)
+	}
+	return config
 }
