@@ -44,13 +44,18 @@ func NewPerceptorDumper(host string, port int) *PerceptorDumper {
 	}
 }
 
-func (pd *PerceptorDumper) DumpModel() (string, error) {
+func (pd *PerceptorDumper) DumpModel() (*api.Model, error) {
 	url := fmt.Sprintf("http://%s:%d/model", pd.Host, pd.Port)
-	resp, err := resty.R().Get(url)
+	resp, err := resty.R().SetResult(&api.Model{}).Get(url)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return string(resp.Body()), nil
+	switch result := resp.Result().(type) {
+	case *api.Model:
+		return result, nil
+	default:
+		return nil, fmt.Errorf("invalid response type: expected *api.Model, got %s (%+v)", reflect.TypeOf(result), result)
+	}
 }
 
 func (pd *PerceptorDumper) DumpScanResults() (*api.ScanResults, error) {

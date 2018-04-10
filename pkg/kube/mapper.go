@@ -34,6 +34,7 @@ func mapKubePod(kubePod *v1.Pod) *Pod {
 	for _, newCont := range kubePod.Status.ContainerStatuses {
 		name, sha, err := ParseImageIDString(newCont.ImageID)
 		if err != nil {
+			// TODO need to do something more intelligent with failures
 			log.Errorf("unable to parse kubernetes imageID string %s from pod %s/%s: %s", newCont.ImageID, kubePod.Namespace, kubePod.Name, err.Error())
 			// continue
 			name = "failed to parse"
@@ -49,5 +50,11 @@ func mapKubePod(kubePod *v1.Pod) *Pod {
 		addedCont := NewContainer(newImage, newCont.Name)
 		containers = append(containers, addedCont)
 	}
-	return &Pod{kubePod.Name, string(kubePod.UID), kubePod.Namespace, containers}
+	return &Pod{
+		kubePod.Name,
+		string(kubePod.UID),
+		kubePod.Namespace,
+		containers,
+		kubePod.Annotations,
+		kubePod.Labels}
 }

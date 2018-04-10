@@ -24,11 +24,12 @@ package kube
 import "fmt"
 
 type Pod struct {
-	Name       string
-	UID        string
-	Namespace  string
-	Containers []*Container
-	// TODO probably need to add Annotations map[string]string
+	Name        string
+	UID         string
+	Namespace   string
+	Containers  []*Container
+	Annotations map[string]string
+	Labels      map[string]string
 }
 
 func (pod *Pod) QualifiedName() string {

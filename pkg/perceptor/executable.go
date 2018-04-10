@@ -25,7 +25,18 @@ import (
 	api "github.com/blackducksoftware/perceptor/pkg/api"
 )
 
-func RunDumper(host string, port int) (*api.ScanResults, error) {
+func RunDumper(host string, port int) (*api.ScanResults, *api.Model, error) {
 	perceptorDumper := NewPerceptorDumper(host, port)
-	return perceptorDumper.DumpScanResults()
+
+	scanResults, err := perceptorDumper.DumpScanResults()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	model, err := perceptorDumper.DumpModel()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return scanResults, model, nil
 }
