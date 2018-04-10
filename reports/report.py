@@ -40,6 +40,7 @@ class Report(object):
         kube_not_perceptor_pods, perceptor_not_kube_pods, _ = diff_dicts(
             self.kube['pods_by_qualified_name'],
             self.perceptor['pods_by_qualified_name'])
+        # TODO we should be comparing the perceptor model with kube
         kube_not_perceptor_images, perceptor_not_kube_images, _ = diff_dicts(
             self.kube['images_by_sha'],
             self.perceptor['images_by_sha'])
