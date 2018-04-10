@@ -1,5 +1,5 @@
-hash: f7b0c20f4c67894a093ca0af97c8c799db5e0f8c8852c471e300c5132fedbd61
-updated: 2018-04-09T14:10:25.351099879-04:00
+hash: 8edbc4bf39699278b8a0681a0e4f11e6bb895c4e397ec3370aa009f65783bf7a
+updated: 2018-04-09T16:01:49.509520363-04:00
 imports:
 - name: github.com/beorn7/perks
   version: 3a771d992973f24aa725d07868b467d1ddfceafb
@@ -13,7 +13,7 @@ imports:
   - hubapi
   - hubclient
 - name: github.com/blackducksoftware/perceptor
-  version: 5ec5672c55583ce97db458b964414ab5f402ebcd
+  version: 97f2bdf1bbf5afaeff50a0943d0b33c02a64b0b2
   repo: git@github.com:blackducksoftware/perceptor.git
   vcs: git
   subpackages:
@@ -175,7 +175,7 @@ imports:
   - storage/v1alpha1
   - storage/v1beta1
 - name: k8s.io/apimachinery
-  version: d65938ce76da251a09c2fe861fb066c468571c47
+  version: 302974c03f7e50f16561ba237db776ab93594ef6
   subpackages:
   - pkg/api/errors
   - pkg/api/meta
