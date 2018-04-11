@@ -28,6 +28,7 @@ import (
 )
 
 type Report struct {
+	Kube          *KubeReport
 	KubePerceptor *KubePerceptorReport
 	PerceptorHub  *PerceptorHubReport
 	Hub           *HubReport
@@ -35,6 +36,7 @@ type Report struct {
 
 func NewReport(dump *dump.Dump) *Report {
 	return &Report{
+		NewKubeReport(dump),
 		NewKubePerceptorReport(dump),
 		NewPerceptorHubReport(dump),
 		NewHubReport(dump),
@@ -43,6 +45,9 @@ func NewReport(dump *dump.Dump) *Report {
 
 func (r *Report) HumanReadableString() string {
 	return fmt.Sprintf(`
+Kubernetes:
+ - we found %d ImageIDs that were unparseable
+
 Kubernetes<->Perceptor:
  - we found %d pod(s) in Kubernetes that were not in Perceptor
  - we found %d pod(s) in Perceptor that were not in Kubernetes
@@ -58,6 +63,7 @@ Hub:
  - we found %d version(s) in the Hub with multiple code locations
  - we found %d code location(s) in the Hub with multiple scan summaries
 		 `,
+		len(r.Kube.UnparseableKubeImages),
 		len(r.KubePerceptor.JustKubePods),
 		len(r.KubePerceptor.JustPerceptorPods),
 		len(r.KubePerceptor.JustKubeImages),
@@ -68,17 +74,6 @@ Hub:
 		len(r.Hub.VersionsMultipleCodeLocations),
 		len(r.Hub.CodeLocationsMultipleScanSummaries))
 }
-
-// In kube but not in perceptor:
-// - pods
-// - images
-// - annotations
-// - labels
-
-// In perceptor but not in kube:
-// - pods
-// - images
-// - scan results
 
 // In perceptor but not in hub:
 // - completed images

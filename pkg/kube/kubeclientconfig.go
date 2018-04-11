@@ -19,24 +19,9 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package perceptor
+package kube
 
-import (
-	api "github.com/blackducksoftware/perceptor/pkg/api"
-)
-
-func RunDumper(host string, port int) (*api.ScanResults, *api.Model, error) {
-	perceptorDumper := NewPerceptorDumper(host, port)
-
-	scanResults, err := perceptorDumper.DumpScanResults()
-	if err != nil {
-		return nil, nil, err
-	}
-
-	model, err := perceptorDumper.DumpModel()
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return scanResults, model, nil
+type KubeClientConfig struct {
+	MasterURL      string
+	KubeConfigPath string
 }

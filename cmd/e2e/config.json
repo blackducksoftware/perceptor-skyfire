@@ -8,8 +8,5 @@
   "HubPassword": "blackduck",
 
   "PerceptorHost": "192.168.99.100",
-  "PerceptorPort": 30308,
-
-  "PerceptorHost2": "perceptor",
-  "PerceptorPort2": 3001
+  "PerceptorPort": 31952
 }

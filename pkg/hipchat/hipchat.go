@@ -29,12 +29,18 @@ import (
 
 var authToken = "pRuvP8nq4nX0D8TpS1Kh5yyCrqt21d047PbBEWyv"
 
-var room = "CloudNativeEngineering"
+type Hipchat struct {
+	Room string
+}
 
-// var room = "PushTesting"
+func NewHipchat(room string) *Hipchat {
+	return &Hipchat{
+		Room: room,
+	}
+}
 
-func Send(message string) (*resty.Response, error) {
-	url := BuildURL(room)
+func (h *Hipchat) Send(message string) (*resty.Response, error) {
+	url := BuildURL(h.Room)
 	data := map[string]string{
 		"message":        fmt.Sprintf("<pre>%s</pre>", message),
 		"message_format": "html",

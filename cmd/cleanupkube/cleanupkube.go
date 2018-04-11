@@ -37,7 +37,14 @@ func main() {
 		panic(err)
 	}
 	log.SetLevel(logLevel)
-	kube.RunPodCleaner(config.UseInClusterConfig, config.MasterURL, config.KubeConfigPath)
+	kubeClient, err := kube.NewKubeClient(config.KubeClientConfig())
+	if err != nil {
+		panic(err)
+	}
+	err = kubeClient.CleanupAllPods()
+	if err != nil {
+		panic(err)
+	}
 }
 
 type Config struct {
@@ -45,6 +52,16 @@ type Config struct {
 	MasterURL          string
 	KubeConfigPath     string
 	LogLevel           string
+}
+
+func (config *Config) KubeClientConfig() *kube.KubeClientConfig {
+	if config.UseInClusterConfig {
+		return nil
+	}
+	return &kube.KubeClientConfig{
+		KubeConfigPath: config.KubeConfigPath,
+		MasterURL:      config.MasterURL,
+	}
 }
 
 func (config *Config) GetLogLevel() (log.Level, error) {

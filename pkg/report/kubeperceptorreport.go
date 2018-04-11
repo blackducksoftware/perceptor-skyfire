@@ -24,20 +24,27 @@ package report
 import "github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
 
 type KubePerceptorReport struct {
-	JustKubePods          []string
-	JustPerceptorPods     []string
-	JustKubeImages        []string
-	JustPerceptorImages   []string
-	UnparseableKubeImages []string
+	JustKubePods        []string
+	JustPerceptorPods   []string
+	JustKubeImages      []string
+	JustPerceptorImages []string
+
+	// TODO:
+	// In kube/openshift but not in perceptor scan results:
+	// - finished pods (with annotations/labels)
+	// - finished images (with annotations/labels)
+
+	// In perceptor scan results but not in kube/openshift:
+	// - scanned pods
+	// - scanned images
 }
 
 func NewKubePerceptorReport(dump *dump.Dump) *KubePerceptorReport {
 	return &KubePerceptorReport{
-		JustKubePods:          KubeNotPerceptorPods(dump),
-		JustPerceptorPods:     PerceptorNotKubePods(dump),
-		JustKubeImages:        KubeNotPerceptorImages(dump),
-		JustPerceptorImages:   PerceptorNotKubeImages(dump),
-		UnparseableKubeImages: UnparseableKubeImages(dump),
+		JustKubePods:        KubeNotPerceptorPods(dump),
+		JustPerceptorPods:   PerceptorNotKubePods(dump),
+		JustKubeImages:      KubeNotPerceptorImages(dump),
+		JustPerceptorImages: PerceptorNotKubeImages(dump),
 	}
 }
 
@@ -81,14 +88,6 @@ func PerceptorNotKubeImages(dump *dump.Dump) []string {
 		if !ok {
 			images = append(images, sha)
 		}
-	}
-	return images
-}
-
-func UnparseableKubeImages(dump *dump.Dump) []string {
-	images := []string{}
-	for _, image := range dump.Kube.ImagesMissingSha {
-		images = append(images, image.ImageID)
 	}
 	return images
 }

@@ -22,6 +22,7 @@ under the License.
 package hub
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/blackducksoftware/hub-client-go/hubapi"
@@ -33,7 +34,8 @@ type HubDumper struct {
 	HubClient *hubclient.Client
 }
 
-func NewHubDumper(baseURL string, username string, password string) (*HubDumper, error) {
+func NewHubDumper(hubHost string, username string, password string) (*HubDumper, error) {
+	var baseURL = fmt.Sprintf("https://%s", hubHost)
 	hubClient, err := hubclient.NewWithSession(baseURL, hubclient.HubClientDebugTimings, 5000*time.Second)
 	if err != nil {
 		log.Errorf("unable to get hub client: %s", err.Error())

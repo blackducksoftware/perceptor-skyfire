@@ -19,9 +19,10 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package e2e
+package skyfire
 
 import (
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 	"github.com/spf13/viper"
 )
 
@@ -31,7 +32,7 @@ type Config struct {
 	KubeConfigPath     string
 	//	LogLevel              string
 
-	HubURL      string
+	HubHost     string
 	HubUser     string
 	HubPassword string
 
@@ -43,16 +44,26 @@ type Config struct {
 // 	return log.ParseLevel(config.LogLevel)
 // }
 
-func ReadConfig(configPath string) *Config {
+func ReadConfig(configPath string) (*Config, error) {
 	viper.SetConfigFile(configPath)
 	config := &Config{}
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	err = viper.Unmarshal(config)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return config
+	return config, nil
+}
+
+func (config *Config) KubeClientConfig() *kube.KubeClientConfig {
+	if config.UseInClusterConfig {
+		return nil
+	}
+	return &kube.KubeClientConfig{
+		MasterURL:      config.MasterURL,
+		KubeConfigPath: config.KubeConfigPath,
+	}
 }

@@ -24,10 +24,17 @@ package main
 import (
 	"os"
 
-	e2e "github.com/blackducksoftware/perceptor-skyfire/pkg/e2e"
+	skyfire "github.com/blackducksoftware/perceptor-skyfire/pkg/skyfire"
 )
 
 func main() {
 	configPath := os.Args[1]
-	e2e.RunDumper(configPath)
+	sf, err := skyfire.NewSkyfire(configPath)
+	if err != nil {
+		panic(err)
+	}
+	err = sf.BuildReportAndSendToHipChat()
+	if err != nil {
+		panic(err)
+	}
 }

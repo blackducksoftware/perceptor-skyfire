@@ -37,21 +37,17 @@ type KubeClient struct {
 	clientset kubernetes.Clientset
 }
 
-func (client *KubeClient) GetAllPods() ([]*Pod, error) {
-	pods := []*Pod{}
-	kubePods, err := client.clientset.CoreV1().Pods(v1.NamespaceAll).List(meta_v1.ListOptions{})
-	if err != nil {
-		return nil, err
+func NewKubeClient(config *KubeClientConfig) (*KubeClient, error) {
+	if config != nil {
+		return NewKubeClientFromOutsideCluster(config.MasterURL, config.KubeConfigPath)
+	} else {
+		return NewKubeClientFromInsideCluster()
 	}
-	for _, kubePod := range kubePods.Items {
-		pods = append(pods, mapKubePod(&kubePod))
-	}
-	return pods, nil
 }
 
-// NewKubeClientFromCluster instantiates a KubeClient using configuration
+// NewKubeClientFromInsideCluster instantiates a KubeClient using configuration
 // pulled from the cluster.
-func NewKubeClientFromCluster() (*KubeClient, error) {
+func NewKubeClientFromInsideCluster() (*KubeClient, error) {
 	config, err := rest.InClusterConfig()
 	if err != nil {
 		log.Errorf("unable to build config from cluster: %s", err.Error())
@@ -60,9 +56,9 @@ func NewKubeClientFromCluster() (*KubeClient, error) {
 	return newKubeClientHelper(config)
 }
 
-// NewKubeClient instantiates a KubeClient using a master URL and
+// NewKubeClientFromOutsideCluster instantiates a KubeClient using a master URL and
 // a path to a kubeconfig file.
-func NewKubeClient(masterURL string, kubeconfigPath string) (*KubeClient, error) {
+func NewKubeClientFromOutsideCluster(masterURL string, kubeconfigPath string) (*KubeClient, error) {
 	config, err := clientcmd.BuildConfigFromFlags(masterURL, kubeconfigPath)
 	if err != nil {
 		log.Errorf("unable to build config from flags: %s", err.Error())
@@ -80,4 +76,16 @@ func newKubeClientHelper(config *rest.Config) (*KubeClient, error) {
 	}
 
 	return &KubeClient{clientset: *clientset}, nil
+}
+
+func (client *KubeClient) GetAllPods() ([]*Pod, error) {
+	pods := []*Pod{}
+	kubePods, err := client.clientset.CoreV1().Pods(v1.NamespaceAll).List(meta_v1.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+	for _, kubePod := range kubePods.Items {
+		pods = append(pods, mapKubePod(&kubePod))
+	}
+	return pods, nil
 }

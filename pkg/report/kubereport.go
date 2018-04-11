@@ -19,37 +19,24 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package kube
+package report
 
-func RunDumper(useInClusterConfig bool, masterURL string, kubeConfigPath string) ([]*Pod, error) {
-	var kubeClient *KubeClient
-	var err error
-	if useInClusterConfig {
-		kubeClient, err = NewKubeClientFromCluster()
-	} else {
-		kubeClient, err = NewKubeClient(masterURL, kubeConfigPath)
-	}
-	if err != nil {
-		return nil, err
-	}
+import "github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
 
-	return kubeClient.GetAllPods()
+type KubeReport struct {
+	UnparseableKubeImages []string
 }
 
-func RunPodCleaner(useInClusterConfig bool, masterURL string, kubeConfigPath string) {
-	var kubeClient *KubeClient
-	var err error
-	if useInClusterConfig {
-		kubeClient, err = NewKubeClientFromCluster()
-	} else {
-		kubeClient, err = NewKubeClient(masterURL, kubeConfigPath)
+func NewKubeReport(dump *dump.Dump) *KubeReport {
+	return &KubeReport{
+		UnparseableKubeImages: UnparseableKubeImages(dump),
 	}
-	if err != nil {
-		panic(err)
-	}
+}
 
-	err = kubeClient.CleanupAllPods()
-	if err != nil {
-		panic(err)
+func UnparseableKubeImages(dump *dump.Dump) []string {
+	images := []string{}
+	for _, image := range dump.Kube.ImagesMissingSha {
+		images = append(images, image.ImageID)
 	}
+	return images
 }
