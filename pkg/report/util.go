@@ -19,25 +19,33 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package kube
+package report
 
-import (
-	log "github.com/sirupsen/logrus"
-)
-
-type Image struct {
-	Image   string
-	ImageID string
-}
-
-func NewImage(image string, imageID string) *Image {
-	return &Image{Image: image, ImageID: imageID}
-}
-
-func (image *Image) ParseImageID() (name string, sha string, err error) {
-	name, sha, err = ParseImageIDString(image.ImageID)
-	if err != nil {
-		log.Errorf("unable to parse kubernetes ImageID string %s from image %s", image.ImageID, image.Image)
+func Difference(a map[string]interface{}, b map[string]interface{}) map[string]bool {
+	aNotB := map[string]bool{}
+	for key := range a {
+		_, ok := b[key]
+		if !ok {
+			aNotB[key] = true
+		}
 	}
+	return aNotB
+}
+
+func Intersection(a map[string]interface{}, b map[string]interface{}) map[string]bool {
+	aAndB := map[string]bool{}
+	for key := range a {
+		_, ok := b[key]
+		if ok {
+			aAndB[key] = true
+		}
+	}
+	return aAndB
+}
+
+func DiffMaps(a map[string]interface{}, b map[string]interface{}) (aNotB map[string]bool, bNotA map[string]bool, aAndB map[string]bool) {
+	aNotB = Difference(a, b)
+	bNotA = Difference(b, a)
+	aAndB = Intersection(a, b)
 	return
 }

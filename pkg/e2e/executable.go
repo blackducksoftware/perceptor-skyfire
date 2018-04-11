@@ -25,10 +25,12 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/hipchat"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
-	"github.com/blackducksoftware/perceptor-skyfire/pkg/inspector"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/perceptor"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/report"
 )
 
 func RunDumper(configPath string) {
@@ -49,10 +51,15 @@ func RunDumper(configPath string) {
 		panic(err)
 	}
 
-	dump := inspector.NewDump(kubePods, hubProjects, perceptorScanResults, perceptorModel)
-	fmt.Println(dumpJson(dump))
-	//	report := inspector.NewReport(dump)
-	//	fmt.Println(dumpJson(report))
+	dump := dump.NewDump(kubePods, hubProjects, perceptorScanResults, perceptorModel)
+	// fmt.Println(dumpJson(dump))
+	report := report.NewReport(dump)
+	// fmt.Println(dumpJson(report))
+	fmt.Println(report.HumanReadableString())
+	_, err = hipchat.Send(report.HumanReadableString())
+	if err != nil {
+		panic(err)
+	}
 }
 
 func dumpJson(object interface{}) string {

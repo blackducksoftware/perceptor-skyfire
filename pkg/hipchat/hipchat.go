@@ -19,25 +19,33 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package kube
+package hipchat
 
 import (
-	log "github.com/sirupsen/logrus"
+	"fmt"
+
+	"github.com/go-resty/resty"
 )
 
-type Image struct {
-	Image   string
-	ImageID string
-}
+var authToken = "pRuvP8nq4nX0D8TpS1Kh5yyCrqt21d047PbBEWyv"
 
-func NewImage(image string, imageID string) *Image {
-	return &Image{Image: image, ImageID: imageID}
-}
+var room = "CloudNativeEngineering"
 
-func (image *Image) ParseImageID() (name string, sha string, err error) {
-	name, sha, err = ParseImageIDString(image.ImageID)
-	if err != nil {
-		log.Errorf("unable to parse kubernetes ImageID string %s from image %s", image.ImageID, image.Image)
+// var room = "PushTesting"
+
+func Send(message string) (*resty.Response, error) {
+	url := BuildURL(room)
+	data := map[string]string{
+		"message":        fmt.Sprintf("<pre>%s</pre>", message),
+		"message_format": "html",
 	}
-	return
+	return resty.R().
+		SetBody(data).
+		SetHeader("Content-Type", "application/json").
+		SetAuthToken(authToken).
+		Post(url)
+}
+
+func BuildURL(room string) string {
+	return fmt.Sprintf("https://api.hipchat.com/v2/room/%s/notification", room)
 }

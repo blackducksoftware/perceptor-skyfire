@@ -26,7 +26,6 @@ import (
 	"reflect"
 
 	api "github.com/blackducksoftware/perceptor/pkg/api"
-	// core "github.com/blackducksoftware/perceptor/pkg/core/model"
 	resty "github.com/go-resty/resty"
 )
 

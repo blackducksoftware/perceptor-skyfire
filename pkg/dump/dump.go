@@ -19,25 +19,23 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package kube
+package dump
 
 import (
-	log "github.com/sirupsen/logrus"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
+	"github.com/blackducksoftware/perceptor/pkg/api"
 )
 
-type Image struct {
-	Image   string
-	ImageID string
+type Dump struct {
+	Kube      *KubeDump
+	Perceptor *PerceptorDump
+	Hub       *HubDump
 }
 
-func NewImage(image string, imageID string) *Image {
-	return &Image{Image: image, ImageID: imageID}
-}
-
-func (image *Image) ParseImageID() (name string, sha string, err error) {
-	name, sha, err = ParseImageIDString(image.ImageID)
-	if err != nil {
-		log.Errorf("unable to parse kubernetes ImageID string %s from image %s", image.ImageID, image.Image)
-	}
-	return
+func NewDump(kubePods []*kube.Pod, hubProjects []*hub.Project, perceptorScanResults *api.ScanResults, perceptorModel *api.Model) *Dump {
+	return &Dump{
+		Kube:      NewKubeDump(kubePods),
+		Perceptor: NewPerceptorDump(perceptorScanResults, perceptorModel),
+		Hub:       NewHubDump(hubProjects)}
 }

@@ -22,31 +22,13 @@ under the License.
 package kube
 
 import (
-	"fmt"
-
-	log "github.com/sirupsen/logrus"
-
 	"k8s.io/api/core/v1"
 )
 
 func mapKubePod(kubePod *v1.Pod) *Pod {
 	containers := []*Container{}
 	for _, newCont := range kubePod.Status.ContainerStatuses {
-		name, sha, err := ParseImageIDString(newCont.ImageID)
-		if err != nil {
-			// TODO need to do something more intelligent with failures
-			log.Errorf("unable to parse kubernetes imageID string %s from pod %s/%s: %s", newCont.ImageID, kubePod.Namespace, kubePod.Name, err.Error())
-			// continue
-			name = "failed to parse"
-			sha = fmt.Sprintf("failed to parse -- %s", newCont.ImageID)
-		}
-		newImage := &Image{
-			DockerImage: newCont.Image,
-			Name:        name,
-			Sha:         sha,
-			ImageID:     newCont.ImageID,
-		}
-		// addedCont := NewContainer(NewImage(name, sha, newCont.Image), newCont.Name)
+		newImage := NewImage(newCont.Image, newCont.ImageID)
 		addedCont := NewContainer(newImage, newCont.Name)
 		containers = append(containers, addedCont)
 	}
