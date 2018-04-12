@@ -24,14 +24,16 @@ package dump
 import "github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
 
 type HubDump struct {
+	Version           string
 	Projects          []*hub.Project
 	ProjectsBySha     map[string]*hub.Project
 	DuplicateShas     map[string]bool
 	ShortProjectNames []string
 }
 
-func NewHubDump(projects []*hub.Project) *HubDump {
+func NewHubDump(version string, projects []*hub.Project) *HubDump {
 	hubDump := &HubDump{
+		Version:           version,
 		Projects:          projects,
 		ProjectsBySha:     map[string]*hub.Project{},
 		DuplicateShas:     map[string]bool{},

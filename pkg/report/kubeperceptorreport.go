@@ -21,7 +21,9 @@ under the License.
 
 package report
 
-import "github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
+import (
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
+)
 
 type KubePerceptorReport struct {
 	JustKubePods        []string
@@ -33,18 +35,33 @@ type KubePerceptorReport struct {
 	// In kube/openshift but not in perceptor scan results:
 	// - finished pods (with annotations/labels)
 	// - finished images (with annotations/labels)
+	FinishedJustKubePods []string
 
 	// In perceptor scan results but not in kube/openshift:
 	// - scanned pods
 	// - scanned images
+	FinishedJustPerceptorPods []string
+
+	PartiallyAnnotatedKubePods []string
+	PartiallyLabeledKubePods   []string
+
+	ConflictingAnnotationsPods map[string]string
+	ConflictingLabelsPods      map[string]string
 }
 
 func NewKubePerceptorReport(dump *dump.Dump) *KubePerceptorReport {
+	finishedJustKubePods, partiallyAnnotatedKubePods, partiallyLabeledKubePods, conflictingAnnotationsPods, conflictingLabelsPods := KubeNotPerceptorFinishedPods(dump)
 	return &KubePerceptorReport{
-		JustKubePods:        KubeNotPerceptorPods(dump),
-		JustPerceptorPods:   PerceptorNotKubePods(dump),
-		JustKubeImages:      KubeNotPerceptorImages(dump),
-		JustPerceptorImages: PerceptorNotKubeImages(dump),
+		JustKubePods:               KubeNotPerceptorPods(dump),
+		JustPerceptorPods:          PerceptorNotKubePods(dump),
+		JustKubeImages:             KubeNotPerceptorImages(dump),
+		JustPerceptorImages:        PerceptorNotKubeImages(dump),
+		FinishedJustKubePods:       finishedJustKubePods,
+		FinishedJustPerceptorPods:  PerceptorNotKubeFinishedPods(dump),
+		PartiallyAnnotatedKubePods: partiallyAnnotatedKubePods,
+		PartiallyLabeledKubePods:   partiallyLabeledKubePods,
+		ConflictingAnnotationsPods: conflictingAnnotationsPods,
+		ConflictingLabelsPods:      conflictingLabelsPods,
 	}
 }
 
@@ -90,4 +107,76 @@ func PerceptorNotKubeImages(dump *dump.Dump) []string {
 		}
 	}
 	return images
+}
+
+func KubeNotPerceptorFinishedPods(dump *dump.Dump) (finishedKubePods []string, partiallyAnnotatedKubePods []string, partiallyLabeledKubePods []string, conflictingAnnotationsPods map[string]string, conflictingLabelsPods map[string]string) {
+	finishedKubePods = []string{}
+	partiallyAnnotatedKubePods = []string{}
+	partiallyLabeledKubePods = []string{}
+	conflictingAnnotationsPods = map[string]string{}
+	conflictingLabelsPods = map[string]string{}
+	for podName, pod := range dump.Kube.PodsByName {
+		// annotations
+		annotations := pod.ParsedAnnotations()
+		if annotations.IsPartiallyAnnotated() {
+			partiallyAnnotatedKubePods = append(partiallyAnnotatedKubePods, podName)
+		}
+
+		// TODO
+		// labels
+		// hasAllLabels := kube.HasAllBDLabelKeys(len(pod.Containers), pod.Labels)
+		// hasAnyLabels := kube.HasAnyBDLabelKeys(len(pod.Containers), pod.Labels)
+		// if hasAnyLabels && !hasAllLabels {
+		// 	partiallyLabeledKubePods = append(partiallyLabeledKubePods, podName)
+		// }
+		// isFinished := hasAllAnnotations && hasAllLabels
+		// if !isFinished {
+		// 	continue
+		// }
+
+		// TODO remove this when above is uncommented
+		if !annotations.HasAllBDAnnotationKeys() {
+			continue
+		}
+
+		// we've established that it's finished
+		// now, let's check if perceptor agrees
+		perceptorPod, ok := dump.Perceptor.PodsByName[podName]
+		if !ok {
+			finishedKubePods = append(finishedKubePods, podName)
+		}
+		// okay, so perceptor thinks it's done too
+		//   but does it have the same values as kube?
+		vCount, _ := annotations.VulnerabilityCount()
+		if vCount != perceptorPod.Vulnerabilities {
+			conflictingAnnotationsPods[podName] += "vulnerabilities"
+		}
+		pvCount, _ := annotations.PolicyViolationCount()
+		if pvCount != perceptorPod.PolicyViolations {
+			conflictingAnnotationsPods[podName] += ",policyviolations"
+		}
+		overallStatus, _ := annotations.OverallStatus()
+		if overallStatus != perceptorPod.OverallStatus {
+			conflictingAnnotationsPods[podName] += ",overallstatus"
+		}
+
+		// TODO check hub version, scanner version
+		// TODO check pod image%d%s annotations
+	}
+	return
+}
+
+func PerceptorNotKubeFinishedPods(dump *dump.Dump) []string {
+	pods := []string{}
+	for podName, _ := range dump.Perceptor.PodsByName {
+		kubePod, ok := dump.Kube.PodsByName[podName]
+		if !ok {
+			// this should be handled elsewhere, right?
+			continue
+		}
+		if !kubePod.ParsedAnnotations().HasAllBDAnnotationKeys() {
+			pods = append(pods, podName)
+		}
+	}
+	return pods
 }

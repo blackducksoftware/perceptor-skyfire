@@ -21,7 +21,9 @@ under the License.
 
 package report
 
-import "github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
+import (
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
+)
 
 type KubeReport struct {
 	UnparseableKubeImages []string

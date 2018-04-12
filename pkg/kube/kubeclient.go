@@ -89,3 +89,28 @@ func (client *KubeClient) GetAllPods() ([]*Pod, error) {
 	}
 	return pods, nil
 }
+
+func (client *KubeClient) GetMeta() (*Meta, error) {
+	nodeList, err := client.clientset.CoreV1().Nodes().List(meta_v1.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+	version, err := client.clientset.ServerVersion()
+	if err != nil {
+		return nil, err
+	}
+	meta := &Meta{
+		BuildDate:    version.BuildDate,
+		Compiler:     version.Compiler,
+		GitCommit:    version.GitCommit,
+		GitTreeState: version.GitTreeState,
+		GitVersion:   version.GitVersion,
+		GoVersion:    version.GoVersion,
+		MajorVersion: version.Major,
+		MinorVersion: version.Minor,
+		Platform:     version.Platform,
+		NodeCount:    len(nodeList.Items),
+	}
+	log.Infof("kube meta: %+v, from %+v", version, meta)
+	return meta, nil
+}

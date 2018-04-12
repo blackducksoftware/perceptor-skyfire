@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2018 Black Duck Software, Inc.
+Copyright (C) 2018 Synopsys, Inc.
 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements. See the NOTICE file
@@ -19,18 +19,24 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package dump
+package skyfire
 
-type Dump struct {
-	Kube      *KubeDump
-	Perceptor *PerceptorDump
-	Hub       *HubDump
+import (
+	"github.com/prometheus/client_golang/prometheus"
+)
+
+var problemsGauge *prometheus.GaugeVec
+
+func recordReportProblem(name string, count int) {
+	problemsGauge.With(prometheus.Labels{"name": name}).Set(float64(count))
 }
 
-func NewDump(kube *KubeDump, perceptor *PerceptorDump, hub *HubDump) *Dump {
-	return &Dump{
-		Kube:      kube,
-		Perceptor: perceptor,
-		Hub:       hub,
-	}
+func init() {
+	problemsGauge = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Namespace: "perceptor",
+		Subsystem: "skyfire",
+		Name:      "test_issues",
+		Help:      "names and counts for issues discovered in perceptor testing",
+	}, []string{"name"})
+	prometheus.MustRegister(problemsGauge)
 }

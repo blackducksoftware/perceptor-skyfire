@@ -37,14 +37,10 @@ type Skyfire struct {
 	KubeDumper      *kube.KubeClient
 	PerceptorDumper *perceptor.PerceptorDumper
 	HubDumper       *hub.HubDumper
+	HipchatRoom     string
 }
 
-func NewSkyfire(configPath string) (*Skyfire, error) {
-	config, err := ReadConfig(configPath)
-	if err != nil {
-		return nil, err
-	}
-
+func NewSkyfire(config *Config) (*Skyfire, error) {
 	kubeDumper, err := kube.NewKubeClient(config.KubeClientConfig())
 	if err != nil {
 		return nil, err
@@ -61,6 +57,7 @@ func NewSkyfire(configPath string) (*Skyfire, error) {
 		KubeDumper:      kubeDumper,
 		PerceptorDumper: perceptorDumper,
 		HubDumper:       hubDumper,
+		HipchatRoom:     config.HipchatRoom,
 	}
 	return skyfire, nil
 }
@@ -70,23 +67,30 @@ func (sf *Skyfire) GrabDumpAndBuildReport() (*dump.Dump, *report.Report, error) 
 	if err != nil {
 		return nil, nil, err
 	}
-
 	model, err := sf.PerceptorDumper.DumpModel()
 	if err != nil {
 		return nil, nil, err
 	}
+	perceptorDump := dump.NewPerceptorDump(scanResults, model)
 
 	hubProjects, err := sf.HubDumper.DumpAllProjects()
 	if err != nil {
 		return nil, nil, err
 	}
+	hubVersion, err := sf.HubDumper.Version()
+	if err != nil {
+		return nil, nil, err
+	}
+	hubDump := dump.NewHubDump(hubVersion, hubProjects)
 
 	kubePods, err := sf.KubeDumper.GetAllPods()
 	if err != nil {
 		return nil, nil, err
 	}
+	kubeMeta, err := sf.KubeDumper.GetMeta()
+	kubeDump := dump.NewKubeDump(kubeMeta, kubePods)
 
-	dump := dump.NewDump(kubePods, hubProjects, scanResults, model)
+	dump := dump.NewDump(kubeDump, perceptorDump, hubDump)
 	report := report.NewReport(dump)
 	return dump, report, nil
 }
@@ -101,10 +105,7 @@ func (sf *Skyfire) BuildReportAndSendToHipChat() error {
 	str := report.HumanReadableString()
 	fmt.Println(str)
 
-	// var room = "CloudNativeEngineering"
-	var room = "PushTesting"
-
-	hip := hipchat.NewHipchat(room)
+	hip := hipchat.NewHipchat(sf.HipchatRoom)
 	_, err = hip.Send(str)
 	return err
 }

@@ -27,6 +27,7 @@ import (
 )
 
 type KubeDump struct {
+	Meta              *kube.Meta
 	Pods              []*kube.Pod
 	PodsByName        map[string]*kube.Pod
 	DuplicatePodNames map[string]bool
@@ -36,8 +37,9 @@ type KubeDump struct {
 	ImagesMissingSha   []*kube.Image
 }
 
-func NewKubeDump(pods []*kube.Pod) *KubeDump {
+func NewKubeDump(meta *kube.Meta, pods []*kube.Pod) *KubeDump {
 	kubeDump := &KubeDump{
+		Meta:               meta,
 		Pods:               pods,
 		PodsByName:         map[string]*kube.Pod{},
 		DuplicatePodNames:  map[string]bool{},

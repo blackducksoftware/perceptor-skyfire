@@ -19,41 +19,22 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package kube
+package main
 
-import "fmt"
+import (
+	"os"
 
-type Pod struct {
-	Name        string
-	UID         string
-	Namespace   string
-	Containers  []*Container
-	Annotations map[string]string
-	Labels      map[string]string
-}
+	skyfire "github.com/blackducksoftware/perceptor-skyfire/pkg/skyfire"
+	log "github.com/sirupsen/logrus"
+)
 
-func (pod *Pod) QualifiedName() string {
-	return fmt.Sprintf("%s/%s", pod.Namespace, pod.Name)
-}
-
-func (pod *Pod) hasImage(image *Image) bool {
-	for _, cont := range pod.Containers {
-		if cont.Image == image {
-			return true
-		}
+func main() {
+	configPath := os.Args[1]
+	daemon, err := skyfire.NewDaemon(configPath)
+	if err != nil {
+		panic(err)
 	}
-	return false
-}
+	log.Infof("instantiated daemon: %+v", daemon)
 
-func NewPod(name string, uid string, namespace string, containers []*Container) *Pod {
-	return &Pod{
-		Name:       name,
-		UID:        uid,
-		Namespace:  namespace,
-		Containers: containers,
-	}
-}
-
-func (pod *Pod) ParsedAnnotations() *PodAnnotations {
-	return NewPodAnnotations(len(pod.Containers), pod.Annotations)
+	select {}
 }

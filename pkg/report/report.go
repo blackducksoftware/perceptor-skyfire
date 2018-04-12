@@ -28,6 +28,7 @@ import (
 )
 
 type Report struct {
+	Meta          *MetaReport
 	Kube          *KubeReport
 	KubePerceptor *KubePerceptorReport
 	PerceptorHub  *PerceptorHubReport
@@ -36,6 +37,7 @@ type Report struct {
 
 func NewReport(dump *dump.Dump) *Report {
 	return &Report{
+		NewMetaReport(dump),
 		NewKubeReport(dump),
 		NewKubePerceptorReport(dump),
 		NewPerceptorHubReport(dump),
@@ -45,6 +47,11 @@ func NewReport(dump *dump.Dump) *Report {
 
 func (r *Report) HumanReadableString() string {
 	return fmt.Sprintf(`
+Overview:
+ - we used hub version %s
+ - we used kubernetes version %s with build date %s
+ - our cluster had %d nodes
+
 Kubernetes:
  - we found %d ImageIDs that were unparseable
 
@@ -53,6 +60,10 @@ Kubernetes<->Perceptor:
  - we found %d pod(s) in Perceptor that were not in Kubernetes
  - we found %d image(s) in Kubernetes that were not in Perceptor
  - we found %d image(s) in Perceptor that were not in Kubernetes
+ - we found %d pod(s) whose kubernetes annotations did not match their scan results
+ - we found %d pod(s) with kubernetes annotations but no scan results
+ - we found %d pod(s) with scan results but not kubernetes annotations
+ - we found %d pod(s) in kubernetes that are partially annotated
 
 Perceptor<->Hub:
  - we found %d image(s) in Perceptor that were not in the Hub
@@ -63,13 +74,27 @@ Hub:
  - we found %d version(s) in the Hub with multiple code locations
  - we found %d code location(s) in the Hub with multiple scan summaries
 		 `,
+		r.Meta.HubVersion,
+		r.Meta.KubeMeta.GitVersion,
+		r.Meta.KubeMeta.BuildDate,
+		r.Meta.KubeMeta.NodeCount,
+		// kube
 		len(r.Kube.UnparseableKubeImages),
+		// kube<->perceptor
 		len(r.KubePerceptor.JustKubePods),
 		len(r.KubePerceptor.JustPerceptorPods),
 		len(r.KubePerceptor.JustKubeImages),
 		len(r.KubePerceptor.JustPerceptorImages),
+		len(r.KubePerceptor.ConflictingAnnotationsPods),
+		// len(r.KubePerceptor.ConflictingLabelsPods), TODO
+		len(r.KubePerceptor.FinishedJustKubePods),
+		len(r.KubePerceptor.FinishedJustPerceptorPods),
+		len(r.KubePerceptor.PartiallyAnnotatedKubePods),
+		// len(r.KubePerceptor.PartiallyLabeledKubePods), TODO
+		// perceptor<->hub
 		len(r.PerceptorHub.JustPerceptorImages),
 		len(r.PerceptorHub.JustHubImages),
+		// hub
 		len(r.Hub.ProjectsMultipleVersions),
 		len(r.Hub.VersionsMultipleCodeLocations),
 		len(r.Hub.CodeLocationsMultipleScanSummaries))

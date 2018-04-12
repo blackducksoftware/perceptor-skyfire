@@ -21,39 +21,15 @@ under the License.
 
 package kube
 
-import "fmt"
-
-type Pod struct {
-	Name        string
-	UID         string
-	Namespace   string
-	Containers  []*Container
-	Annotations map[string]string
-	Labels      map[string]string
-}
-
-func (pod *Pod) QualifiedName() string {
-	return fmt.Sprintf("%s/%s", pod.Namespace, pod.Name)
-}
-
-func (pod *Pod) hasImage(image *Image) bool {
-	for _, cont := range pod.Containers {
-		if cont.Image == image {
-			return true
-		}
-	}
-	return false
-}
-
-func NewPod(name string, uid string, namespace string, containers []*Container) *Pod {
-	return &Pod{
-		Name:       name,
-		UID:        uid,
-		Namespace:  namespace,
-		Containers: containers,
-	}
-}
-
-func (pod *Pod) ParsedAnnotations() *PodAnnotations {
-	return NewPodAnnotations(len(pod.Containers), pod.Annotations)
+type Meta struct {
+	MajorVersion string
+	MinorVersion string
+	GitVersion   string
+	GitCommit    string
+	GitTreeState string
+	BuildDate    string
+	GoVersion    string
+	Compiler     string
+	Platform     string
+	NodeCount    int
 }

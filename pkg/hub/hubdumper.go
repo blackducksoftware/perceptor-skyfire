@@ -50,6 +50,14 @@ func NewHubDumper(hubHost string, username string, password string) (*HubDumper,
 	return dumper, nil
 }
 
+func (hd *HubDumper) Version() (string, error) {
+	version, err := hd.HubClient.CurrentVersion()
+	if err != nil {
+		return "", err
+	}
+	return version.Version, nil
+}
+
 func (hd *HubDumper) DumpAllProjects() ([]*Project, error) {
 	limit := 20000 // totally arbitrary number, just needs to be higher than the
 	// number of projects in the hub.  20000 is so high as to be effectively

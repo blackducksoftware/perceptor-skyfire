@@ -21,31 +21,20 @@ under the License.
 
 package report
 
-func Difference(a map[string]interface{}, b map[string]interface{}) map[string]bool {
-	aNotB := map[string]bool{}
-	for key := range a {
-		_, ok := b[key]
-		if !ok {
-			aNotB[key] = true
-		}
-	}
-	return aNotB
+import (
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
+)
+
+type MetaReport struct {
+	KubeMeta   *kube.Meta
+	HubVersion string
+	//	HubScanClientVersion string // TODO we don't need this, do we?
 }
 
-func Intersection(a map[string]interface{}, b map[string]interface{}) map[string]bool {
-	aAndB := map[string]bool{}
-	for key := range a {
-		_, ok := b[key]
-		if ok {
-			aAndB[key] = true
-		}
+func NewMetaReport(dump *dump.Dump) *MetaReport {
+	return &MetaReport{
+		KubeMeta:   dump.Kube.Meta,
+		HubVersion: dump.Hub.Version,
 	}
-	return aAndB
-}
-
-func DiffMaps(a map[string]interface{}, b map[string]interface{}) (aNotB map[string]bool, bNotA map[string]bool, aAndB map[string]bool) {
-	aNotB = Difference(a, b)
-	bNotA = Difference(b, a)
-	aAndB = Intersection(a, b)
-	return
 }

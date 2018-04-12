@@ -38,6 +38,8 @@ type Config struct {
 
 	PerceptorHost string
 	PerceptorPort int
+
+	HipchatRoom string
 }
 
 // func (config *Config) GetLogLevel() (log.Level, error) {

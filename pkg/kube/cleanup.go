@@ -22,8 +22,6 @@ under the License.
 package kube
 
 import (
-	"fmt"
-
 	log "github.com/sirupsen/logrus"
 	"k8s.io/api/core/v1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -38,8 +36,8 @@ func (client *KubeClient) CleanupAllPods() error {
 	}
 	for _, pod := range podList.Items {
 		log.Debugf("before:\n%+v\n%+v\n", pod.Annotations, pod.Labels)
-		updatedAnnotations := removeBDKeys(len(pod.Status.ContainerStatuses), pod.Annotations)
-		updatedLabels := removeBDKeys(len(pod.Status.ContainerStatuses), pod.Labels)
+		updatedAnnotations := RemoveBDPodAnnotationKeys(len(pod.Status.ContainerStatuses), pod.Annotations)
+		updatedLabels := pod.Labels // TODO removeBDLabelKeys(len(pod.Status.ContainerStatuses), pod.Labels)
 		log.Debugf("after:\n%+v\n%+v\n\n", pod.Annotations, pod.Labels)
 		pod.SetAnnotations(updatedAnnotations)
 		pod.SetLabels(updatedLabels)
@@ -53,37 +51,95 @@ func (client *KubeClient) CleanupAllPods() error {
 	return nil
 }
 
-var podKeys = []string{
-	"pod.vulnerabilities",
-	"pod.policy-violations",
-	"pod.overall-status",
-	"pod.server-version",
-	"pod.scanner-version",
-}
+// var podLabelKeys = []string{
+// 	"pod.vulnerabilities",
+// 	"pod.policy-violations",
+// 	"pod.overall-status",
+// }
+//
+// var podLabelImageSuffixes = []string{
+// 	".vulnerabilities",
+// 	".policy-violations",
+// 	".overall-status",
+// 	"",
+// }
+//
+// func PodLabelImageKeys(containerCount int) []string {
+// 	keys := []string{}
+// 	for i := 0; i < containerCount; i++ {
+// 		for _, suffix := range podLabelImageSuffixes {
+// 			key := fmt.Sprintf("image%d%s", i, suffix)
+// 			keys = append(keys, key)
+// 		}
+// 	}
+// 	return keys
+// }
+//
+// func PodLabelKeys(containerCount int) []string {
+// 	return append(podLabelKeys, PodLabelImageKeys(containerCount)...)
+// }
+//
+// var podAnnotationKeys = []string{
+// 	"pod.vulnerabilities",
+// 	"pod.policy-violations",
+// 	"pod.overall-status",
+// 	"pod.server-version",
+// 	"pod.scanner-version",
+// }
+//
+// var podAnnotationImageSuffixes = []string{
+// 	".vulnerabilities",
+// 	".policy-violations",
+// 	".overall-status",
+// 	".server-version",
+// 	".scanner-version",
+// 	".project-endpoint",
+// 	"",
+// }
+//
+// func PodAnnotationImageKeys(containerCount int) []string {
+// 	keys := []string{}
+// 	for i := 0; i < containerCount; i++ {
+// 		for _, suffix := range podAnnotationImageSuffixes {
+// 			key := fmt.Sprintf("image%d%s", i, suffix)
+// 			keys = append(keys, key)
+// 		}
+// 	}
+// 	return keys
+// }
 
-var imageSuffixes = []string{
-	".vulnerabilities",
-	".policy-violations",
-	".overall-status",
-	".server-version",
-	".scanner-version",
-	".project-endpoint",
-	"",
-}
+// func PodAnnotationKeys(containerCount int) []string {
+// 	return append(podAnnotationKeys, PodAnnotationImageKeys(containerCount)...)
+// }
+//
+// func HasAllBDAnnotationKeys(containerCount int, dict map[string]string) bool {
+// 	return len(util.Difference(dict, util.MakeSet(PodAnnotationKeys(containerCount)))) == 0
+// }
+//
+// func HasAnyBDAnnotationKeys(containerCount int, dict map[string]string) bool {
+// 	return len(util.Difference(dict, util.MakeSet(PodAnnotationKeys(containerCount)))) > 0
+// }
 
-func removeBDKeys(containerCount int, dict map[string]string) map[string]string {
-	copy := map[string]string{}
-	for key, val := range dict {
-		copy[key] = val
-	}
-	for i := 0; i < containerCount; i++ {
-		for _, suffix := range imageSuffixes {
-			key := fmt.Sprintf("image%d%s", i, suffix)
-			delete(copy, key)
-		}
-		for _, key := range podKeys {
-			delete(copy, key)
-		}
-	}
-	return copy
-}
+// func HasAllBDLabelKeys(containerCount int, dict map[string]string) bool {
+// 	return len(util.Difference(dict, util.MakeSet(PodLabelKeys(containerCount)))) == 0
+// }
+//
+// func HasAnyBDLabelKeys(containerCount int, dict map[string]string) bool {
+// 	return len(util.Difference(dict, util.MakeSet(PodLabelKeys(containerCount)))) > 0
+// }
+//
+// func GetBDAnnotationKeys(containerCount int, dict map[string]string) map[string]string {
+// 	return util.Difference(dict, util.MakeSet(PodAnnotationKeys(containerCount)))
+// }
+//
+// func GetBDLabelKeys(containerCount int, dict map[string]string) map[string]string {
+// 	return util.Difference(dict, util.MakeSet(PodLabelKeys(containerCount)))
+// }
+//
+// func removeBDAnnotationKeys(containerCount int, dict map[string]string) map[string]string {
+// 	return util.Difference(dict, util.MakeSet(PodAnnotationKeys(containerCount)))
+// }
+//
+// func removeBDLabelKeys(containerCount int, dict map[string]string) map[string]string {
+// 	return util.Difference(dict, util.MakeSet(PodLabelKeys(containerCount)))
+// }
