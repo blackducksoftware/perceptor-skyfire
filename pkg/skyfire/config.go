@@ -23,6 +23,7 @@ package skyfire
 
 import (
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -30,7 +31,9 @@ type Config struct {
 	UseInClusterConfig bool
 	MasterURL          string
 	KubeConfigPath     string
-	//	LogLevel              string
+	LogLevel           string
+
+	Port int
 
 	HubHost     string
 	HubUser     string
@@ -42,9 +45,9 @@ type Config struct {
 	HipchatRoom string
 }
 
-// func (config *Config) GetLogLevel() (log.Level, error) {
-// 	return log.ParseLevel(config.LogLevel)
-// }
+func (config *Config) GetLogLevel() (log.Level, error) {
+	return log.ParseLevel(config.LogLevel)
+}
 
 func ReadConfig(configPath string) (*Config, error) {
 	viper.SetConfigFile(configPath)

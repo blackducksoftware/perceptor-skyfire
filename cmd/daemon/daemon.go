@@ -22,22 +22,37 @@ under the License.
 package main
 
 import (
+	"fmt"
+	"net/http"
 	"os"
 
 	skyfire "github.com/blackducksoftware/perceptor-skyfire/pkg/skyfire"
+	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 )
 
 func main() {
 	configPath := os.Args[1]
-	daemon, err := skyfire.NewDaemon(configPath)
+	config, err := skyfire.ReadConfig(configPath)
+	if err != nil {
+		panic(err)
+	}
+
+	logLevel, err := config.GetLogLevel()
+	if err != nil {
+		panic(err)
+	}
+	log.SetLevel(logLevel)
+
+	daemon, err := skyfire.NewDaemon(config)
 	if err != nil {
 		panic(err)
 	}
 	log.Infof("instantiated daemon: %+v", daemon)
-	//
-	// http.Handle("/metrics", prometheus.Handler())
-	// http.ListenAndServe(addr, handler)
+
+	http.Handle("/metrics", prometheus.Handler())
+	addr := fmt.Sprintf(":%d", config.Port)
+	go http.ListenAndServe(addr, nil)
 
 	select {}
 }

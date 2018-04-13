@@ -42,12 +42,7 @@ const (
 	infoPullPauseMinutes = 1
 )
 
-func NewDaemon(configPath string) (*Daemon, error) {
-	config, err := ReadConfig(configPath)
-	if err != nil {
-		return nil, err
-	}
-
+func NewDaemon(config *Config) (*Daemon, error) {
 	skyfire, err := NewSkyfire(config)
 	if err != nil {
 		return nil, err
