@@ -38,7 +38,8 @@ func NewPerceptorHubReport(dump *dump.Dump) *PerceptorHubReport {
 func PerceptorNotHubImages(dump *dump.Dump) []string {
 	images := []string{}
 	for sha := range dump.Perceptor.ImagesBySha {
-		_, ok := dump.Hub.ProjectsBySha[sha]
+		sha20 := sha[:20]
+		_, ok := dump.Hub.ProjectsBySha[sha20]
 		if !ok {
 			images = append(images, sha)
 		}
@@ -49,8 +50,15 @@ func PerceptorNotHubImages(dump *dump.Dump) []string {
 func HubNotPerceptorImages(dump *dump.Dump) []string {
 	images := []string{}
 	for sha := range dump.Hub.ProjectsBySha {
-		_, ok := dump.Perceptor.ImagesBySha[sha]
-		if !ok {
+		foundMatch := false
+		// can't do a dictionary lookup, because hub sha only has first 20 characters
+		for _, perceptorImage := range dump.Perceptor.ScanResults.Images {
+			if perceptorImage.Sha[:20] == sha {
+				foundMatch = true
+				break
+			}
+		}
+		if !foundMatch {
 			images = append(images, sha)
 		}
 	}

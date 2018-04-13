@@ -35,6 +35,9 @@ func main() {
 		panic(err)
 	}
 	log.Infof("instantiated daemon: %+v", daemon)
+	//
+	// http.Handle("/metrics", prometheus.Handler())
+	// http.ListenAndServe(addr, handler)
 
 	select {}
 }

@@ -56,7 +56,11 @@ func (pd *PerceptorDump) computeDerivedData() {
 		if ok {
 			pd.DuplicatePodNames[podName] = true
 		} else {
-			pd.PodsByName[podName] = &pod
+			// wow, what a hack.  avoids accidentally assigning the same pod every time ...
+			// since `pod` is actually the same variable for every iteration through the loop
+			// the actual solution would be to have perceptor pass by reference or something
+			podRef := pod
+			pd.PodsByName[podName] = &podRef
 		}
 	}
 	for _, image := range pd.ScanResults.Images {
@@ -64,7 +68,9 @@ func (pd *PerceptorDump) computeDerivedData() {
 		if ok {
 			pd.DuplicateImageShas[image.Sha] = true
 		} else {
-			pd.ImagesBySha[image.Sha] = &image
+			// again: wow, what a hack
+			imageRef := image
+			pd.ImagesBySha[image.Sha] = &imageRef
 		}
 	}
 }

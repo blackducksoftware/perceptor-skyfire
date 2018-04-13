@@ -22,8 +22,12 @@ under the License.
 package skyfire
 
 import (
+	"encoding/json"
+	"fmt"
+	"os"
 	"time"
 
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/hipchat"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/report"
 	log "github.com/sirupsen/logrus"
@@ -58,15 +62,22 @@ func NewDaemon(configPath string) (*Daemon, error) {
 }
 
 func (d *Daemon) startPullingInfo() {
-	for {
-		_, report, err := d.Skyfire.GrabDumpAndBuildReport()
-		IssueReportMetrics(report)
+	err := os.Mkdir("dumps", 0777)
+	if err != nil {
+		log.Errorf("unable to create directory: %s", err.Error())
+	}
+	for i := 0; ; i++ {
+		dump, report, err := d.Skyfire.GrabDumpAndBuildReport()
 
 		if err != nil {
 			log.Errorf("unable to build report: %s", err.Error())
 		} else {
+			IssueReportMetrics(report)
+
 			str := report.HumanReadableString()
 			log.Infof("report: \n%s", str)
+
+			writeOut(i, dump, report)
 
 			_, err = d.Hipchat.Send(str)
 			if err != nil {
@@ -76,6 +87,23 @@ func (d *Daemon) startPullingInfo() {
 
 		time.Sleep(infoPullPauseMinutes * time.Minute)
 	}
+}
+
+func writeOut(i int, dump *dump.Dump, report *report.Report) error {
+	f, err := os.Create(fmt.Sprintf("dumps/dump%d", i))
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	bytes, err := json.MarshalIndent(map[string]interface{}{
+		"Dump":   dump,
+		"Report": report,
+	}, "", "  ")
+	if err != nil {
+		return err
+	}
+	_, err = f.Write(bytes)
+	return err
 }
 
 func IssueReportMetrics(report *report.Report) {
@@ -89,6 +117,12 @@ func IssueReportMetrics(report *report.Report) {
 	recordReportProblem("kube-perceptor_pods_just_in_kube", len(report.KubePerceptor.JustKubePods))
 	recordReportProblem("kube-perceptor_images_just_in_perceptor", len(report.KubePerceptor.JustPerceptorImages))
 	recordReportProblem("kube-perceptor_pods_just_in_perceptor", len(report.KubePerceptor.JustPerceptorPods))
+	recordReportProblem("kube-perceptor_incorrect_pod_annotations", len(report.KubePerceptor.ConflictingAnnotationsPods))
+	recordReportProblem("kube-perceptor_incorrect_pod_labels", len(report.KubePerceptor.ConflictingLabelsPods))
+	recordReportProblem("kube-perceptor_finished_pods_just_kube", len(report.KubePerceptor.FinishedJustKubePods))
+	recordReportProblem("kube-perceptor_finished_pods_just_perceptor", len(report.KubePerceptor.FinishedJustPerceptorPods))
+	recordReportProblem("kube-perceptor_partially_annotated_pods", len(report.KubePerceptor.PartiallyAnnotatedKubePods))
+	recordReportProblem("kube-perceptor_partially_labeled_pods", len(report.KubePerceptor.PartiallyLabeledKubePods))
 
 	recordReportProblem("perceptor-hub_images_just_in_hub", len(report.PerceptorHub.JustHubImages))
 	recordReportProblem("perceptor-hub_images_just_in_perceptor", len(report.PerceptorHub.JustPerceptorImages))
