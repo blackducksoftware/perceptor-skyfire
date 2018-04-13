@@ -54,6 +54,24 @@ func NewPod(name string, uid string, namespace string, containers []*Container) 
 	}
 }
 
-func (pod *Pod) ParsedAnnotations() *PodAnnotations {
-	return NewPodAnnotations(len(pod.Containers), pod.Annotations)
+func (pod *Pod) BDPodAnnotations() (*BDPodInfo, []*BDPodInfo) {
+	podAnnotations := NewBDPodInfo(pod.Annotations, podAnnotationKeyStrings)
+	podImageAnnotations := []*BDPodInfo{}
+	for i, _ := range pod.Containers {
+		podImageAnnotations = append(podImageAnnotations, NewBDPodInfo(pod.Annotations, podImageAnnotationKeyStrings(i)))
+	}
+	return podAnnotations, podImageAnnotations
 }
+
+func (pod *Pod) BDPodLabels() (*BDPodInfo, []*BDPodInfo) {
+	podLabels := NewBDPodInfo(pod.Labels, podLabelKeyStrings)
+	podImageLabels := []*BDPodInfo{}
+	for i, _ := range pod.Containers {
+		podImageLabels = append(podImageLabels, NewBDPodInfo(pod.Labels, podImageLabelKeyStrings(i)))
+	}
+	return podLabels, podImageLabels
+}
+
+// func (pod *Pod) ParsedAnnotations() *PodAnnotations {
+// 	return NewPodAnnotations(len(pod.Containers), pod.Annotations)
+// }

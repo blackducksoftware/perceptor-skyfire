@@ -69,121 +69,129 @@ func (pak PodImageAnnotationKey) String(index int) string {
 	return fmt.Sprintf(pak.formatString(), index)
 }
 
-type PodImageAnnotations struct {
-	ContainerIndex  int
-	KubeAnnotations map[string]string
-}
-
-func NewPodImageAnnotations(containerIndex int, annotations map[string]string) *PodImageAnnotations {
-	return &PodImageAnnotations{
-		ContainerIndex:  containerIndex,
-		KubeAnnotations: annotations,
-	}
-}
-
-func (pa *PodImageAnnotations) HasAllBDAnnotationKeys() bool {
-	_, err := pa.VulnerabilityCount()
-	if err != nil {
-		return false
-	}
-	_, err = pa.PolicyViolationCount()
-	if err != nil {
-		return false
-	}
-	_, err = pa.OverallStatus()
-	if err != nil {
-		return false
-	}
-	_, err = pa.ServerVersion()
-	if err != nil {
-		return false
-	}
-	_, err = pa.ScannerVersion()
-	if err != nil {
-		return false
-	}
-	_, err = pa.ProjectEndpoint()
-	if err != nil {
-		return false
-	}
-	_, err = pa.Image()
-	if err != nil {
-		return false
-	}
-	return true
-}
-
-func (pa *PodImageAnnotations) HasAnyBDAnnotationKeys() bool {
-	_, err := pa.VulnerabilityCount()
-	if err == nil {
-		return true
-	}
-	_, err = pa.PolicyViolationCount()
-	if err == nil {
-		return true
-	}
-	_, err = pa.OverallStatus()
-	if err == nil {
-		return true
-	}
-	_, err = pa.ServerVersion()
-	if err == nil {
-		return true
-	}
-	_, err = pa.ScannerVersion()
-	if err == nil {
-		return true
-	}
-	_, err = pa.ProjectEndpoint()
-	if err == nil {
-		return true
-	}
-	_, err = pa.Image()
-	if err == nil {
-		return true
-	}
-	return false
-}
-
-func (pa *PodImageAnnotations) VulnerabilityCount() (int, error) {
-	return getInt(pa.KubeAnnotations, PodImageAnnotationKeyVulnerabilities.String(pa.ContainerIndex))
-}
-
-func (pa *PodImageAnnotations) PolicyViolationCount() (int, error) {
-	return getInt(pa.KubeAnnotations, PodImageAnnotationKeyPolicyViolations.String(pa.ContainerIndex))
-}
-
-func (pa *PodImageAnnotations) OverallStatus() (string, error) {
-	return getString(pa.KubeAnnotations, PodImageAnnotationKeyOverallStatus.String(pa.ContainerIndex))
-}
-
-func (pa *PodImageAnnotations) ServerVersion() (string, error) {
-	return getString(pa.KubeAnnotations, PodImageAnnotationKeyServerVersion.String(pa.ContainerIndex))
-}
-
-func (pa *PodImageAnnotations) ScannerVersion() (string, error) {
-	return getString(pa.KubeAnnotations, PodImageAnnotationKeyScannerVersion.String(pa.ContainerIndex))
-}
-
-func (pa *PodImageAnnotations) ProjectEndpoint() (string, error) {
-	return getString(pa.KubeAnnotations, PodImageAnnotationKeyProjectEndpoint.String(pa.ContainerIndex))
-}
-
-func (pa *PodImageAnnotations) Image() (string, error) {
-	return getString(pa.KubeAnnotations, PodImageAnnotationKeyImage.String(pa.ContainerIndex))
-}
-
-func RemoveBDPodImageAnnotationKeys(containerIndex int, annotations map[string]string) map[string]string {
-	copy := map[string]string{}
-	keysToDrop := map[string]bool{}
+func podImageAnnotationKeyStrings(index int) []string {
+	strs := []string{}
 	for _, key := range podImageAnnotationKeys {
-		keysToDrop[key.String(containerIndex)] = true
+		strs = append(strs, key.String(index))
 	}
-	for key, val := range annotations {
-		_, ok := keysToDrop[key]
-		if !ok {
-			copy[key] = val
-		}
-	}
-	return copy
+	return strs
 }
+
+// type PodImageAnnotations struct {
+// 	ContainerIndex  int
+// 	KubeAnnotations map[string]string
+// }
+//
+// func NewPodImageAnnotations(containerIndex int, annotations map[string]string) *PodImageAnnotations {
+// 	return &PodImageAnnotations{
+// 		ContainerIndex:  containerIndex,
+// 		KubeAnnotations: annotations,
+// 	}
+// }
+//
+// func (pa *PodImageAnnotations) HasAllBDAnnotationKeys() bool {
+// 	_, err := pa.VulnerabilityCount()
+// 	if err != nil {
+// 		return false
+// 	}
+// 	_, err = pa.PolicyViolationCount()
+// 	if err != nil {
+// 		return false
+// 	}
+// 	_, err = pa.OverallStatus()
+// 	if err != nil {
+// 		return false
+// 	}
+// 	_, err = pa.ServerVersion()
+// 	if err != nil {
+// 		return false
+// 	}
+// 	_, err = pa.ScannerVersion()
+// 	if err != nil {
+// 		return false
+// 	}
+// 	_, err = pa.ProjectEndpoint()
+// 	if err != nil {
+// 		return false
+// 	}
+// 	_, err = pa.Image()
+// 	if err != nil {
+// 		return false
+// 	}
+// 	return true
+// }
+//
+// func (pa *PodImageAnnotations) HasAnyBDAnnotationKeys() bool {
+// 	_, err := pa.VulnerabilityCount()
+// 	if err == nil {
+// 		return true
+// 	}
+// 	_, err = pa.PolicyViolationCount()
+// 	if err == nil {
+// 		return true
+// 	}
+// 	_, err = pa.OverallStatus()
+// 	if err == nil {
+// 		return true
+// 	}
+// 	_, err = pa.ServerVersion()
+// 	if err == nil {
+// 		return true
+// 	}
+// 	_, err = pa.ScannerVersion()
+// 	if err == nil {
+// 		return true
+// 	}
+// 	_, err = pa.ProjectEndpoint()
+// 	if err == nil {
+// 		return true
+// 	}
+// 	_, err = pa.Image()
+// 	if err == nil {
+// 		return true
+// 	}
+// 	return false
+// }
+//
+// func (pa *PodImageAnnotations) VulnerabilityCount() (int, error) {
+// 	return getInt(pa.KubeAnnotations, PodImageAnnotationKeyVulnerabilities.String(pa.ContainerIndex))
+// }
+//
+// func (pa *PodImageAnnotations) PolicyViolationCount() (int, error) {
+// 	return getInt(pa.KubeAnnotations, PodImageAnnotationKeyPolicyViolations.String(pa.ContainerIndex))
+// }
+//
+// func (pa *PodImageAnnotations) OverallStatus() (string, error) {
+// 	return getString(pa.KubeAnnotations, PodImageAnnotationKeyOverallStatus.String(pa.ContainerIndex))
+// }
+//
+// func (pa *PodImageAnnotations) ServerVersion() (string, error) {
+// 	return getString(pa.KubeAnnotations, PodImageAnnotationKeyServerVersion.String(pa.ContainerIndex))
+// }
+//
+// func (pa *PodImageAnnotations) ScannerVersion() (string, error) {
+// 	return getString(pa.KubeAnnotations, PodImageAnnotationKeyScannerVersion.String(pa.ContainerIndex))
+// }
+//
+// func (pa *PodImageAnnotations) ProjectEndpoint() (string, error) {
+// 	return getString(pa.KubeAnnotations, PodImageAnnotationKeyProjectEndpoint.String(pa.ContainerIndex))
+// }
+//
+// func (pa *PodImageAnnotations) Image() (string, error) {
+// 	return getString(pa.KubeAnnotations, PodImageAnnotationKeyImage.String(pa.ContainerIndex))
+// }
+//
+// func RemoveBDPodImageAnnotationKeys(containerIndex int, annotations map[string]string) map[string]string {
+// 	copy := map[string]string{}
+// 	keysToDrop := map[string]bool{}
+// 	for _, key := range podImageAnnotationKeys {
+// 		keysToDrop[key.String(containerIndex)] = true
+// 	}
+// 	for key, val := range annotations {
+// 		_, ok := keysToDrop[key]
+// 		if !ok {
+// 			copy[key] = val
+// 		}
+// 	}
+// 	return copy
+// }

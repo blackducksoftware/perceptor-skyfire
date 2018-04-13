@@ -74,3 +74,39 @@ func getInt(dict map[string]string, key string) (int, error) {
 	}
 	return strconv.Atoi(str)
 }
+
+func CopyMap(dict map[string]string) map[string]string {
+	copy := map[string]string{}
+	for key, val := range dict {
+		copy[key] = val
+	}
+	return copy
+}
+
+func RemoveKeys(dict map[string]string, keys []string) map[string]string {
+	copy := CopyMap(dict)
+	for _, key := range keys {
+		delete(copy, key)
+	}
+	return copy
+}
+
+func HasAllKeys(dict map[string]string, keys []string) bool {
+	for _, key := range keys {
+		_, ok := dict[key]
+		if !ok {
+			return false
+		}
+	}
+	return true
+}
+
+func HasAnyKeys(dict map[string]string, keys []string) bool {
+	for _, key := range keys {
+		_, ok := dict[key]
+		if ok {
+			return true
+		}
+	}
+	return false
+}

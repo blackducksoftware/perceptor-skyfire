@@ -59,134 +59,142 @@ var podAnnotationKeys = []PodAnnotationKey{
 	PodAnnotationKeyScannerVersion,
 }
 
-type PodAnnotations struct {
-	ContainerCount      int
-	KubeAnnotations     map[string]string
-	PodImageAnnotations []*PodImageAnnotations
-}
+var podAnnotationKeyStrings = []string{}
 
-func NewPodAnnotations(containerCount int, annotations map[string]string) *PodAnnotations {
-	podImageAnnotations := []*PodImageAnnotations{}
-	for i := 0; i < containerCount; i++ {
-		podImageAnnotations = append(podImageAnnotations, NewPodImageAnnotations(i, annotations))
-	}
-	return &PodAnnotations{
-		ContainerCount:      containerCount,
-		KubeAnnotations:     annotations,
-		PodImageAnnotations: podImageAnnotations,
-	}
-}
-
-func (pa *PodAnnotations) hasAllBDPodAnnotationKeys() bool {
-	_, err := pa.VulnerabilityCount()
-	if err != nil {
-		return false
-	}
-	_, err = pa.PolicyViolationCount()
-	if err != nil {
-		return false
-	}
-	_, err = pa.OverallStatus()
-	if err != nil {
-		return false
-	}
-	_, err = pa.ServerVersion()
-	if err != nil {
-		return false
-	}
-	_, err = pa.ScannerVersion()
-	if err != nil {
-		return false
-	}
-	return true
-}
-
-func (pa *PodAnnotations) hasAnyBDPodAnnotationKeys() bool {
-	_, err := pa.VulnerabilityCount()
-	if err == nil {
-		return true
-	}
-	_, err = pa.PolicyViolationCount()
-	if err == nil {
-		return true
-	}
-	_, err = pa.OverallStatus()
-	if err == nil {
-		return true
-	}
-	_, err = pa.ServerVersion()
-	if err == nil {
-		return true
-	}
-	_, err = pa.ScannerVersion()
-	if err == nil {
-		return true
-	}
-	return false
-}
-
-func (pa *PodAnnotations) VulnerabilityCount() (int, error) {
-	return getInt(pa.KubeAnnotations, PodAnnotationKeyVulnerabilities.String())
-}
-
-func (pa *PodAnnotations) PolicyViolationCount() (int, error) {
-	return getInt(pa.KubeAnnotations, PodAnnotationKeyPolicyViolations.String())
-}
-
-func (pa *PodAnnotations) OverallStatus() (string, error) {
-	return getString(pa.KubeAnnotations, PodAnnotationKeyOverallStatus.String())
-}
-
-func (pa *PodAnnotations) ServerVersion() (string, error) {
-	return getString(pa.KubeAnnotations, PodAnnotationKeyServerVersion.String())
-}
-
-func (pa *PodAnnotations) ScannerVersion() (string, error) {
-	return getString(pa.KubeAnnotations, PodAnnotationKeyScannerVersion.String())
-}
-
-func (pa *PodAnnotations) HasAllBDAnnotationKeys() bool {
-	if !pa.hasAllBDPodAnnotationKeys() {
-		return false
-	}
-	for _, imageAnnotations := range pa.PodImageAnnotations {
-		if !imageAnnotations.HasAllBDAnnotationKeys() {
-			return false
-		}
-	}
-	return true
-}
-
-func (pa *PodAnnotations) HasAnyBDAnnotationKeys() bool {
-	if pa.hasAnyBDPodAnnotationKeys() {
-		return true
-	}
-	for _, imageAnnotations := range pa.PodImageAnnotations {
-		if imageAnnotations.HasAnyBDAnnotationKeys() {
-			return true
-		}
-	}
-	return false
-}
-
-func (pa *PodAnnotations) IsPartiallyAnnotated() bool {
-	return pa.HasAnyBDAnnotationKeys() && !pa.HasAllBDAnnotationKeys()
-}
-
-func RemoveBDPodAnnotationKeys(containerCount int, annotations map[string]string) map[string]string {
-	copy := map[string]string{}
-	keysToDrop := map[string]bool{}
+func init() {
 	for _, key := range podAnnotationKeys {
-		keysToDrop[key.String()] = true
+		podAnnotationKeyStrings = append(podAnnotationKeyStrings, key.String())
 	}
-	for key, val := range annotations {
-		_, ok := keysToDrop[key]
-		if !ok {
-			copy[key] = val
-		}
-	}
-	for i := 0; i < containerCount; i++ {
-		copy = RemoveBDPodImageAnnotationKeys(i, copy)
-	}
-	return copy
 }
+
+// type PodAnnotations struct {
+// 	ContainerCount      int
+// 	KubeAnnotations     map[string]string
+// 	PodImageAnnotations []*PodImageAnnotations
+// }
+//
+// func NewPodAnnotations(containerCount int, annotations map[string]string) *PodAnnotations {
+// 	podImageAnnotations := []*PodImageAnnotations{}
+// 	for i := 0; i < containerCount; i++ {
+// 		podImageAnnotations = append(podImageAnnotations, NewPodImageAnnotations(i, annotations))
+// 	}
+// 	return &PodAnnotations{
+// 		ContainerCount:      containerCount,
+// 		KubeAnnotations:     annotations,
+// 		PodImageAnnotations: podImageAnnotations,
+// 	}
+// }
+//
+// func (pa *PodAnnotations) hasAllBDPodAnnotationKeys() bool {
+// 	_, err := pa.VulnerabilityCount()
+// 	if err != nil {
+// 		return false
+// 	}
+// 	_, err = pa.PolicyViolationCount()
+// 	if err != nil {
+// 		return false
+// 	}
+// 	_, err = pa.OverallStatus()
+// 	if err != nil {
+// 		return false
+// 	}
+// 	_, err = pa.ServerVersion()
+// 	if err != nil {
+// 		return false
+// 	}
+// 	_, err = pa.ScannerVersion()
+// 	if err != nil {
+// 		return false
+// 	}
+// 	return true
+// }
+//
+// func (pa *PodAnnotations) hasAnyBDPodAnnotationKeys() bool {
+// 	_, err := pa.VulnerabilityCount()
+// 	if err == nil {
+// 		return true
+// 	}
+// 	_, err = pa.PolicyViolationCount()
+// 	if err == nil {
+// 		return true
+// 	}
+// 	_, err = pa.OverallStatus()
+// 	if err == nil {
+// 		return true
+// 	}
+// 	_, err = pa.ServerVersion()
+// 	if err == nil {
+// 		return true
+// 	}
+// 	_, err = pa.ScannerVersion()
+// 	if err == nil {
+// 		return true
+// 	}
+// 	return false
+// }
+//
+// func (pa *PodAnnotations) VulnerabilityCount() (int, error) {
+// 	return getInt(pa.KubeAnnotations, PodAnnotationKeyVulnerabilities.String())
+// }
+//
+// func (pa *PodAnnotations) PolicyViolationCount() (int, error) {
+// 	return getInt(pa.KubeAnnotations, PodAnnotationKeyPolicyViolations.String())
+// }
+//
+// func (pa *PodAnnotations) OverallStatus() (string, error) {
+// 	return getString(pa.KubeAnnotations, PodAnnotationKeyOverallStatus.String())
+// }
+//
+// func (pa *PodAnnotations) ServerVersion() (string, error) {
+// 	return getString(pa.KubeAnnotations, PodAnnotationKeyServerVersion.String())
+// }
+//
+// func (pa *PodAnnotations) ScannerVersion() (string, error) {
+// 	return getString(pa.KubeAnnotations, PodAnnotationKeyScannerVersion.String())
+// }
+//
+// func (pa *PodAnnotations) HasAllBDAnnotationKeys() bool {
+// 	if !pa.hasAllBDPodAnnotationKeys() {
+// 		return false
+// 	}
+// 	for _, imageAnnotations := range pa.PodImageAnnotations {
+// 		if !imageAnnotations.HasAllBDAnnotationKeys() {
+// 			return false
+// 		}
+// 	}
+// 	return true
+// }
+//
+// func (pa *PodAnnotations) HasAnyBDAnnotationKeys() bool {
+// 	if pa.hasAnyBDPodAnnotationKeys() {
+// 		return true
+// 	}
+// 	for _, imageAnnotations := range pa.PodImageAnnotations {
+// 		if imageAnnotations.HasAnyBDAnnotationKeys() {
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }
+//
+// func (pa *PodAnnotations) IsPartiallyAnnotated() bool {
+// 	return pa.HasAnyBDAnnotationKeys() && !pa.HasAllBDAnnotationKeys()
+// }
+//
+// func RemoveBDPodAnnotationKeys(containerCount int, annotations map[string]string) map[string]string {
+// 	copy := map[string]string{}
+// 	keysToDrop := map[string]bool{}
+// 	for _, key := range podAnnotationKeys {
+// 		keysToDrop[key.String()] = true
+// 	}
+// 	for key, val := range annotations {
+// 		_, ok := keysToDrop[key]
+// 		if !ok {
+// 			copy[key] = val
+// 		}
+// 	}
+// 	for i := 0; i < containerCount; i++ {
+// 		copy = RemoveBDPodImageAnnotationKeys(i, copy)
+// 	}
+// 	return copy
+// }

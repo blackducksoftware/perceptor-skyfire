@@ -35,10 +35,12 @@ func (client *KubeClient) CleanupAllPods() error {
 		return err
 	}
 	for _, pod := range podList.Items {
-		log.Debugf("before:\n%+v\n%+v\n", pod.Annotations, pod.Labels)
+		log.Debugf("annotations before:\n%+v", pod.Annotations)
+		log.Debugf("labels before:\n%+v\n", pod.Labels)
 		updatedAnnotations := RemoveBDPodAnnotationKeys(len(pod.Status.ContainerStatuses), pod.Annotations)
-		updatedLabels := pod.Labels // TODO removeBDLabelKeys(len(pod.Status.ContainerStatuses), pod.Labels)
-		log.Debugf("after:\n%+v\n%+v\n\n", pod.Annotations, pod.Labels)
+		updatedLabels := RemoveBDPodLabelKeys(len(pod.Status.ContainerStatuses), pod.Labels)
+		log.Debugf("annotations after:\n%+v", pod.Annotations)
+		log.Debugf("labels after:\n%+v\n\n", pod.Labels)
 		pod.SetAnnotations(updatedAnnotations)
 		pod.SetLabels(updatedLabels)
 		nsPods := client.clientset.CoreV1().Pods(pod.Namespace)
@@ -49,6 +51,24 @@ func (client *KubeClient) CleanupAllPods() error {
 		}
 	}
 	return nil
+}
+
+func RemoveBDPodAnnotationKeys(containerCount int, annotations map[string]string) map[string]string {
+	cleanedAnnotations := CopyMap(annotations)
+	cleanedAnnotations = RemoveKeys(cleanedAnnotations, podAnnotationKeyStrings)
+	for i := 0; i < containerCount; i++ {
+		cleanedAnnotations = RemoveKeys(cleanedAnnotations, podImageAnnotationKeyStrings(i))
+	}
+	return cleanedAnnotations
+}
+
+func RemoveBDPodLabelKeys(containerCount int, labels map[string]string) map[string]string {
+	cleanedLabels := CopyMap(labels)
+	cleanedLabels = RemoveKeys(cleanedLabels, podLabelKeyStrings)
+	for i := 0; i < containerCount; i++ {
+		cleanedLabels = RemoveKeys(cleanedLabels, podImageLabelKeyStrings(i))
+	}
+	return cleanedLabels
 }
 
 // var podLabelKeys = []string{
