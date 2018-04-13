@@ -26,39 +26,6 @@ import (
 	"strconv"
 )
 
-// var podAnnotationKeys = []string{
-// 	"pod.vulnerabilities",
-// 	"pod.policy-violations",
-// 	"pod.overall-status",
-// 	"pod.server-version",
-// 	"pod.scanner-version",
-// }
-//
-// var podAnnotationImageSuffixes = []string{
-// 	".vulnerabilities",
-// 	".policy-violations",
-// 	".overall-status",
-// 	".server-version",
-// 	".scanner-version",
-// 	".project-endpoint",
-// 	"",
-// }
-//
-// func podAnnotationImageKeys(containerCount int) []string {
-// 	keys := []string{}
-// 	for i := 0; i < containerCount; i++ {
-// 		for _, suffix := range podAnnotationImageSuffixes {
-// 			key := fmt.Sprintf("image%d%s", i, suffix)
-// 			keys = append(keys, key)
-// 		}
-// 	}
-// 	return keys
-// }
-//
-// func PodAnnotationKeys(containerCount int) []string {
-// 	return append(podAnnotationKeys, podAnnotationImageKeys(containerCount)...)
-// }
-
 func getString(dict map[string]string, key string) (string, error) {
 	val, ok := dict[key]
 	if !ok {

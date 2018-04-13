@@ -21,39 +21,40 @@ under the License.
 
 package kube
 
-type BDPodInfo struct {
-	KubeInfo     map[string]string
-	ExpectedKeys []string
-}
+import (
+	"fmt"
+)
 
-func NewBDPodInfo(kubeInfo map[string]string, expectedKeys []string) *BDPodInfo {
-	return &BDPodInfo{
-		KubeInfo:     kubeInfo,
-		ExpectedKeys: expectedKeys,
+type PodLabelKey int
+
+const (
+	PodLabelKeyVulnerabilities  PodLabelKey = iota
+	PodLabelKeyPolicyViolations PodLabelKey = iota
+	PodLabelKeyOverallStatus    PodLabelKey = iota
+)
+
+func (pak PodLabelKey) String() string {
+	switch pak {
+	case PodLabelKeyVulnerabilities:
+		return "pod.vulnerabilities"
+	case PodLabelKeyPolicyViolations:
+		return "pod.policy-violations"
+	case PodLabelKeyOverallStatus:
+		return "pod.overall-status"
 	}
+	panic(fmt.Errorf("invalid PodLabelKey value: %d", pak))
 }
 
-func (b *BDPodInfo) GetKVPairs() map[string]*string {
-	kvPairs := map[string]*string{}
-	for _, key := range b.ExpectedKeys {
-		var value *string = nil
-		val, ok := b.KubeInfo[key]
-		if ok {
-			value = &val
-		}
-		kvPairs[key] = value
+var podLabelKeys = []PodLabelKey{
+	PodLabelKeyVulnerabilities,
+	PodLabelKeyPolicyViolations,
+	PodLabelKeyOverallStatus,
+}
+
+var podLabelKeyStrings = []string{}
+
+func init() {
+	for _, key := range podLabelKeys {
+		podLabelKeyStrings = append(podLabelKeyStrings, key.String())
 	}
-	return kvPairs
-}
-
-func (b *BDPodInfo) HasAllBDKeys() bool {
-	return HasAllKeys(b.KubeInfo, b.ExpectedKeys)
-}
-
-func (b *BDPodInfo) HasAnyBDKeys() bool {
-	return HasAnyKeys(b.KubeInfo, b.ExpectedKeys)
-}
-
-func (b *BDPodInfo) HasPartialBDKeys() bool {
-	return HasAnyKeys(b.KubeInfo, b.ExpectedKeys) && !HasAllKeys(b.KubeInfo, b.ExpectedKeys)
 }

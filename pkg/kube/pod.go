@@ -21,7 +21,9 @@ under the License.
 
 package kube
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Pod struct {
 	Name        string
@@ -54,24 +56,72 @@ func NewPod(name string, uid string, namespace string, containers []*Container) 
 	}
 }
 
-func (pod *Pod) BDPodAnnotations() (*BDPodInfo, []*BDPodInfo) {
-	podAnnotations := NewBDPodInfo(pod.Annotations, podAnnotationKeyStrings)
-	podImageAnnotations := []*BDPodInfo{}
-	for i, _ := range pod.Containers {
-		podImageAnnotations = append(podImageAnnotations, NewBDPodInfo(pod.Annotations, podImageAnnotationKeyStrings(i)))
+// BD annotations
+
+func (pod *Pod) BDAnnotations() map[string]string {
+	bdKeys := BDPodAnnotationKeys(len(pod.Containers))
+	dict := map[string]string{}
+	for _, key := range bdKeys {
+		val, ok := pod.Annotations[key]
+		if ok {
+			dict[key] = val
+		}
 	}
-	return podAnnotations, podImageAnnotations
+	return dict
 }
 
-func (pod *Pod) BDPodLabels() (*BDPodInfo, []*BDPodInfo) {
-	podLabels := NewBDPodInfo(pod.Labels, podLabelKeyStrings)
-	podImageLabels := []*BDPodInfo{}
-	for i, _ := range pod.Containers {
-		podImageLabels = append(podImageLabels, NewBDPodInfo(pod.Labels, podImageLabelKeyStrings(i)))
-	}
-	return podLabels, podImageLabels
+func (pod *Pod) HasAllBDAnnotations() bool {
+	return len(pod.BDAnnotations()) == len(BDPodAnnotationKeys(len(pod.Containers)))
 }
 
-// func (pod *Pod) ParsedAnnotations() *PodAnnotations {
-// 	return NewPodAnnotations(len(pod.Containers), pod.Annotations)
-// }
+func (pod *Pod) HasAnyBDAnnotations() bool {
+	return len(pod.BDAnnotations()) > 0
+}
+
+func BDPodAnnotationKeys(containerCount int) []string {
+	keys := append([]string{}, podAnnotationKeyStrings...)
+	for i := 0; i < containerCount; i++ {
+		keys = append(keys, podImageAnnotationKeyStrings(i)...)
+	}
+	return keys
+}
+
+func RemoveBDPodAnnotationKeys(containerCount int, annotations map[string]string) map[string]string {
+	dict := CopyMap(annotations)
+	return RemoveKeys(dict, BDPodAnnotationKeys(containerCount))
+}
+
+// BD labels
+
+func (pod *Pod) BDLabels() map[string]string {
+	bdKeys := BDPodLabelKeys(len(pod.Containers))
+	dict := map[string]string{}
+	for _, key := range bdKeys {
+		val, ok := pod.Labels[key]
+		if ok {
+			dict[key] = val
+		}
+	}
+	return dict
+}
+
+func (pod *Pod) HasAllBDLabels() bool {
+	return len(pod.BDLabels()) == len(BDPodLabelKeys(len(pod.Containers)))
+}
+
+func (pod *Pod) HasAnyBDLabels() bool {
+	return len(pod.BDLabels()) > 0
+}
+
+func BDPodLabelKeys(containerCount int) []string {
+	keys := append([]string{}, podLabelKeyStrings...)
+	for i := 0; i < containerCount; i++ {
+		keys = append(keys, podImageLabelKeyStrings(i)...)
+	}
+	return keys
+}
+
+func RemoveBDPodLabelKeys(containerCount int, labels map[string]string) map[string]string {
+	dict := CopyMap(labels)
+	return RemoveKeys(dict, BDPodLabelKeys(containerCount))
+}

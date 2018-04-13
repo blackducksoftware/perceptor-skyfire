@@ -64,30 +64,3 @@ func podImageLabelKeyStrings(index int) []string {
 	}
 	return strs
 }
-
-// type PodImageLabels struct {
-// 	ContainerIndex int
-// 	KubeLabels     map[string]string
-// }
-//
-// func NewPodImageLabels(containerIndex int, Labels map[string]string) *PodImageLabels {
-// 	return &PodImageLabels{
-// 		ContainerIndex: containerIndex,
-// 		KubeLabels:     Labels,
-// 	}
-// }
-//
-// func RemoveBDPodImageLabelKeys(containerIndex int, Labels map[string]string) map[string]string {
-// 	copy := map[string]string{}
-// 	keysToDrop := map[string]bool{}
-// 	for _, key := range podImageLabelKeys {
-// 		keysToDrop[key.String(containerIndex)] = true
-// 	}
-// 	for key, val := range Labels {
-// 		_, ok := keysToDrop[key]
-// 		if !ok {
-// 			copy[key] = val
-// 		}
-// 	}
-// 	return copy
-// }
