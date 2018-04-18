@@ -22,19 +22,47 @@ under the License.
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"os"
 
-	skyfire "github.com/blackducksoftware/perceptor-skyfire/pkg/skyfire"
+	dump "github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
+	hub "github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
+	report "github.com/blackducksoftware/perceptor-skyfire/pkg/report"
 )
 
 func main() {
-	configPath := os.Args[1]
-	sf, err := skyfire.NewSkyfire(configPath)
+	url := os.Args[1]
+	username := os.Args[2]
+	password := os.Args[3]
+
+	hubDumper, err := hub.NewHubDumper(url, username, password)
 	if err != nil {
 		panic(err)
 	}
-	err = sf.BuildReportAndSendToHipChat()
+
+	version, err := hubDumper.Version()
 	if err != nil {
 		panic(err)
 	}
+	projects, err := hubDumper.DumpAllProjects()
+	if err != nil {
+		panic(err)
+	}
+	hubDump := dump.NewHubDump(version, projects)
+	hubReport := report.NewHubReport(hubDump)
+
+	dict := map[string]interface{}{
+		"Dump":   hubDump,
+		"Report": hubReport,
+	}
+
+	bytes, err := json.Marshal(dict)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(bytes))
+
+	// TODO
 }

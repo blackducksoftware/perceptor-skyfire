@@ -43,7 +43,7 @@ func NewReport(dump *dump.Dump) *Report {
 		NewKubeReport(dump),
 		NewKubePerceptorReport(dump),
 		NewPerceptorHubReport(dump),
-		NewHubReport(dump),
+		NewHubReport(dump.Hub),
 	}
 }
 

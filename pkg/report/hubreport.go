@@ -33,7 +33,7 @@ type HubReport struct {
 	CodeLocationsMultipleScanSummaries []string
 }
 
-func NewHubReport(dump *dump.Dump) *HubReport {
+func NewHubReport(dump *dump.HubDump) *HubReport {
 	return &HubReport{
 		ProjectsMultipleVersions:           HubProjectsWrongNumberOfVersions(dump),
 		VersionsMultipleCodeLocations:      HubVersionsWrongNumberOfCodeLocations(dump),
@@ -53,9 +53,9 @@ Hub:
 		len(h.CodeLocationsMultipleScanSummaries))
 }
 
-func HubProjectsWrongNumberOfVersions(d *dump.Dump) []string {
+func HubProjectsWrongNumberOfVersions(d *dump.HubDump) []string {
 	projectNames := []string{}
-	for _, project := range d.Hub.Projects {
+	for _, project := range d.Projects {
 		if len(project.Versions) != 1 {
 			projectNames = append(projectNames, project.Name)
 		}
@@ -63,9 +63,9 @@ func HubProjectsWrongNumberOfVersions(d *dump.Dump) []string {
 	return projectNames
 }
 
-func HubVersionsWrongNumberOfCodeLocations(d *dump.Dump) []string {
+func HubVersionsWrongNumberOfCodeLocations(d *dump.HubDump) []string {
 	versionNames := []string{}
-	for _, project := range d.Hub.Projects {
+	for _, project := range d.Projects {
 		for _, version := range project.Versions {
 			if len(version.CodeLocations) != 1 {
 				versionNames = append(versionNames, version.Name)
@@ -75,9 +75,9 @@ func HubVersionsWrongNumberOfCodeLocations(d *dump.Dump) []string {
 	return versionNames
 }
 
-func HubCodeLocationsWrongNumberOfScans(d *dump.Dump) []string {
+func HubCodeLocationsWrongNumberOfScans(d *dump.HubDump) []string {
 	codeLocationNames := []string{}
-	for _, project := range d.Hub.Projects {
+	for _, project := range d.Projects {
 		for _, version := range project.Versions {
 			for _, codeLocation := range version.CodeLocations {
 				if len(codeLocation.ScanSummaries) != 1 {

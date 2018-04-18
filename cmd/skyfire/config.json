@@ -3,10 +3,15 @@
   "MasterURL": "https://192.168.99.100:8443",
   "KubeConfigPath": "/Users/mfenwick/.kube/config",
 
-  "HubURL": "TODO",
+  "LogLevel": "debug",
+  "Port": 3010,
+
+  "HubHost": "",
   "HubUser": "sysadmin",
-  "HubPassword": "blackduck",
+  "HubPassword": "",
 
   "PerceptorHost": "192.168.99.100",
-  "PerceptorPort": 31952
+  "PerceptorPort": 30119,
+
+  "HipchatRoom": "PushTesting"
 }
