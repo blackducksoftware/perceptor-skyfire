@@ -22,12 +22,13 @@ under the License.
 package report
 
 import (
-	"fmt"
+	"strings"
 
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
 )
 
 type Report struct {
+	Dump          *dump.Dump
 	Meta          *MetaReport
 	Kube          *KubeReport
 	KubePerceptor *KubePerceptorReport
@@ -37,6 +38,7 @@ type Report struct {
 
 func NewReport(dump *dump.Dump) *Report {
 	return &Report{
+		dump,
 		NewMetaReport(dump),
 		NewKubeReport(dump),
 		NewKubePerceptorReport(dump),
@@ -46,41 +48,14 @@ func NewReport(dump *dump.Dump) *Report {
 }
 
 func (r *Report) HumanReadableString() string {
-	return fmt.Sprintf(`
-Overview:
- - we used hub version %s
- - we used kubernetes version %s with build date %s
- - our cluster had %d nodes
-
-Kubernetes:
- - we found %d ImageIDs that were unparseable
-
-%s
-
-Perceptor<->Hub:
- - we found %d image(s) in Perceptor that were not in the Hub
- - we found %d image(s) in the Hub that were not in Perceptor
-
-Hub:
- - we found %d project(s) in the Hub with multiple versions
- - we found %d version(s) in the Hub with multiple code locations
- - we found %d code location(s) in the Hub with multiple scan summaries
-		 `,
-		r.Meta.HubVersion,
-		r.Meta.KubeMeta.GitVersion,
-		r.Meta.KubeMeta.BuildDate,
-		r.Meta.KubeMeta.NodeCount,
-		// kube
-		len(r.Kube.UnparseableKubeImages),
-		// kube<->perceptor
+	chunks := []string{
+		r.Meta.HumanReadableString(),
+		r.Kube.HumanReadableString(),
 		r.KubePerceptor.HumanReadableString(),
-		// perceptor<->hub
-		len(r.PerceptorHub.JustPerceptorImages),
-		len(r.PerceptorHub.JustHubImages),
-		// hub
-		len(r.Hub.ProjectsMultipleVersions),
-		len(r.Hub.VersionsMultipleCodeLocations),
-		len(r.Hub.CodeLocationsMultipleScanSummaries))
+		r.PerceptorHub.HumanReadableString(),
+		r.Hub.HumanReadableString(),
+	}
+	return strings.Join(chunks, "\n\n")
 }
 
 // In perceptor but not in hub:

@@ -21,7 +21,11 @@ under the License.
 
 package report
 
-import "github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
+import (
+	"fmt"
+
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
+)
 
 type PerceptorHubReport struct {
 	JustPerceptorImages []string
@@ -33,6 +37,16 @@ func NewPerceptorHubReport(dump *dump.Dump) *PerceptorHubReport {
 		JustPerceptorImages: PerceptorNotHubImages(dump),
 		JustHubImages:       HubNotPerceptorImages(dump),
 	}
+}
+
+func (p *PerceptorHubReport) HumanReadableString() string {
+	return fmt.Sprintf(`
+Perceptor<->Hub:
+ - we found %d image(s) in Perceptor that were not in the Hub
+ - we found %d image(s) in the Hub that were not in Perceptor
+	`,
+		len(p.JustPerceptorImages),
+		len(p.JustHubImages))
 }
 
 func PerceptorNotHubImages(dump *dump.Dump) []string {

@@ -22,6 +22,8 @@ under the License.
 package report
 
 import (
+	"fmt"
+
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 )
@@ -37,4 +39,17 @@ func NewMetaReport(dump *dump.Dump) *MetaReport {
 		KubeMeta:   dump.Kube.Meta,
 		HubVersion: dump.Hub.Version,
 	}
+}
+
+func (m *MetaReport) HumanReadableString() string {
+	return fmt.Sprintf(`
+Overview:
+ - we used hub version %s
+ - we used kubernetes version %s with build date %s
+ - our cluster had %d nodes
+`,
+		m.HubVersion,
+		m.KubeMeta.GitVersion,
+		m.KubeMeta.BuildDate,
+		m.KubeMeta.NodeCount)
 }

@@ -22,6 +22,8 @@ under the License.
 package report
 
 import (
+	"fmt"
+
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
 )
 
@@ -33,6 +35,14 @@ func NewKubeReport(dump *dump.Dump) *KubeReport {
 	return &KubeReport{
 		UnparseableKubeImages: UnparseableKubeImages(dump),
 	}
+}
+
+func (k *KubeReport) HumanReadableString() string {
+	return fmt.Sprintf(`
+Kubernetes:
+ - we found %d ImageIDs that were unparseable
+`,
+		len(k.UnparseableKubeImages))
 }
 
 func UnparseableKubeImages(dump *dump.Dump) []string {

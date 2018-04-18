@@ -22,6 +22,8 @@ under the License.
 package report
 
 import (
+	"fmt"
+
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
 )
 
@@ -37,6 +39,18 @@ func NewHubReport(dump *dump.Dump) *HubReport {
 		VersionsMultipleCodeLocations:      HubVersionsWrongNumberOfCodeLocations(dump),
 		CodeLocationsMultipleScanSummaries: HubCodeLocationsWrongNumberOfScans(dump),
 	}
+}
+
+func (h *HubReport) HumanReadableString() string {
+	return fmt.Sprintf(`
+Hub:
+ - we found %d project(s) in the Hub with multiple versions
+ - we found %d version(s) in the Hub with multiple code locations
+ - we found %d code location(s) in the Hub with multiple scan summaries
+`,
+		len(h.ProjectsMultipleVersions),
+		len(h.VersionsMultipleCodeLocations),
+		len(h.CodeLocationsMultipleScanSummaries))
 }
 
 func HubProjectsWrongNumberOfVersions(d *dump.Dump) []string {
