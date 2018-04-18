@@ -10,6 +10,10 @@
   "HubUser": "sysadmin",
   "HubPassword": "",
 
+  "KubeDumpIntervalSeconds": 15,
+  "PerceptorDumpIntervalSeconds": 15,
+  "HubDumpPauseSeconds": 30,
+
   "PerceptorHost": "192.168.99.100",
   "PerceptorPort": 30119
 }

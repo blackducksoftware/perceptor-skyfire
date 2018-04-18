@@ -22,7 +22,9 @@ under the License.
 package skyfire
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
@@ -46,7 +48,19 @@ func NewSkyfire(config *Config) (*Skyfire, error) {
 	}
 	skyfire := &Skyfire{scraper, nil, nil, nil, nil}
 	skyfire.HandleScrapes()
+	http.HandleFunc("/latestreport", skyfire.LatestReportHandler())
 	return skyfire, nil
+}
+
+func (sf *Skyfire) LatestReportHandler() func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		bytes, err := json.MarshalIndent(sf.LastReport, "", "  ")
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
+		fmt.Fprint(w, string(bytes))
+	}
 }
 
 func (sf *Skyfire) HandleScrapes() {
