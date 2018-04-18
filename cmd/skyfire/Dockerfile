@@ -1,3 +1,3 @@
 FROM centos:centos7
 
-COPY ./daemon ./daemon
+COPY ./skyfire ./skyfire
