@@ -19,38 +19,37 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package dump
+package kube
 
 import (
-	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 	log "github.com/sirupsen/logrus"
 )
 
-type KubeDump struct {
-	Meta              *kube.Meta
-	Pods              []*kube.Pod
-	PodsByName        map[string]*kube.Pod
+type Dump struct {
+	Meta              *Meta
+	Pods              []*Pod
+	PodsByName        map[string]*Pod
 	DuplicatePodNames map[string]bool
-	// Images     []*kube.Image
-	ImagesBySha        map[string]*kube.Image
+	// Images     []*Image
+	ImagesBySha        map[string]*Image
 	DuplicateImageShas map[string]bool
-	ImagesMissingSha   []*kube.Image
+	ImagesMissingSha   []*Image
 }
 
-func NewKubeDump(meta *kube.Meta, pods []*kube.Pod) *KubeDump {
-	kubeDump := &KubeDump{
+func NewDump(meta *Meta, pods []*Pod) *Dump {
+	dump := &Dump{
 		Meta:               meta,
 		Pods:               pods,
-		PodsByName:         map[string]*kube.Pod{},
+		PodsByName:         map[string]*Pod{},
 		DuplicatePodNames:  map[string]bool{},
-		ImagesBySha:        map[string]*kube.Image{},
+		ImagesBySha:        map[string]*Image{},
 		DuplicateImageShas: map[string]bool{},
-		ImagesMissingSha:   []*kube.Image{}}
-	kubeDump.computeDerivedData()
-	return kubeDump
+		ImagesMissingSha:   []*Image{}}
+	dump.computeDerivedData()
+	return dump
 }
 
-func (kd *KubeDump) computeDerivedData() {
+func (kd *Dump) computeDerivedData() {
 	for _, pod := range kd.Pods {
 		_, ok := kd.PodsByName[pod.QualifiedName()]
 		if ok {

@@ -33,6 +33,10 @@ type Config struct {
 	KubeConfigPath     string
 	LogLevel           string
 
+	KubeDumpIntervalSeconds      int
+	PerceptorDumpIntervalSeconds int
+	HubDumpPauseSeconds          int
+
 	Port int
 
 	HubHost     string

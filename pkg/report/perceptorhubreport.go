@@ -23,8 +23,6 @@ package report
 
 import (
 	"fmt"
-
-	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
 )
 
 type PerceptorHubReport struct {
@@ -32,7 +30,7 @@ type PerceptorHubReport struct {
 	JustHubImages       []string
 }
 
-func NewPerceptorHubReport(dump *dump.Dump) *PerceptorHubReport {
+func NewPerceptorHubReport(dump *Dump) *PerceptorHubReport {
 	return &PerceptorHubReport{
 		JustPerceptorImages: PerceptorNotHubImages(dump),
 		JustHubImages:       HubNotPerceptorImages(dump),
@@ -49,7 +47,7 @@ Perceptor<->Hub:
 		len(p.JustHubImages))
 }
 
-func PerceptorNotHubImages(dump *dump.Dump) []string {
+func PerceptorNotHubImages(dump *Dump) []string {
 	images := []string{}
 	for sha := range dump.Perceptor.ImagesBySha {
 		sha20 := sha[:20]
@@ -61,7 +59,7 @@ func PerceptorNotHubImages(dump *dump.Dump) []string {
 	return images
 }
 
-func HubNotPerceptorImages(dump *dump.Dump) []string {
+func HubNotPerceptorImages(dump *Dump) []string {
 	images := []string{}
 	for sha := range dump.Hub.ProjectsBySha {
 		foundMatch := false

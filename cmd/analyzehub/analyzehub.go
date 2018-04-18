@@ -26,7 +26,6 @@ import (
 	"fmt"
 	"os"
 
-	dump "github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
 	hub "github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
 	report "github.com/blackducksoftware/perceptor-skyfire/pkg/report"
 )
@@ -41,15 +40,10 @@ func main() {
 		panic(err)
 	}
 
-	version, err := hubDumper.Version()
+	hubDump, err := hubDumper.Dump()
 	if err != nil {
 		panic(err)
 	}
-	projects, err := hubDumper.DumpAllProjects()
-	if err != nil {
-		panic(err)
-	}
-	hubDump := dump.NewHubDump(version, projects)
 	hubReport := report.NewHubReport(hubDump)
 
 	dict := map[string]interface{}{
@@ -57,7 +51,7 @@ func main() {
 		"Report": hubReport,
 	}
 
-	bytes, err := json.Marshal(dict)
+	bytes, err := json.MarshalIndent(dict, "", "  ")
 	if err != nil {
 		panic(err)
 	}

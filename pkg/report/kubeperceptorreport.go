@@ -25,7 +25,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 )
 
@@ -55,7 +54,7 @@ type KubePerceptorReport struct {
 	UnanalyzeablePods []string
 }
 
-func NewKubePerceptorReport(dump *dump.Dump) *KubePerceptorReport {
+func NewKubePerceptorReport(dump *Dump) *KubePerceptorReport {
 	finishedJustKubePods, partiallyAnnotatedKubePods, partiallyLabeledKubePods, conflictingAnnotationsPods, conflictingLabelsPods, unanalyzeablePods := KubeNotPerceptorFinishedPods(dump)
 	return &KubePerceptorReport{
 		JustKubePods:               KubeNotPerceptorPods(dump),
@@ -98,7 +97,7 @@ Kubernetes<->Perceptor:
 		len(kr.PartiallyLabeledKubePods))
 }
 
-func KubeNotPerceptorPods(dump *dump.Dump) []string {
+func KubeNotPerceptorPods(dump *Dump) []string {
 	pods := []string{}
 	for podName := range dump.Kube.PodsByName {
 		_, ok := dump.Perceptor.Model.Pods[podName]
@@ -109,7 +108,7 @@ func KubeNotPerceptorPods(dump *dump.Dump) []string {
 	return pods
 }
 
-func PerceptorNotKubePods(dump *dump.Dump) []string {
+func PerceptorNotKubePods(dump *Dump) []string {
 	pods := []string{}
 	for podName := range dump.Perceptor.Model.Pods {
 		_, ok := dump.Kube.PodsByName[podName]
@@ -120,7 +119,7 @@ func PerceptorNotKubePods(dump *dump.Dump) []string {
 	return pods
 }
 
-func KubeNotPerceptorImages(dump *dump.Dump) []string {
+func KubeNotPerceptorImages(dump *Dump) []string {
 	images := []string{}
 	for sha := range dump.Kube.ImagesBySha {
 		_, ok := dump.Perceptor.Model.Images[sha]
@@ -131,7 +130,7 @@ func KubeNotPerceptorImages(dump *dump.Dump) []string {
 	return images
 }
 
-func PerceptorNotKubeImages(dump *dump.Dump) []string {
+func PerceptorNotKubeImages(dump *Dump) []string {
 	images := []string{}
 	for sha := range dump.Perceptor.Model.Images {
 		_, ok := dump.Kube.ImagesBySha[sha]
@@ -142,7 +141,7 @@ func PerceptorNotKubeImages(dump *dump.Dump) []string {
 	return images
 }
 
-func KubeNotPerceptorFinishedPods(dump *dump.Dump) (finishedKubePods []string, partiallyAnnotatedKubePods []string, partiallyLabeledKubePods []string, incorrectAnnotationsPods []string, incorrectLabelsPods []string, unanalyzeablePods []string) {
+func KubeNotPerceptorFinishedPods(dump *Dump) (finishedKubePods []string, partiallyAnnotatedKubePods []string, partiallyLabeledKubePods []string, incorrectAnnotationsPods []string, incorrectLabelsPods []string, unanalyzeablePods []string) {
 	finishedKubePods = []string{}
 	partiallyAnnotatedKubePods = []string{}
 	partiallyLabeledKubePods = []string{}
@@ -215,7 +214,7 @@ func KubeNotPerceptorFinishedPods(dump *dump.Dump) (finishedKubePods []string, p
 	return
 }
 
-func PerceptorNotKubeFinishedPods(dump *dump.Dump) []string {
+func PerceptorNotKubeFinishedPods(dump *Dump) []string {
 	pods := []string{}
 	for podName, _ := range dump.Perceptor.PodsByName {
 		kubePod, ok := dump.Kube.PodsByName[podName]
@@ -242,7 +241,7 @@ func PodShas(pod *kube.Pod) ([]string, error) {
 	return imageShas, nil
 }
 
-func ExpectedPodAnnotations(podName string, imageShas []string, dump *dump.Dump) (map[string]string, error) {
+func ExpectedPodAnnotations(podName string, imageShas []string, dump *Dump) (map[string]string, error) {
 	perceptor := dump.Perceptor
 	annotations := map[string]string{}
 	pod, ok := perceptor.PodsByName[podName]
@@ -277,7 +276,7 @@ func ExpectedPodAnnotations(podName string, imageShas []string, dump *dump.Dump)
 	return annotations, nil
 }
 
-func ExpectedPodLabels(podName string, imageShas []string, dump *dump.Dump) (map[string]string, error) {
+func ExpectedPodLabels(podName string, imageShas []string, dump *Dump) (map[string]string, error) {
 	perceptor := dump.Perceptor
 	labels := map[string]string{}
 	pod, ok := perceptor.PodsByName[podName]

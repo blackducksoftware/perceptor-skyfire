@@ -43,6 +43,18 @@ func NewPerceptorDumper(host string, port int) *PerceptorDumper {
 	}
 }
 
+func (pd *PerceptorDumper) Dump() (*Dump, error) {
+	scanResults, err := pd.DumpScanResults()
+	if err != nil {
+		return nil, err
+	}
+	model, err := pd.DumpModel()
+	if err != nil {
+		return nil, err
+	}
+	return NewDump(scanResults, model), nil
+}
+
 func (pd *PerceptorDumper) DumpModel() (*api.Model, error) {
 	url := fmt.Sprintf("http://%s:%d/model", pd.Host, pd.Port)
 	resp, err := resty.R().SetResult(&api.Model{}).Get(url)

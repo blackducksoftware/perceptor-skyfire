@@ -23,15 +23,13 @@ package report
 
 import (
 	"fmt"
-
-	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
 )
 
 type KubeReport struct {
 	UnparseableKubeImages []string
 }
 
-func NewKubeReport(dump *dump.Dump) *KubeReport {
+func NewKubeReport(dump *Dump) *KubeReport {
 	return &KubeReport{
 		UnparseableKubeImages: UnparseableKubeImages(dump),
 	}
@@ -45,7 +43,7 @@ Kubernetes:
 		len(k.UnparseableKubeImages))
 }
 
-func UnparseableKubeImages(dump *dump.Dump) []string {
+func UnparseableKubeImages(dump *Dump) []string {
 	images := []string{}
 	for _, image := range dump.Kube.ImagesMissingSha {
 		images = append(images, image.ImageID)

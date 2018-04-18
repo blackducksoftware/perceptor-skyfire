@@ -24,7 +24,7 @@ package report
 import (
 	"fmt"
 
-	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
 )
 
 type HubReport struct {
@@ -33,7 +33,7 @@ type HubReport struct {
 	CodeLocationsMultipleScanSummaries []string
 }
 
-func NewHubReport(dump *dump.HubDump) *HubReport {
+func NewHubReport(dump *hub.Dump) *HubReport {
 	return &HubReport{
 		ProjectsMultipleVersions:           HubProjectsWrongNumberOfVersions(dump),
 		VersionsMultipleCodeLocations:      HubVersionsWrongNumberOfCodeLocations(dump),
@@ -53,7 +53,7 @@ Hub:
 		len(h.CodeLocationsMultipleScanSummaries))
 }
 
-func HubProjectsWrongNumberOfVersions(d *dump.HubDump) []string {
+func HubProjectsWrongNumberOfVersions(d *hub.Dump) []string {
 	projectNames := []string{}
 	for _, project := range d.Projects {
 		if len(project.Versions) != 1 {
@@ -63,7 +63,7 @@ func HubProjectsWrongNumberOfVersions(d *dump.HubDump) []string {
 	return projectNames
 }
 
-func HubVersionsWrongNumberOfCodeLocations(d *dump.HubDump) []string {
+func HubVersionsWrongNumberOfCodeLocations(d *hub.Dump) []string {
 	versionNames := []string{}
 	for _, project := range d.Projects {
 		for _, version := range project.Versions {
@@ -75,7 +75,7 @@ func HubVersionsWrongNumberOfCodeLocations(d *dump.HubDump) []string {
 	return versionNames
 }
 
-func HubCodeLocationsWrongNumberOfScans(d *dump.HubDump) []string {
+func HubCodeLocationsWrongNumberOfScans(d *hub.Dump) []string {
 	codeLocationNames := []string{}
 	for _, project := range d.Projects {
 		for _, version := range project.Versions {

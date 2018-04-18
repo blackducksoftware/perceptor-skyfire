@@ -50,6 +50,18 @@ func NewHubDumper(hubHost string, username string, password string) (*HubDumper,
 	return dumper, nil
 }
 
+func (hd *HubDumper) Dump() (*Dump, error) {
+	hubProjects, err := hd.DumpAllProjects()
+	if err != nil {
+		return nil, err
+	}
+	hubVersion, err := hd.Version()
+	if err != nil {
+		return nil, err
+	}
+	return NewDump(hubVersion, hubProjects), nil
+}
+
 func (hd *HubDumper) Version() (string, error) {
 	version, err := hd.HubClient.CurrentVersion()
 	if err != nil {

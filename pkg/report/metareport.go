@@ -24,7 +24,6 @@ package report
 import (
 	"fmt"
 
-	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 )
 
@@ -34,7 +33,7 @@ type MetaReport struct {
 	//	HubScanClientVersion string // TODO we don't need this, do we?
 }
 
-func NewMetaReport(dump *dump.Dump) *MetaReport {
+func NewMetaReport(dump *Dump) *MetaReport {
 	return &MetaReport{
 		KubeMeta:   dump.Kube.Meta,
 		HubVersion: dump.Hub.Version,

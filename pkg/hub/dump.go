@@ -19,30 +19,28 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package dump
+package hub
 
-import "github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
-
-type HubDump struct {
+type Dump struct {
 	Version           string
-	Projects          []*hub.Project
-	ProjectsBySha     map[string]*hub.Project
+	Projects          []*Project
+	ProjectsBySha     map[string]*Project
 	DuplicateShas     map[string]bool
 	ShortProjectNames []string
 }
 
-func NewHubDump(version string, projects []*hub.Project) *HubDump {
-	hubDump := &HubDump{
+func NewDump(version string, projects []*Project) *Dump {
+	dump := &Dump{
 		Version:           version,
 		Projects:          projects,
-		ProjectsBySha:     map[string]*hub.Project{},
+		ProjectsBySha:     map[string]*Project{},
 		DuplicateShas:     map[string]bool{},
 		ShortProjectNames: []string{}}
-	hubDump.computeDerivedData()
-	return hubDump
+	dump.computeDerivedData()
+	return dump
 }
 
-func (hd *HubDump) computeDerivedData() {
+func (hd *Dump) computeDerivedData() {
 	for _, project := range hd.Projects {
 		// handle unexpectedly short names
 		if len(project.Name) < 20 {

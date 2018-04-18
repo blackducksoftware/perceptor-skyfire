@@ -23,12 +23,10 @@ package report
 
 import (
 	"strings"
-
-	"github.com/blackducksoftware/perceptor-skyfire/pkg/dump"
 )
 
 type Report struct {
-	Dump          *dump.Dump
+	Dump          *Dump
 	Meta          *MetaReport
 	Kube          *KubeReport
 	KubePerceptor *KubePerceptorReport
@@ -36,7 +34,7 @@ type Report struct {
 	Hub           *HubReport
 }
 
-func NewReport(dump *dump.Dump) *Report {
+func NewReport(dump *Dump) *Report {
 	return &Report{
 		dump,
 		NewMetaReport(dump),

@@ -19,15 +19,21 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package dump
+package report
+
+import (
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/perceptor"
+)
 
 type Dump struct {
-	Kube      *KubeDump
-	Perceptor *PerceptorDump
-	Hub       *HubDump
+	Kube      *kube.Dump
+	Perceptor *perceptor.Dump
+	Hub       *hub.Dump
 }
 
-func NewDump(kube *KubeDump, perceptor *PerceptorDump, hub *HubDump) *Dump {
+func NewDump(kube *kube.Dump, perceptor *perceptor.Dump, hub *hub.Dump) *Dump {
 	return &Dump{
 		Kube:      kube,
 		Perceptor: perceptor,

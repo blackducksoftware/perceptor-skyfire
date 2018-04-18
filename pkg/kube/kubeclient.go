@@ -78,6 +78,18 @@ func newKubeClientHelper(config *rest.Config) (*KubeClient, error) {
 	return &KubeClient{clientset: *clientset}, nil
 }
 
+func (client *KubeClient) Dump() (*Dump, error) {
+	kubePods, err := client.GetAllPods()
+	if err != nil {
+		return nil, err
+	}
+	kubeMeta, err := client.GetMeta()
+	if err != nil {
+		return nil, err
+	}
+	return NewDump(kubeMeta, kubePods), nil
+}
+
 func (client *KubeClient) GetAllPods() ([]*Pod, error) {
 	pods := []*Pod{}
 	kubePods, err := client.clientset.CoreV1().Pods(v1.NamespaceAll).List(meta_v1.ListOptions{})

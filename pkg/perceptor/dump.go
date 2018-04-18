@@ -19,7 +19,7 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package dump
+package perceptor
 
 import (
 	"fmt"
@@ -27,7 +27,7 @@ import (
 	"github.com/blackducksoftware/perceptor/pkg/api"
 )
 
-type PerceptorDump struct {
+type Dump struct {
 	ScanResults        *api.ScanResults
 	Model              *api.Model
 	PodsByName         map[string]*api.ScannedPod
@@ -36,8 +36,8 @@ type PerceptorDump struct {
 	DuplicateImageShas map[string]bool
 }
 
-func NewPerceptorDump(scanResults *api.ScanResults, model *api.Model) *PerceptorDump {
-	dump := &PerceptorDump{
+func NewDump(scanResults *api.ScanResults, model *api.Model) *Dump {
+	dump := &Dump{
 		ScanResults:        scanResults,
 		Model:              model,
 		PodsByName:         map[string]*api.ScannedPod{},
@@ -48,7 +48,7 @@ func NewPerceptorDump(scanResults *api.ScanResults, model *api.Model) *Perceptor
 	return dump
 }
 
-func (pd *PerceptorDump) computeDerivedData() {
+func (pd *Dump) computeDerivedData() {
 	// TODO figure out what, if anything, to do with Model
 	for _, pod := range pd.ScanResults.Pods {
 		podName := fmt.Sprintf("%s/%s", pod.Namespace, pod.Name)
