@@ -11,7 +11,5 @@
   "HubPassword": "",
 
   "PerceptorHost": "192.168.99.100",
-  "PerceptorPort": 30119,
-
-  "HipchatRoom": "PushTesting"
+  "PerceptorPort": 30119
 }

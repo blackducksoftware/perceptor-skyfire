@@ -44,11 +44,11 @@ func main() {
 	}
 	log.SetLevel(logLevel)
 
-	daemon, err := skyfire.NewDaemon(config)
+	skyfire, err := skyfire.NewSkyfire(config)
 	if err != nil {
 		panic(err)
 	}
-	log.Infof("instantiated daemon: %+v", daemon)
+	log.Infof("instantiated skyfire: %+v", skyfire)
 
 	http.Handle("/metrics", prometheus.Handler())
 	addr := fmt.Sprintf(":%d", config.Port)
