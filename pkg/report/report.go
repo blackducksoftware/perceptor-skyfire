@@ -38,7 +38,7 @@ func NewReport(dump *Dump) *Report {
 	return &Report{
 		dump,
 		NewMetaReport(dump),
-		NewKubeReport(dump),
+		NewKubeReport(dump.Kube),
 		NewKubePerceptorReport(dump),
 		NewPerceptorHubReport(dump),
 		NewHubReport(dump.Hub),

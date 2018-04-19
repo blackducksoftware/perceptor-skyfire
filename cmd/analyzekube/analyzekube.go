@@ -19,36 +19,44 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package report
+package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 
-	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
+	kube "github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
+	report "github.com/blackducksoftware/perceptor-skyfire/pkg/report"
 )
 
-type KubeReport struct {
-	UnparseableKubeImages []string
-}
+func main() {
+	kubeConfigPath := os.Args[1]
+	masterURL := os.Args[2]
 
-func NewKubeReport(dump *kube.Dump) *KubeReport {
-	return &KubeReport{
-		UnparseableKubeImages: UnparseableKubeImages(dump),
+	config := &kube.KubeClientConfig{KubeConfigPath: kubeConfigPath, MasterURL: masterURL}
+	kubeDumper, err := kube.NewKubeClient(config)
+	if err != nil {
+		panic(err)
 	}
-}
 
-func (k *KubeReport) HumanReadableString() string {
-	return fmt.Sprintf(`
-Kubernetes:
- - we found %d ImageIDs that were unparseable
-`,
-		len(k.UnparseableKubeImages))
-}
-
-func UnparseableKubeImages(dump *kube.Dump) []string {
-	images := []string{}
-	for _, image := range dump.ImagesMissingSha {
-		images = append(images, image.ImageID)
+	kubeDump, err := kubeDumper.Dump()
+	if err != nil {
+		panic(err)
 	}
-	return images
+	kubeReport := report.NewKubeReport(kubeDump)
+
+	dict := map[string]interface{}{
+		"Dump":   kubeDump,
+		"Report": kubeReport,
+	}
+
+	bytes, err := json.MarshalIndent(dict, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(bytes))
+
+	// TODO
 }
