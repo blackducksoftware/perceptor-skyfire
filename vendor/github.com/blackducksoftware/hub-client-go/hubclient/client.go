@@ -335,5 +335,5 @@ func readResponseBody(resp *http.Response) {
 		log.Errorf("Error reading HTTP Response: %+v.", err)
 	}
 
-	log.Debugf("TEXT OF RESPONSE: \n %s", string(bodyBytes[:]))
+	log.Warnf("TEXT OF RESPONSE: \n %s", string(bodyBytes[:]))
 }
