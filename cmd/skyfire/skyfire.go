@@ -44,6 +44,8 @@ func main() {
 	}
 	log.SetLevel(logLevel)
 
+	log.Infof("received config %+v", config)
+
 	skyfire, err := skyfire.NewSkyfire(config)
 	if err != nil {
 		panic(err)
@@ -53,6 +55,7 @@ func main() {
 	http.Handle("/metrics", prometheus.Handler())
 	addr := fmt.Sprintf(":%d", config.Port)
 	go http.ListenAndServe(addr, nil)
+	log.Infof("running http server on %s", addr)
 
 	select {}
 }

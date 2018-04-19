@@ -47,7 +47,7 @@ func NewSkyfire(config *Config) (*Skyfire, error) {
 		return nil, err
 	}
 	skyfire := &Skyfire{scraper, nil, nil, nil, nil}
-	skyfire.HandleScrapes()
+	go skyfire.HandleScrapes()
 	http.HandleFunc("/latestreport", skyfire.LatestReportHandler())
 	return skyfire, nil
 }
@@ -69,12 +69,15 @@ func (sf *Skyfire) HandleScrapes() {
 		case h := <-sf.Scraper.HubDumps:
 			fmt.Println(h)
 			sf.LastHubDump = h
+			sf.BuildReport()
 		case k := <-sf.Scraper.KubeDumps:
 			fmt.Println(k)
 			sf.LastKubeDump = k
+			sf.BuildReport()
 		case p := <-sf.Scraper.PerceptorDumps:
 			fmt.Println(p)
 			sf.LastPerceptorDump = p
+			sf.BuildReport()
 		}
 	}
 }
