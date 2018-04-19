@@ -96,7 +96,7 @@ func (hd *HubDumper) DumpAllProjects() ([]*Project, error) {
 }
 
 func (hd *HubDumper) DumpProject(hubProject *hubapi.Project) (*Project, error) {
-	log.Infof("looking for project %s at url %s", hubProject.Name, hubProject.Meta.Href)
+	log.Debugf("looking for project %s at url %s", hubProject.Name, hubProject.Meta.Href)
 	versions := []*Version{}
 	versionsLink, err := hubProject.GetProjectVersionsLink()
 	if err != nil {
@@ -113,7 +113,7 @@ func (hd *HubDumper) DumpProject(hubProject *hubapi.Project) (*Project, error) {
 		}
 		versions = append(versions, version)
 	}
-	log.Infof("successfully dumped project %s at url %s", hubProject.Name, hubProject.Meta.Href)
+	log.Debugf("successfully dumped project %s at url %s", hubProject.Name, hubProject.Meta.Href)
 	project := &Project{
 		Name:        hubProject.Name,
 		Versions:    versions,

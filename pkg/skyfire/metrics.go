@@ -26,9 +26,19 @@ import (
 )
 
 var problemsGauge *prometheus.GaugeVec
+var errorCounter *prometheus.CounterVec
+var eventCounter *prometheus.CounterVec
 
 func recordReportProblem(name string, count int) {
 	problemsGauge.With(prometheus.Labels{"name": name}).Set(float64(count))
+}
+
+func recordError(name string) {
+	errorCounter.With(prometheus.Labels{"name": name}).Inc()
+}
+
+func recordEvent(name string) {
+	eventCounter.With(prometheus.Labels{"name": name}).Inc()
 }
 
 func init() {
@@ -39,4 +49,20 @@ func init() {
 		Help:      "names and counts for issues discovered in perceptor testing",
 	}, []string{"name"})
 	prometheus.MustRegister(problemsGauge)
+
+	errorCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Namespace: "perceptor",
+		Subsystem: "skyfire",
+		Name:      "errors",
+		Help:      "internal skyfire errors",
+	}, []string{"name"})
+	prometheus.MustRegister(errorCounter)
+
+	eventCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Namespace: "perceptor",
+		Subsystem: "skyfire",
+		Name:      "events",
+		Help:      "internal skyfire events",
+	}, []string{"name"})
+	prometheus.MustRegister(eventCounter)
 }

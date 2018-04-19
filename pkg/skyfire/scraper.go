@@ -77,7 +77,9 @@ func (sc *Scraper) StartHubScrapes() {
 		hubDump, err := sc.HubDumper.Dump()
 		if err == nil {
 			sc.HubDumps <- hubDump
+			recordEvent("hub dump")
 		} else {
+			recordError("unable to get perceptor dump")
 			log.Errorf("unable to get hub dump: %s", err.Error())
 		}
 		time.Sleep(time.Duration(sc.HubDumpPauseSeconds) * time.Second)
@@ -89,7 +91,9 @@ func (sc *Scraper) StartKubeScrapes() {
 		kubeDump, err := sc.KubeDumper.Dump()
 		if err == nil {
 			sc.KubeDumps <- kubeDump
+			recordEvent("kube dump")
 		} else {
+			recordError("unable to get kube dump")
 			log.Errorf("unable to get kube dump: %s", err.Error())
 		}
 		time.Sleep(time.Duration(sc.KubeDumpIntervalSeconds) * time.Second)
@@ -101,8 +105,10 @@ func (sc *Scraper) StartPerceptorScrapes() {
 		perceptorDump, err := sc.PerceptorDumper.Dump()
 		if err == nil {
 			sc.PerceptorDumps <- perceptorDump
+			recordEvent("perceptor dump")
 		} else {
-			log.Errorf("unable to get hub dump: %s", err.Error())
+			recordError("unable to get perceptor dump")
+			log.Errorf("unable to get perceptor dump: %s", err.Error())
 		}
 		time.Sleep(time.Duration(sc.PerceptorDumpIntervalSeconds) * time.Second)
 	}

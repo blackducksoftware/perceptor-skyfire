@@ -56,9 +56,11 @@ func (sf *Skyfire) LatestReportHandler() func(http.ResponseWriter, *http.Request
 	return func(w http.ResponseWriter, r *http.Request) {
 		bytes, err := json.MarshalIndent(sf.LastReport, "", "  ")
 		if err != nil {
+			recordError("unable to marshal report")
 			http.Error(w, err.Error(), 500)
 			return
 		}
+		recordEvent("latest report handler")
 		fmt.Fprint(w, string(bytes))
 	}
 }
@@ -84,14 +86,17 @@ func (sf *Skyfire) HandleScrapes() {
 
 func (sf *Skyfire) BuildReport() {
 	if sf.LastPerceptorDump == nil {
+		recordError("unable to generate report: perceptor dump is nil")
 		log.Warnf("unable to generate report: perceptor dump is nil")
 		return
 	}
 	if sf.LastHubDump == nil {
+		recordError("unable to generate report: hub dump is nil")
 		log.Warnf("unable to generate report: hub dump is nil")
 		return
 	}
 	if sf.LastKubeDump == nil {
+		recordError("unable to generate report: kube dump is nil")
 		log.Warnf("unable to generate report: kube dump is nil")
 		return
 	}
@@ -100,6 +105,7 @@ func (sf *Skyfire) BuildReport() {
 	sf.LastReport = report.NewReport(dump)
 	IssueReportMetrics(sf.LastReport)
 
+	recordEvent("built report")
 	log.Infof("successfully built report")
 }
 
