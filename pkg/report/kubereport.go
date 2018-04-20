@@ -28,21 +28,49 @@ import (
 )
 
 type KubeReport struct {
-	UnparseableKubeImages []string
+	UnanalyzeablePods          []string
+	UnparseableImages          []string
+	PartiallyAnnotatedKubePods []string
+	PartiallyLabeledKubePods   []string
 }
 
 func NewKubeReport(dump *kube.Dump) *KubeReport {
+	partiallyAnnotatedKubePods, partiallyLabeledKubePods := PartiallyHandledKubePods(dump)
 	return &KubeReport{
-		UnparseableKubeImages: UnparseableKubeImages(dump),
+		UnanalyzeablePods:          UnanalyzeablePods(dump),
+		UnparseableImages:          UnparseableKubeImages(dump),
+		PartiallyAnnotatedKubePods: partiallyAnnotatedKubePods,
+		PartiallyLabeledKubePods:   partiallyLabeledKubePods,
 	}
 }
 
 func (k *KubeReport) HumanReadableString() string {
 	return fmt.Sprintf(`
 Kubernetes:
- - we found %d ImageIDs that were unparseable
+ - %d unanalyzeable pod(s)
+ - %d unparseable ImageID(s)
+ - %d partially annotated pod(s)
+ - %d partially labeled pod(s)
 `,
-		len(k.UnparseableKubeImages))
+		len(k.UnanalyzeablePods),
+		len(k.UnparseableImages),
+		len(k.PartiallyAnnotatedKubePods),
+		len(k.PartiallyLabeledKubePods))
+}
+
+func PartiallyHandledKubePods(dump *kube.Dump) (partiallyAnnotatedKubePods []string, partiallyLabeledKubePods []string) {
+	partiallyAnnotatedKubePods = []string{}
+	partiallyLabeledKubePods = []string{}
+	for podName, pod := range dump.PodsByName {
+		if pod.HasAnyBDAnnotations() && !pod.HasAllBDAnnotations() {
+			partiallyAnnotatedKubePods = append(partiallyAnnotatedKubePods, podName)
+		}
+
+		if pod.HasAnyBDLabels() && !pod.HasAllBDLabels() {
+			partiallyLabeledKubePods = append(partiallyLabeledKubePods, podName)
+		}
+	}
+	return
 }
 
 func UnparseableKubeImages(dump *kube.Dump) []string {
@@ -51,4 +79,15 @@ func UnparseableKubeImages(dump *kube.Dump) []string {
 		images = append(images, image.ImageID)
 	}
 	return images
+}
+
+func UnanalyzeablePods(dump *kube.Dump) []string {
+	unanalyzeablePods := []string{}
+	for podName, pod := range dump.PodsByName {
+		_, err := PodShas(pod)
+		if err != nil {
+			unanalyzeablePods = append(unanalyzeablePods, podName)
+		}
+	}
+	return unanalyzeablePods
 }

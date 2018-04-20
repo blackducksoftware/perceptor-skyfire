@@ -45,9 +45,6 @@ type KubePerceptorReport struct {
 	// - scanned images
 	FinishedJustPerceptorPods []string
 
-	PartiallyAnnotatedKubePods []string
-	PartiallyLabeledKubePods   []string
-
 	ConflictingAnnotationsPods []string
 	ConflictingLabelsPods      []string
 
@@ -55,7 +52,7 @@ type KubePerceptorReport struct {
 }
 
 func NewKubePerceptorReport(dump *Dump) *KubePerceptorReport {
-	finishedJustKubePods, partiallyAnnotatedKubePods, partiallyLabeledKubePods, conflictingAnnotationsPods, conflictingLabelsPods, unanalyzeablePods := KubeNotPerceptorFinishedPods(dump)
+	finishedJustKubePods, conflictingAnnotationsPods, conflictingLabelsPods, unanalyzeablePods := KubeNotPerceptorFinishedPods(dump)
 	return &KubePerceptorReport{
 		JustKubePods:               KubeNotPerceptorPods(dump),
 		JustPerceptorPods:          PerceptorNotKubePods(dump),
@@ -63,8 +60,6 @@ func NewKubePerceptorReport(dump *Dump) *KubePerceptorReport {
 		JustPerceptorImages:        PerceptorNotKubeImages(dump),
 		FinishedJustKubePods:       finishedJustKubePods,
 		FinishedJustPerceptorPods:  PerceptorNotKubeFinishedPods(dump),
-		PartiallyAnnotatedKubePods: partiallyAnnotatedKubePods,
-		PartiallyLabeledKubePods:   partiallyLabeledKubePods,
 		ConflictingAnnotationsPods: conflictingAnnotationsPods,
 		ConflictingLabelsPods:      conflictingLabelsPods,
 		UnanalyzeablePods:          unanalyzeablePods,
@@ -74,16 +69,14 @@ func NewKubePerceptorReport(dump *Dump) *KubePerceptorReport {
 func (kr *KubePerceptorReport) HumanReadableString() string {
 	return fmt.Sprintf(`
 Kubernetes<->Perceptor:
- - we found %d pod(s) in Kubernetes that were not in Perceptor
- - we found %d pod(s) in Perceptor that were not in Kubernetes
- - we found %d image(s) in Kubernetes that were not in Perceptor
- - we found %d image(s) in Perceptor that were not in Kubernetes
- - we found %d pod(s) whose kubernetes annotations did not match their scan results
- - we found %d pod(s) whose kubernetes labels did not match their scan results
- - we found %d pod(s) with kubernetes annotations but no scan results
- - we found %d pod(s) with scan results but not kubernetes annotations
- - we found %d pod(s) in kubernetes that are partially annotated
- - we found %d pod(s) in kubernetes that are partially labeled
+ - %d pod(s) in Kubernetes that were not in Perceptor
+ - %d pod(s) in Perceptor that were not in Kubernetes
+ - %d image(s) in Kubernetes that were not in Perceptor
+ - %d image(s) in Perceptor that were not in Kubernetes
+ - %d pod(s) whose Kubernetes annotations did not match their scan results
+ - %d pod(s) whose Kubernetes labels did not match their scan results
+ - %d pod(s) with Kubernetes annotations but no scan results
+ - %d pod(s) with scan results but not Kubernetes annotations
 	 `,
 		len(kr.JustKubePods),
 		len(kr.JustPerceptorPods),
@@ -92,9 +85,7 @@ Kubernetes<->Perceptor:
 		len(kr.ConflictingAnnotationsPods),
 		len(kr.ConflictingLabelsPods),
 		len(kr.FinishedJustKubePods),
-		len(kr.FinishedJustPerceptorPods),
-		len(kr.PartiallyAnnotatedKubePods),
-		len(kr.PartiallyLabeledKubePods))
+		len(kr.FinishedJustPerceptorPods))
 }
 
 func KubeNotPerceptorPods(dump *Dump) []string {
@@ -141,23 +132,13 @@ func PerceptorNotKubeImages(dump *Dump) []string {
 	return images
 }
 
-func KubeNotPerceptorFinishedPods(dump *Dump) (finishedKubePods []string, partiallyAnnotatedKubePods []string, partiallyLabeledKubePods []string, incorrectAnnotationsPods []string, incorrectLabelsPods []string, unanalyzeablePods []string) {
+func KubeNotPerceptorFinishedPods(dump *Dump) (finishedKubePods []string, incorrectAnnotationsPods []string, incorrectLabelsPods []string, unanalyzeablePods []string) {
 	finishedKubePods = []string{}
-	partiallyAnnotatedKubePods = []string{}
-	partiallyLabeledKubePods = []string{}
 	incorrectAnnotationsPods = []string{}
 	incorrectLabelsPods = []string{}
 	unanalyzeablePods = []string{}
 
 	for podName, pod := range dump.Kube.PodsByName {
-		if pod.HasAnyBDAnnotations() && !pod.HasAllBDAnnotations() {
-			partiallyAnnotatedKubePods = append(partiallyAnnotatedKubePods, podName)
-		}
-
-		if pod.HasAnyBDLabels() && !pod.HasAllBDLabels() {
-			partiallyLabeledKubePods = append(partiallyLabeledKubePods, podName)
-		}
-
 		imageShas, err := PodShas(pod)
 		if err != nil {
 			unanalyzeablePods = append(unanalyzeablePods, podName)

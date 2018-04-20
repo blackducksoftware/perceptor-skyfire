@@ -43,9 +43,9 @@ func NewMetaReport(dump *Dump) *MetaReport {
 func (m *MetaReport) HumanReadableString() string {
 	return fmt.Sprintf(`
 Overview:
- - we used hub version %s
- - we used kubernetes version %s with build date %s
- - our cluster had %d nodes
+ - Hub version %s
+ - Kubernetes version %s with build date %s
+ - the cluster had %d nodes
 `,
 		m.HubVersion,
 		m.KubeMeta.GitVersion,

@@ -44,9 +44,9 @@ func NewHubReport(dump *hub.Dump) *HubReport {
 func (h *HubReport) HumanReadableString() string {
 	return fmt.Sprintf(`
 Hub:
- - we found %d project(s) in the Hub with multiple versions
- - we found %d version(s) in the Hub with multiple code locations
- - we found %d code location(s) in the Hub with multiple scan summaries
+ - %d project(s) with multiple versions
+ - %d version(s) with multiple code locations
+ - %d code location(s) with multiple scan summaries
 `,
 		len(h.ProjectsMultipleVersions),
 		len(h.VersionsMultipleCodeLocations),

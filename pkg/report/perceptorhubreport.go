@@ -40,8 +40,8 @@ func NewPerceptorHubReport(dump *Dump) *PerceptorHubReport {
 func (p *PerceptorHubReport) HumanReadableString() string {
 	return fmt.Sprintf(`
 Perceptor<->Hub:
- - we found %d image(s) in Perceptor that were not in the Hub
- - we found %d image(s) in the Hub that were not in Perceptor
+ - %d image(s) in Perceptor that were not in the Hub
+ - %d image(s) in the Hub that were not in Perceptor
 	`,
 		len(p.JustPerceptorImages),
 		len(p.JustHubImages))
