@@ -123,7 +123,10 @@ func IssueHubReportMetrics(report *report.HubReport) {
 }
 
 func IssueKubeReportMetrics(report *report.KubeReport) {
-	recordReportProblem("kube_unparseable_images", len(report.UnparseableKubeImages))
+	recordReportProblem("kube_unparseable_images", len(report.UnparseableImages))
+	recordReportProblem("kube_partially_annotated_pods", len(report.PartiallyAnnotatedPods))
+	recordReportProblem("kube_partially_labeled_pods", len(report.PartiallyLabeledPods))
+	recordReportProblem("kube_unanalyzeable_pods", len(report.UnanalyzeablePods))
 }
 
 func IssueKubePerceptorReportMetrics(report *report.KubePerceptorReport) {
@@ -135,8 +138,6 @@ func IssueKubePerceptorReportMetrics(report *report.KubePerceptorReport) {
 	recordReportProblem("kube-perceptor_incorrect_pod_labels", len(report.ConflictingLabelsPods))
 	recordReportProblem("kube-perceptor_finished_pods_just_kube", len(report.FinishedJustKubePods))
 	recordReportProblem("kube-perceptor_finished_pods_just_perceptor", len(report.FinishedJustPerceptorPods))
-	recordReportProblem("kube-perceptor_partially_annotated_pods", len(report.PartiallyAnnotatedKubePods))
-	recordReportProblem("kube-perceptor_partially_labeled_pods", len(report.PartiallyLabeledKubePods))
 }
 
 func IssuePerceptorHubMetrics(report *report.PerceptorHubReport) {

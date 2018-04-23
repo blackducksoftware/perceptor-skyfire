@@ -28,19 +28,19 @@ import (
 )
 
 type KubeReport struct {
-	UnanalyzeablePods          []string
-	UnparseableImages          []string
-	PartiallyAnnotatedKubePods []string
-	PartiallyLabeledKubePods   []string
+	UnanalyzeablePods      []string
+	UnparseableImages      []string
+	PartiallyAnnotatedPods []string
+	PartiallyLabeledPods   []string
 }
 
 func NewKubeReport(dump *kube.Dump) *KubeReport {
 	partiallyAnnotatedKubePods, partiallyLabeledKubePods := PartiallyHandledKubePods(dump)
 	return &KubeReport{
-		UnanalyzeablePods:          UnanalyzeablePods(dump),
-		UnparseableImages:          UnparseableKubeImages(dump),
-		PartiallyAnnotatedKubePods: partiallyAnnotatedKubePods,
-		PartiallyLabeledKubePods:   partiallyLabeledKubePods,
+		UnanalyzeablePods:      UnanalyzeablePods(dump),
+		UnparseableImages:      UnparseableKubeImages(dump),
+		PartiallyAnnotatedPods: partiallyAnnotatedKubePods,
+		PartiallyLabeledPods:   partiallyLabeledKubePods,
 	}
 }
 
@@ -54,8 +54,8 @@ Kubernetes:
 `,
 		len(k.UnanalyzeablePods),
 		len(k.UnparseableImages),
-		len(k.PartiallyAnnotatedKubePods),
-		len(k.PartiallyLabeledKubePods))
+		len(k.PartiallyAnnotatedPods),
+		len(k.PartiallyLabeledPods))
 }
 
 func PartiallyHandledKubePods(dump *kube.Dump) (partiallyAnnotatedKubePods []string, partiallyLabeledKubePods []string) {
