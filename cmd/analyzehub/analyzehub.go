@@ -28,12 +28,15 @@ import (
 
 	hub "github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
 	report "github.com/blackducksoftware/perceptor-skyfire/pkg/report"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
 	url := os.Args[1]
 	username := os.Args[2]
 	password := os.Args[3]
+
+	log.SetLevel(log.DebugLevel)
 
 	hubDumper, err := hub.NewHubDumper(url, username, password)
 	if err != nil {
