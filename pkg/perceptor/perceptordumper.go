@@ -24,22 +24,25 @@ package perceptor
 import (
 	"fmt"
 	"reflect"
+	"time"
 
 	api "github.com/blackducksoftware/perceptor/pkg/api"
 	resty "github.com/go-resty/resty"
 )
 
 type PerceptorDumper struct {
-	//	Resty resty.Client
-	Host string
-	Port int
+	Resty *resty.Client
+	Host  string
+	Port  int
 }
 
 func NewPerceptorDumper(host string, port int) *PerceptorDumper {
+	restyClient := resty.New()
+	restyClient.SetTimeout(time.Duration(5 * time.Second))
 	return &PerceptorDumper{
-		//		Resty: resty.R(),
-		Host: host,
-		Port: port,
+		Resty: restyClient,
+		Host:  host,
+		Port:  port,
 	}
 }
 
@@ -57,7 +60,7 @@ func (pd *PerceptorDumper) Dump() (*Dump, error) {
 
 func (pd *PerceptorDumper) DumpModel() (*api.Model, error) {
 	url := fmt.Sprintf("http://%s:%d/model", pd.Host, pd.Port)
-	resp, err := resty.R().SetResult(&api.Model{}).Get(url)
+	resp, err := pd.Resty.R().SetResult(&api.Model{}).Get(url)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +74,7 @@ func (pd *PerceptorDumper) DumpModel() (*api.Model, error) {
 
 func (pd *PerceptorDumper) DumpScanResults() (*api.ScanResults, error) {
 	url := fmt.Sprintf("http://%s:%d/scanresults", pd.Host, pd.Port)
-	resp, err := resty.R().SetResult(&api.ScanResults{}).Get(url)
+	resp, err := pd.Resty.R().SetResult(&api.ScanResults{}).Get(url)
 	if err != nil {
 		return nil, err
 	}
