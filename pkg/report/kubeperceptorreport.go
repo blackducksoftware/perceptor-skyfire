@@ -257,6 +257,33 @@ func ExpectedPodAnnotations(podName string, imageShas []string, dump *Dump) (map
 	return annotations, nil
 }
 
+// ShortenLabelContent will ensure the data is less than the 63 character limit and doesn't contain
+// any characters that are not allowed
+func ShortenLabelContent(data string) string {
+	newData := RemoveRegistryInfo(data)
+
+	// Label values can not be longer than 63 characters
+	if len(newData) > 63 {
+		newData = newData[0:63]
+	}
+
+	return newData
+}
+
+// RemoveRegistryInfo will take a string and return a string that removes any registry name information
+// and replaces all / with .
+func RemoveRegistryInfo(d string) string {
+	s := strings.Split(d, "/")
+
+	// If the data includes a . or : before the first / then that string is most likely
+	// a registry name.  Remove it because it could make the data too long and
+	// truncate useful information
+	if strings.Contains(s[0], ".") || strings.Contains(s[0], ":") {
+		s = s[1:]
+	}
+	return strings.Join(s, ".")
+}
+
 func ExpectedPodLabels(podName string, imageShas []string, dump *Dump) (map[string]string, error) {
 	perceptor := dump.Perceptor
 	labels := map[string]string{}
@@ -273,10 +300,7 @@ func ExpectedPodLabels(podName string, imageShas []string, dump *Dump) (map[stri
 		labels[kube.PodImageLabelKeyOverallStatus.String(i)] = image.OverallStatus
 		labels[kube.PodImageLabelKeyVulnerabilities.String(i)] = fmt.Sprintf("%d", image.Vulnerabilities)
 		labels[kube.PodImageLabelKeyPolicyViolations.String(i)] = fmt.Sprintf("%d", image.PolicyViolations)
-		name, _, _ := dump.Kube.ImagesBySha[sha].ParseImageID() // just ignore errors and missing values!  maybe not a good idea TODO
-		name = strings.Replace(name, "/", ".", -1)
-		name = strings.Replace(name, ":", ".", -1)
-		labels[kube.PodImageLabelKeyImage.String(i)] = name
+		labels[kube.PodImageLabelKeyImage.String(i)] = ShortenLabelContent(dump.Kube.ImagesBySha[sha])
 	}
 
 	labels[kube.PodLabelKeyOverallStatus.String()] = pod.OverallStatus
