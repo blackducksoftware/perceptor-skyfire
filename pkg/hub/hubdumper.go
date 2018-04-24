@@ -31,7 +31,9 @@ import (
 )
 
 type HubDumper struct {
-	HubClient *hubclient.Client
+	HubClient   *hubclient.Client
+	HubUsername string
+	HubPassword string
 }
 
 func NewHubDumper(hubHost string, username string, password string) (*HubDumper, error) {
@@ -41,13 +43,17 @@ func NewHubDumper(hubHost string, username string, password string) (*HubDumper,
 		log.Errorf("unable to get hub client: %s", err.Error())
 		return nil, err
 	}
-	err = hubClient.Login(username, password)
+	dumper := &HubDumper{HubClient: hubClient, HubUsername: username, HubPassword: password}
+	err = dumper.Login()
 	if err != nil {
 		log.Errorf("unable to log in to hub: %s", err.Error())
 		return nil, err
 	}
-	dumper := &HubDumper{HubClient: hubClient}
 	return dumper, nil
+}
+
+func (hd *HubDumper) Login() error {
+	return hd.HubClient.Login(hd.HubUsername, hd.HubPassword)
 }
 
 func (hd *HubDumper) Dump() (*Dump, error) {

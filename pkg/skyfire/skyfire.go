@@ -49,11 +49,13 @@ func NewSkyfire(config *Config) (*Skyfire, error) {
 	skyfire := &Skyfire{scraper, nil, nil, nil, nil}
 	go skyfire.HandleScrapes()
 	http.HandleFunc("/latestreport", skyfire.LatestReportHandler())
+	http.HandleFunc("/relogintohub", skyfire.ReloginToHubHandler())
 	return skyfire, nil
 }
 
 func (sf *Skyfire) LatestReportHandler() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		log.Infof("received latest report request")
 		bytes, err := json.MarshalIndent(sf.LastReport, "", "  ")
 		if err != nil {
 			recordError("unable to marshal report")
@@ -62,6 +64,20 @@ func (sf *Skyfire) LatestReportHandler() func(http.ResponseWriter, *http.Request
 		}
 		recordEvent("latest report handler")
 		fmt.Fprint(w, string(bytes))
+	}
+}
+
+func (sf *Skyfire) ReloginToHubHandler() func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		log.Debugf("received relogin to hub request")
+		err := sf.Scraper.HubDumper.Login()
+		if err != nil {
+			recordError("unable to relogin to hub")
+			http.Error(w, err.Error(), 500)
+			return
+		}
+		log.Debugf("successfully logged in to hub")
+		fmt.Fprint(w, "")
 	}
 }
 
