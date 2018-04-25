@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
+	log "github.com/sirupsen/logrus"
 )
 
 type KubePerceptorReport struct {
@@ -181,6 +182,7 @@ func KubeNotPerceptorFinishedPods(dump *Dump) (finishedKubePods []string, incorr
 				if !ok {
 					missingKeys = append(missingKeys, key)
 				} else if expectedVal != actualVal {
+					log.Warnf("conflicting values for key %s: expected %s, actual %s", key, expectedVal, actualVal)
 					keysOfWrongValues = append(keysOfWrongValues, key)
 				}
 			}
