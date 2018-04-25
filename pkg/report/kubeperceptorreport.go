@@ -302,7 +302,7 @@ func ExpectedPodLabels(podName string, imageShas []string, dump *Dump) (map[stri
 		labels[kube.PodImageLabelKeyOverallStatus.String(i)] = image.OverallStatus
 		labels[kube.PodImageLabelKeyVulnerabilities.String(i)] = fmt.Sprintf("%d", image.Vulnerabilities)
 		labels[kube.PodImageLabelKeyPolicyViolations.String(i)] = fmt.Sprintf("%d", image.PolicyViolations)
-		labels[kube.PodImageLabelKeyImage.String(i)] = ShortenLabelContent(dump.Kube.ImagesBySha[sha].ImageID)
+		labels[kube.PodImageLabelKeyImage.String(i)] = ShortenLabelContent(dump.Kube.ImagesBySha[sha].Image)
 	}
 
 	labels[kube.PodLabelKeyOverallStatus.String()] = pod.OverallStatus
