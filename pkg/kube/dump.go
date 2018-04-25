@@ -21,10 +21,6 @@ under the License.
 
 package kube
 
-import (
-	log "github.com/sirupsen/logrus"
-)
-
 type Dump struct {
 	Meta              *Meta
 	Pods              []*Pod
@@ -61,7 +57,7 @@ func (kd *Dump) computeDerivedData() {
 			_, sha, err := container.Image.ParseImageID()
 			if err != nil {
 				kd.ImagesMissingSha = append(kd.ImagesMissingSha, container.Image)
-				log.Errorf("unable to parse sha for pod %s, container %s, image %s: %s", pod.QualifiedName(), container.Name, container.Image.ImageID, err.Error())
+				// log.Errorf("unable to parse sha for pod %s, container %s, image %s: %s", pod.QualifiedName(), container.Name, container.Image.ImageID, err.Error())
 			} else {
 				_, ok := kd.ImagesBySha[sha]
 				if ok {

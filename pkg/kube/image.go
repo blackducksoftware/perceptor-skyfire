@@ -21,10 +21,6 @@ under the License.
 
 package kube
 
-import (
-	log "github.com/sirupsen/logrus"
-)
-
 type Image struct {
 	Image   string
 	ImageID string
@@ -36,8 +32,8 @@ func NewImage(image string, imageID string) *Image {
 
 func (image *Image) ParseImageID() (name string, sha string, err error) {
 	name, sha, err = ParseImageIDString(image.ImageID)
-	if err != nil {
-		log.Errorf("unable to parse kubernetes ImageID string %s from image %s", image.ImageID, image.Image)
-	}
+	// if err != nil {
+	// 	log.Errorf("unable to parse kubernetes ImageID string %s from image %s", image.ImageID, image.Image)
+	// }
 	return
 }
