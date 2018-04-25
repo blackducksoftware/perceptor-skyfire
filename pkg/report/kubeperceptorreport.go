@@ -302,7 +302,12 @@ func ExpectedPodLabels(podName string, imageShas []string, dump *Dump) (map[stri
 		labels[kube.PodImageLabelKeyOverallStatus.String(i)] = image.OverallStatus
 		labels[kube.PodImageLabelKeyVulnerabilities.String(i)] = fmt.Sprintf("%d", image.Vulnerabilities)
 		labels[kube.PodImageLabelKeyPolicyViolations.String(i)] = fmt.Sprintf("%d", image.PolicyViolations)
-		labels[kube.PodImageLabelKeyImage.String(i)] = ShortenLabelContent(dump.Kube.ImagesBySha[sha].Image)
+		name, _, err := dump.Kube.ImagesBySha[sha].ParseImageID()
+		// TODO ignoring errors ... not a great idea
+		if err != nil {
+			log.Errorf("unable to parse image id %s: %s", dump.Kube.ImagesBySha[sha].ImageID, err.Error())
+		}
+		labels[kube.PodImageLabelKeyImage.String(i)] = ShortenLabelContent(name)
 	}
 
 	labels[kube.PodLabelKeyOverallStatus.String()] = pod.OverallStatus
