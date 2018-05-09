@@ -25,6 +25,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/blackducksoftware/hub-client-go/hubapi"
@@ -230,12 +231,18 @@ func (pt *PerformanceTester) StartHittingHub() {
 
 func (pt *PerformanceTester) AddFreewayResultsHandler() {
 	http.HandleFunc("/freewayresults", func(w http.ResponseWriter, r *http.Request) {
+		var wg sync.WaitGroup
+		wg.Add(1)
+		var jsonBytes []byte
 		pt.GetResults <- func(results []*PerformanceResults) {
-			jsonBytes, err := json.MarshalIndent(pt.DurationsResults, "", "  ")
+			var err error
+			jsonBytes, err = json.MarshalIndent(pt.DurationsResults, "", "  ")
 			if err != nil {
 				panic(err)
 			}
-			fmt.Fprint(w, string(jsonBytes))
+			wg.Done()
 		}
+		wg.Wait()
+		fmt.Fprint(w, string(jsonBytes))
 	})
 }
