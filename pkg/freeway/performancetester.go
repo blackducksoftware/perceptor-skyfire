@@ -19,11 +19,12 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package hub
+package freeway
 
 import (
+	"encoding/json"
 	"fmt"
-	"reflect"
+	"net/http"
 	"time"
 
 	"github.com/blackducksoftware/hub-client-go/hubapi"
@@ -31,10 +32,21 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const (
+	scrapeHubAPIPause = 20 * time.Second
+)
+
+type PerformanceResults struct {
+	LinkTypeTimings map[string][]float64
+}
+
 type PerformanceTester struct {
-	HubClient   *hubclient.Client
-	HubUsername string
-	HubPassword string
+	HubClient        *hubclient.Client
+	HubUsername      string
+	HubPassword      string
+	DurationsResults []map[LinkType][]*time.Duration
+	AddResults       chan map[LinkType][]*time.Duration
+	GetResults       chan func([]*PerformanceResults)
 }
 
 func NewPerformanceTester(hubHost string, username string, password string) (*PerformanceTester, error) {
@@ -44,16 +56,25 @@ func NewPerformanceTester(hubHost string, username string, password string) (*Pe
 		log.Errorf("unable to get hub client: %s", err.Error())
 		return nil, err
 	}
-	pt := &PerformanceTester{HubClient: hubClient, HubUsername: username, HubPassword: password}
+	pt := &PerformanceTester{
+		HubClient:        hubClient,
+		HubUsername:      username,
+		HubPassword:      password,
+		DurationsResults: []map[LinkType][]*time.Duration{},
+		AddResults:       make(chan map[LinkType][]*time.Duration),
+		GetResults:       make(chan func([]*PerformanceResults))}
 	err = hubClient.Login(username, password)
 	if err != nil {
 		log.Errorf("unable to log in to hub: %s", err.Error())
 		return nil, err
 	}
+	go pt.StartHittingHub()
+	go pt.StartReducer()
+	pt.AddFreewayResultsHandler()
 	return pt, nil
 }
 
-func (pt *PerformanceTester) GetLinks() (map[LinkType][]*time.Duration, []error) {
+func (pt *PerformanceTester) GetGroupedDurations() (map[LinkType][]*time.Duration, []error) {
 	root := fmt.Sprintf("%s/api/projects", hubclient.BaseURL(pt.HubClient))
 	times, errors := pt.TraverseGraph(root)
 	groupedTimes := map[LinkType][]*time.Duration{}
@@ -151,86 +172,70 @@ func (pt *PerformanceTester) FetchLink(link string) (map[string]interface{}, err
 	//log.Infof("result and error: %+v, %s", result, err)
 	if err != nil {
 		log.Errorf("failed to fetch link %s: %s", link, err.Error())
+		recordError("failed to fetch link")
 		return nil, err
 	}
 	log.Infof("successfully fetched link %s", link)
 	return result, nil
 }
 
-//
-// func FindLinksRestricted(obj interface{}) ([]string, []error) {
-// 	links := []string{}
-// 	errors := []error{}
-// 	switch obj.(type) {
-// 		case hubapi
-// 	}
-// }
-
-func FindLinks(obj interface{}) ([]string, []error) {
-	switch v := obj.(type) {
-	case map[string]interface{}:
-		return FindLinksDict(v)
-	case []interface{}:
-		return FindLinksArray(v)
-	default:
-		return []string{}, []error{}
-	}
-}
-
-func FindLinksDict(dict map[string]interface{}) ([]string, []error) {
-	links := []string{}
-	errors := []error{}
-	for key, val := range dict {
-		if key == "links" {
-			linkObjs, ok := val.([]interface{})
-			if ok {
-				for _, obj := range linkObjs {
-					objDict, ok := obj.(map[string]interface{})
-					if ok {
-						linkValue, ok := objDict["href"].(string)
-						if ok {
-							links = append(links, linkValue)
-						} else {
-							errors = append(errors, fmt.Errorf("invalid type of href: %s", reflect.TypeOf(objDict["href"])))
-						}
-					} else {
-						errors = append(errors, fmt.Errorf("invalid type of links object: %s", reflect.TypeOf(obj)))
-					}
-				}
-			} else {
-				errors = append(errors, fmt.Errorf("invalid type of links: %s", reflect.TypeOf(val)))
-			}
-			continue
-		}
-		switch v := val.(type) {
-		case []interface{}:
-			arrayLinks, errs := FindLinksArray(v)
-			links = append(links, arrayLinks...)
-			errors = append(errors, errs...)
-		case map[string]interface{}:
-			dictLinks, errs := FindLinksDict(v)
-			links = append(links, dictLinks...)
-			errors = append(errors, errs...)
-		default:
-			break
-		}
-	}
-	return links, errors
-}
-
-func FindLinksArray(array []interface{}) ([]string, []error) {
-	links := []string{}
-	errors := []error{}
-	for _, item := range array {
-		itemLinks, errs := FindLinks(item)
-		links = append(links, itemLinks...)
-		errors = append(errors, errs...)
-	}
-	return links, errors
-}
-
 func (pt *PerformanceTester) GetProjects() (*hubapi.ProjectList, error) {
 	limit := 35000
 	options := &hubapi.GetListOptions{Limit: &limit}
 	return pt.HubClient.ListProjects(options)
+}
+
+func (pt *PerformanceTester) StartReducer() {
+	for {
+		select {
+		case results := <-pt.AddResults:
+			pt.DurationsResults = append(pt.DurationsResults, results)
+		case continuation := <-pt.GetResults:
+			resultsArray := []*PerformanceResults{}
+			for _, results := range pt.DurationsResults {
+				times := map[string][]float64{}
+				for linkType, durations := range results {
+					floats := []float64{}
+					for _, d := range durations {
+						floats = append(floats, float64(*d/time.Millisecond))
+					}
+					times[linkType.String()] = floats
+				}
+				perfResults := &PerformanceResults{
+					LinkTypeTimings: times,
+				}
+				resultsArray = append(resultsArray, perfResults)
+			}
+			go continuation(resultsArray)
+		}
+	}
+}
+
+func (pt *PerformanceTester) StartHittingHub() {
+	for {
+		groupedDurations, errors := pt.GetGroupedDurations()
+		pt.AddResults <- groupedDurations
+		for linkType, durations := range groupedDurations {
+			log.Infof("durations for %s: %+v", linkType.String(), durations)
+			for _, duration := range durations {
+				recordLinkTypeDuration(linkType, *duration)
+			}
+		}
+		for _, err := range errors {
+			log.Errorf("error: %s", err.Error())
+		}
+		time.Sleep(scrapeHubAPIPause)
+	}
+}
+
+func (pt *PerformanceTester) AddFreewayResultsHandler() {
+	http.HandleFunc("/freewayresults", func(w http.ResponseWriter, r *http.Request) {
+		pt.GetResults <- func(results []*PerformanceResults) {
+			jsonBytes, err := json.MarshalIndent(pt.DurationsResults, "", "  ")
+			if err != nil {
+				panic(err)
+			}
+			fmt.Fprint(w, string(jsonBytes))
+		}
+	})
 }

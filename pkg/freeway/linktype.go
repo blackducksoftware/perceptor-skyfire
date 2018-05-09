@@ -19,7 +19,7 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package hub
+package freeway
 
 import (
 	"fmt"
@@ -46,6 +46,15 @@ const (
 	LinkTypeCodeLocations        LinkType = iota
 	LinkTypeScanSummaries        LinkType = iota
 )
+
+func (l LinkType) MarshalJSON() ([]byte, error) {
+	jsonString := fmt.Sprintf(`"%s"`, l.String())
+	return []byte(jsonString), nil
+}
+
+func (l LinkType) MarshalText() (text []byte, err error) {
+	return []byte(l.String()), nil
+}
 
 var allLinkTypes = []LinkType{
 	LinkTypeProjs,

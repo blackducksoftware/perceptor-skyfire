@@ -22,44 +22,40 @@ under the License.
 package main
 
 import (
+	"fmt"
+	"net/http"
 	"os"
 
-	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/freeway"
+	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	hubHost := os.Args[1]
-	hubUser := os.Args[2]
-	hubPassword := os.Args[3]
-	// port := os.Args[4]
+	configPath := os.Args[1]
+	config, err := freeway.ReadConfig(configPath)
+	if err != nil {
+		panic(err)
+	}
 
-	pt, err := hub.NewPerformanceTester(hubHost, hubUser, hubPassword)
+	logLevel, err := config.GetLogLevel()
+	if err != nil {
+		panic(err)
+	}
+	log.SetLevel(logLevel)
+
+	log.Infof("received config %+v", config)
+
+	pt, err := freeway.NewPerformanceTester(config.HubHost, config.HubUser, config.HubPassword)
 	if err != nil {
 		panic(err)
 	}
 	log.Infof("instantiated performance tester: %+v", pt)
 
-	groupedDurations, errors := pt.GetLinks()
-	for key, durations := range groupedDurations {
-		log.Infof("durations for %s: %+v", key, durations)
-	}
-	for _, err := range errors {
-		log.Errorf("error: %s", err.Error())
-	}
+	http.Handle("/metrics", prometheus.Handler())
+	addr := fmt.Sprintf(":%d", config.Port)
+	go http.ListenAndServe(addr, nil)
+	log.Infof("running http server on %s", addr)
 
-	// links, errs := pt.TraverseGraph()
-	// for link := range links {
-	// 	log.Infof("link: %s", link)
-	// }
-	// for _, err := range errs {
-	// 	log.Errorf("error: %s", err.Error())
-	// }
-
-	// http.Handle("/metrics", prometheus.Handler())
-	// addr := fmt.Sprintf(":%s", port)
-	// go http.ListenAndServe(addr, nil)
-	// log.Infof("running http server on %s", addr)
-	//
-	// select {}
+	select {}
 }
