@@ -22,6 +22,7 @@ under the License.
 package skyfire
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -51,7 +52,11 @@ func NewScraper(config *Config) (*Scraper, error) {
 
 	perceptorDumper := perceptor.NewPerceptorDumper(config.PerceptorHost, config.PerceptorPort)
 
-	hubDumper, err := hub.NewHubDumper(config.HubHost, config.HubUser, os.Getenv(config.HubUserPasswordEnvVar))
+	hubPassword, ok := os.LookupEnv(config.HubUserPasswordEnvVar)
+	if !ok {
+		return nil, fmt.Errorf("unable to get Hub password: environment variable %s not set", config.HubUserPasswordEnvVar)
+	}
+	hubDumper, err := hub.NewHubDumper(config.HubHost, config.HubUser, hubPassword)
 	if err != nil {
 		return nil, err
 	}
