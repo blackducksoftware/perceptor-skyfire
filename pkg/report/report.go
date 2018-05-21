@@ -37,10 +37,10 @@ type Report struct {
 func NewReport(dump *Dump) *Report {
 	return &Report{
 		dump,
-		NewMetaReport(dump),
+		NewMetaReport(dump.Kube, dump.HubVersion),
 		NewKubeReport(dump.Kube),
-		NewKubePerceptorReport(dump),
-		NewPerceptorHubReport(dump),
+		NewKubePerceptorReport(dump.Kube, dump.Perceptor, dump.HubVersion),
+		NewPerceptorHubReport(dump.Perceptor, dump.Hub),
 		NewHubReport(dump.Hub),
 	}
 }
@@ -55,16 +55,3 @@ func (r *Report) HumanReadableString() string {
 	}
 	return strings.Join(chunks, "\n\n")
 }
-
-// In perceptor but not in hub:
-// - completed images
-// - completed pods
-
-// In hub but not in perceptor:
-// - completed image
-
-// Extra hub stuff:
-// - multiple projects matching a sha (?)
-// - multiple project versions in a project
-// - multiple scan summaries in a project version
-// - multiple code locations in a scan summary

@@ -22,16 +22,14 @@ under the License.
 package hub
 
 type Dump struct {
-	Version           string
 	Projects          []*Project
 	ProjectsBySha     map[string]*Project
 	DuplicateShas     map[string]bool
 	ShortProjectNames []string
 }
 
-func NewDump(version string, projects []*Project) *Dump {
+func NewDump(projects []*Project) *Dump {
 	dump := &Dump{
-		Version:           version,
 		Projects:          projects,
 		ProjectsBySha:     map[string]*Project{},
 		DuplicateShas:     map[string]bool{},

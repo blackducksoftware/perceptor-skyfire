@@ -30,17 +30,25 @@ import (
 type MetaReport struct {
 	KubeMeta   *kube.Meta
 	HubVersion string
-	//	HubScanClientVersion string // TODO we don't need this, do we?
 }
 
-func NewMetaReport(dump *Dump) *MetaReport {
+func NewMetaReport(kubeDump *kube.Dump, hubVersion string) *MetaReport {
+	if kubeDump == nil {
+		return nil
+	}
 	return &MetaReport{
-		KubeMeta:   dump.Kube.Meta,
-		HubVersion: dump.Hub.Version,
+		KubeMeta:   kubeDump.Meta,
+		HubVersion: hubVersion,
 	}
 }
 
 func (m *MetaReport) HumanReadableString() string {
+	if m == nil {
+		return `
+Overview:
+ - no information
+`
+	}
 	return fmt.Sprintf(`
 Overview:
  - Hub version %s

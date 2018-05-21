@@ -28,9 +28,14 @@ import (
 var problemsGauge *prometheus.GaugeVec
 var errorCounter *prometheus.CounterVec
 var eventCounter *prometheus.CounterVec
+var dumpFactsGauge *prometheus.GaugeVec
 
 func recordReportProblem(name string, count int) {
 	problemsGauge.With(prometheus.Labels{"name": name}).Set(float64(count))
+}
+
+func recordDumpFact(name string, count int) {
+	dumpFactsGauge.With(prometheus.Labels{"name": name}).Set(float64(count))
 }
 
 func recordError(name string) {
@@ -65,4 +70,12 @@ func init() {
 		Help:      "internal skyfire events",
 	}, []string{"name"})
 	prometheus.MustRegister(eventCounter)
+
+	dumpFactsGauge = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Namespace: "perceptor",
+		Subsystem: "skyfire",
+		Name:      "dump_facts",
+		Help:      "raw data of the dumps",
+	}, []string{"name"})
+	prometheus.MustRegister(dumpFactsGauge)
 }

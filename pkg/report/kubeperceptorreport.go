@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/perceptor"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -52,15 +53,18 @@ type KubePerceptorReport struct {
 	UnanalyzeablePods []string
 }
 
-func NewKubePerceptorReport(dump *Dump) *KubePerceptorReport {
-	finishedJustKubePods, conflictingAnnotationsPods, conflictingLabelsPods, unanalyzeablePods := KubeNotPerceptorFinishedPods(dump)
+func NewKubePerceptorReport(kubeDump *kube.Dump, perceptorDump *perceptor.Dump, hubVersion string) *KubePerceptorReport {
+	if kubeDump == nil || perceptorDump == nil {
+		return nil
+	}
+	finishedJustKubePods, conflictingAnnotationsPods, conflictingLabelsPods, unanalyzeablePods := KubeNotPerceptorFinishedPods(kubeDump, perceptorDump, hubVersion)
 	return &KubePerceptorReport{
-		JustKubePods:               KubeNotPerceptorPods(dump),
-		JustPerceptorPods:          PerceptorNotKubePods(dump),
-		JustKubeImages:             KubeNotPerceptorImages(dump),
-		JustPerceptorImages:        PerceptorNotKubeImages(dump),
+		JustKubePods:               KubeNotPerceptorPods(kubeDump, perceptorDump),
+		JustPerceptorPods:          PerceptorNotKubePods(kubeDump, perceptorDump),
+		JustKubeImages:             KubeNotPerceptorImages(kubeDump, perceptorDump),
+		JustPerceptorImages:        PerceptorNotKubeImages(kubeDump, perceptorDump),
 		FinishedJustKubePods:       finishedJustKubePods,
-		FinishedJustPerceptorPods:  PerceptorNotKubeFinishedPods(dump),
+		FinishedJustPerceptorPods:  PerceptorNotKubeFinishedPods(kubeDump, perceptorDump),
 		ConflictingAnnotationsPods: conflictingAnnotationsPods,
 		ConflictingLabelsPods:      conflictingLabelsPods,
 		UnanalyzeablePods:          unanalyzeablePods,
@@ -68,6 +72,12 @@ func NewKubePerceptorReport(dump *Dump) *KubePerceptorReport {
 }
 
 func (kr *KubePerceptorReport) HumanReadableString() string {
+	if kr == nil {
+		return `
+Kubernetes<->Perceptor:
+ - no information
+ `
+	}
 	return fmt.Sprintf(`
 Kubernetes<->Perceptor:
  - %d pod(s) in Kubernetes that were not in Perceptor
@@ -89,10 +99,10 @@ Kubernetes<->Perceptor:
 		len(kr.FinishedJustPerceptorPods))
 }
 
-func KubeNotPerceptorPods(dump *Dump) []string {
+func KubeNotPerceptorPods(kubeDump *kube.Dump, perceptorDump *perceptor.Dump) []string {
 	pods := []string{}
-	for podName := range dump.Kube.PodsByName {
-		_, ok := dump.Perceptor.Model.Pods[podName]
+	for podName := range kubeDump.PodsByName {
+		_, ok := perceptorDump.Model.Pods[podName]
 		if !ok {
 			pods = append(pods, podName)
 		}
@@ -100,10 +110,10 @@ func KubeNotPerceptorPods(dump *Dump) []string {
 	return pods
 }
 
-func PerceptorNotKubePods(dump *Dump) []string {
+func PerceptorNotKubePods(kubeDump *kube.Dump, perceptorDump *perceptor.Dump) []string {
 	pods := []string{}
-	for podName := range dump.Perceptor.Model.Pods {
-		_, ok := dump.Kube.PodsByName[podName]
+	for podName := range perceptorDump.Model.Pods {
+		_, ok := kubeDump.PodsByName[podName]
 		if !ok {
 			pods = append(pods, podName)
 		}
@@ -111,10 +121,10 @@ func PerceptorNotKubePods(dump *Dump) []string {
 	return pods
 }
 
-func KubeNotPerceptorImages(dump *Dump) []string {
+func KubeNotPerceptorImages(kubeDump *kube.Dump, perceptorDump *perceptor.Dump) []string {
 	images := []string{}
-	for sha := range dump.Kube.ImagesBySha {
-		_, ok := dump.Perceptor.Model.Images[sha]
+	for sha := range kubeDump.ImagesBySha {
+		_, ok := perceptorDump.Model.Images[sha]
 		if !ok {
 			images = append(images, sha)
 		}
@@ -122,10 +132,10 @@ func KubeNotPerceptorImages(dump *Dump) []string {
 	return images
 }
 
-func PerceptorNotKubeImages(dump *Dump) []string {
+func PerceptorNotKubeImages(kubeDump *kube.Dump, perceptorDump *perceptor.Dump) []string {
 	images := []string{}
-	for sha := range dump.Perceptor.Model.Images {
-		_, ok := dump.Kube.ImagesBySha[sha]
+	for sha := range perceptorDump.Model.Images {
+		_, ok := kubeDump.ImagesBySha[sha]
 		if !ok {
 			images = append(images, sha)
 		}
@@ -133,13 +143,13 @@ func PerceptorNotKubeImages(dump *Dump) []string {
 	return images
 }
 
-func KubeNotPerceptorFinishedPods(dump *Dump) (finishedKubePods []string, incorrectAnnotationsPods []string, incorrectLabelsPods []string, unanalyzeablePods []string) {
+func KubeNotPerceptorFinishedPods(kubeDump *kube.Dump, perceptorDump *perceptor.Dump, hubVersion string) (finishedKubePods []string, incorrectAnnotationsPods []string, incorrectLabelsPods []string, unanalyzeablePods []string) {
 	finishedKubePods = []string{}
 	incorrectAnnotationsPods = []string{}
 	incorrectLabelsPods = []string{}
 	unanalyzeablePods = []string{}
 
-	for podName, pod := range dump.Kube.PodsByName {
+	for podName, pod := range kubeDump.PodsByName {
 		imageShas, err := PodShas(pod)
 		if err != nil {
 			unanalyzeablePods = append(unanalyzeablePods, podName)
@@ -147,13 +157,13 @@ func KubeNotPerceptorFinishedPods(dump *Dump) (finishedKubePods []string, incorr
 		}
 
 		if pod.HasAllBDAnnotations() && pod.HasAllBDLabels() {
-			_, ok := dump.Perceptor.PodsByName[podName]
+			_, ok := perceptorDump.PodsByName[podName]
 			if !ok {
 				finishedKubePods = append(finishedKubePods, podName)
 			}
 		}
 
-		expectedPodAnnotations, err := ExpectedPodAnnotations(podName, imageShas, dump)
+		expectedPodAnnotations, err := ExpectedPodAnnotations(podName, imageShas, kubeDump, perceptorDump, hubVersion)
 		if err == nil {
 			missingKeys := []string{} // TODO do we actually need this?
 			keysOfWrongValues := []string{}
@@ -173,7 +183,7 @@ func KubeNotPerceptorFinishedPods(dump *Dump) (finishedKubePods []string, incorr
 			unanalyzeablePods = append(unanalyzeablePods, podName)
 		}
 
-		expectedPodLabels, err := ExpectedPodLabels(podName, imageShas, dump)
+		expectedPodLabels, err := ExpectedPodLabels(podName, imageShas, kubeDump, perceptorDump)
 		if err == nil {
 			missingKeys := []string{} // TODO do we actually need this?
 			keysOfWrongValues := []string{}
@@ -197,10 +207,10 @@ func KubeNotPerceptorFinishedPods(dump *Dump) (finishedKubePods []string, incorr
 	return
 }
 
-func PerceptorNotKubeFinishedPods(dump *Dump) []string {
+func PerceptorNotKubeFinishedPods(kubeDump *kube.Dump, perceptorDump *perceptor.Dump) []string {
 	pods := []string{}
-	for podName, _ := range dump.Perceptor.PodsByName {
-		kubePod, ok := dump.Kube.PodsByName[podName]
+	for podName, _ := range perceptorDump.PodsByName {
+		kubePod, ok := kubeDump.PodsByName[podName]
 		if !ok {
 			// this should be handled elsewhere, right?
 			continue
@@ -224,17 +234,16 @@ func PodShas(pod *kube.Pod) ([]string, error) {
 	return imageShas, nil
 }
 
-func ExpectedPodAnnotations(podName string, imageShas []string, dump *Dump) (map[string]string, error) {
-	perceptor := dump.Perceptor
+func ExpectedPodAnnotations(podName string, imageShas []string, kubeDump *kube.Dump, perceptorDump *perceptor.Dump, hubVersion string) (map[string]string, error) {
 	annotations := map[string]string{}
-	pod, ok := perceptor.PodsByName[podName]
+	pod, ok := perceptorDump.PodsByName[podName]
 	if !ok {
 		// didn't find this pod in the scan results?  then there shouldn't be any BD annotations
 		return annotations, nil
 	}
 
 	for i, sha := range imageShas {
-		image, ok := perceptor.ImagesBySha[sha]
+		image, ok := perceptorDump.ImagesBySha[sha]
 		if !ok {
 			return nil, fmt.Errorf("unable to find image %s", sha)
 		}
@@ -242,9 +251,9 @@ func ExpectedPodAnnotations(podName string, imageShas []string, dump *Dump) (map
 		annotations[kube.PodImageAnnotationKeyVulnerabilities.String(i)] = fmt.Sprintf("%d", image.Vulnerabilities)
 		annotations[kube.PodImageAnnotationKeyPolicyViolations.String(i)] = fmt.Sprintf("%d", image.PolicyViolations)
 		annotations[kube.PodImageAnnotationKeyProjectEndpoint.String(i)] = image.ComponentsURL
-		annotations[kube.PodImageAnnotationKeyScannerVersion.String(i)] = dump.Hub.Version
-		annotations[kube.PodImageAnnotationKeyServerVersion.String(i)] = dump.Hub.Version
-		name, _, _ := dump.Kube.ImagesBySha[sha].ParseImageID() // just ignore errors and missing values!  maybe not a good idea TODO
+		annotations[kube.PodImageAnnotationKeyScannerVersion.String(i)] = hubVersion
+		annotations[kube.PodImageAnnotationKeyServerVersion.String(i)] = hubVersion
+		name, _, _ := kubeDump.ImagesBySha[sha].ParseImageID() // just ignore errors and missing values!  maybe not a good idea TODO
 		name = strings.Replace(name, "/", ".", -1)
 		name = strings.Replace(name, ":", ".", -1)
 		annotations[kube.PodImageAnnotationKeyImage.String(i)] = name
@@ -253,8 +262,8 @@ func ExpectedPodAnnotations(podName string, imageShas []string, dump *Dump) (map
 	annotations[kube.PodAnnotationKeyOverallStatus.String()] = pod.OverallStatus
 	annotations[kube.PodAnnotationKeyVulnerabilities.String()] = fmt.Sprintf("%d", pod.Vulnerabilities)
 	annotations[kube.PodAnnotationKeyPolicyViolations.String()] = fmt.Sprintf("%d", pod.PolicyViolations)
-	annotations[kube.PodAnnotationKeyScannerVersion.String()] = dump.Hub.Version
-	annotations[kube.PodAnnotationKeyServerVersion.String()] = dump.Hub.Version
+	annotations[kube.PodAnnotationKeyScannerVersion.String()] = hubVersion
+	annotations[kube.PodAnnotationKeyServerVersion.String()] = hubVersion
 
 	return annotations, nil
 }
@@ -286,8 +295,8 @@ func RemoveRegistryInfo(d string) string {
 	return strings.Join(s, ".")
 }
 
-func ExpectedPodLabels(podName string, imageShas []string, dump *Dump) (map[string]string, error) {
-	perceptor := dump.Perceptor
+func ExpectedPodLabels(podName string, imageShas []string, kubeDump *kube.Dump, perceptorDump *perceptor.Dump) (map[string]string, error) {
+	perceptor := perceptorDump
 	labels := map[string]string{}
 	pod, ok := perceptor.PodsByName[podName]
 	if !ok {
@@ -302,10 +311,10 @@ func ExpectedPodLabels(podName string, imageShas []string, dump *Dump) (map[stri
 		labels[kube.PodImageLabelKeyOverallStatus.String(i)] = image.OverallStatus
 		labels[kube.PodImageLabelKeyVulnerabilities.String(i)] = fmt.Sprintf("%d", image.Vulnerabilities)
 		labels[kube.PodImageLabelKeyPolicyViolations.String(i)] = fmt.Sprintf("%d", image.PolicyViolations)
-		name, _, err := dump.Kube.ImagesBySha[sha].ParseImageID()
+		name, _, err := kubeDump.ImagesBySha[sha].ParseImageID()
 		// TODO ignoring errors ... not a great idea
 		if err != nil {
-			log.Errorf("unable to parse image id %s: %s", dump.Kube.ImagesBySha[sha].ImageID, err.Error())
+			log.Errorf("unable to parse image id %s: %s", kubeDump.ImagesBySha[sha].ImageID, err.Error())
 		}
 		labels[kube.PodImageLabelKeyImage.String(i)] = ShortenLabelContent(name)
 	}

@@ -23,6 +23,9 @@ package report
 
 import (
 	"fmt"
+
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
+	"github.com/blackducksoftware/perceptor-skyfire/pkg/perceptor"
 )
 
 type PerceptorHubReport struct {
@@ -30,14 +33,23 @@ type PerceptorHubReport struct {
 	JustHubImages       []string
 }
 
-func NewPerceptorHubReport(dump *Dump) *PerceptorHubReport {
+func NewPerceptorHubReport(perceptorDump *perceptor.Dump, hubDump *hub.Dump) *PerceptorHubReport {
+	if perceptorDump == nil || hubDump == nil {
+		return nil
+	}
 	return &PerceptorHubReport{
-		JustPerceptorImages: PerceptorNotHubImages(dump),
-		JustHubImages:       HubNotPerceptorImages(dump),
+		JustPerceptorImages: PerceptorNotHubImages(perceptorDump, hubDump),
+		JustHubImages:       HubNotPerceptorImages(perceptorDump, hubDump),
 	}
 }
 
 func (p *PerceptorHubReport) HumanReadableString() string {
+	if p == nil {
+		return `
+Perceptor<->Hub:
+ - no information
+`
+	}
 	return fmt.Sprintf(`
 Perceptor<->Hub:
  - %d image(s) in Perceptor that were not in the Hub
@@ -47,11 +59,11 @@ Perceptor<->Hub:
 		len(p.JustHubImages))
 }
 
-func PerceptorNotHubImages(dump *Dump) []string {
+func PerceptorNotHubImages(perceptorDump *perceptor.Dump, hubDump *hub.Dump) []string {
 	images := []string{}
-	for sha := range dump.Perceptor.ImagesBySha {
+	for sha := range perceptorDump.ImagesBySha {
 		sha20 := sha[:20]
-		_, ok := dump.Hub.ProjectsBySha[sha20]
+		_, ok := hubDump.ProjectsBySha[sha20]
 		if !ok {
 			images = append(images, sha)
 		}
@@ -59,12 +71,12 @@ func PerceptorNotHubImages(dump *Dump) []string {
 	return images
 }
 
-func HubNotPerceptorImages(dump *Dump) []string {
+func HubNotPerceptorImages(perceptorDump *perceptor.Dump, hubDump *hub.Dump) []string {
 	images := []string{}
-	for sha := range dump.Hub.ProjectsBySha {
+	for sha := range hubDump.ProjectsBySha {
 		foundMatch := false
 		// can't do a dictionary lookup, because hub sha only has first 20 characters
-		for _, perceptorImage := range dump.Perceptor.ScanResults.Images {
+		for _, perceptorImage := range perceptorDump.ScanResults.Images {
 			if perceptorImage.Sha[:20] == sha {
 				foundMatch = true
 				break
