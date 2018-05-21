@@ -76,7 +76,7 @@ func NewPerformanceTester(hubHost string, username string, password string) (*Pe
 }
 
 func (pt *PerformanceTester) GetGroupedDurations() (map[LinkType][]*time.Duration, []error) {
-	root := fmt.Sprintf("%s/api/projects", hubclient.BaseURL(pt.HubClient))
+	root := fmt.Sprintf("%s/api/projects", pt.HubClient.BaseURL())
 	times, errors := pt.TraverseGraph(root)
 	groupedTimes := map[LinkType][]*time.Duration{}
 	for link, duration := range times {
