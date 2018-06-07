@@ -46,7 +46,8 @@ func NewDashboardPerformanceTester(hubHost string, username string, password str
 		log.Errorf("unable to log in to hub: %s", err.Error())
 		return nil, err
 	}
-	return &DashboardPerformanceTester{HubClient: hubClient, URLs: urls}, nil
+	dpt := &DashboardPerformanceTester{HubClient: hubClient, URLs: urls, RequestBatchPause: requestBatchPause}
+	return dpt, nil
 }
 
 func (dpt *DashboardPerformanceTester) Start(stop <-chan struct{}) {
@@ -56,11 +57,13 @@ func (dpt *DashboardPerformanceTester) Start(stop <-chan struct{}) {
 			case <-stop:
 				return
 			default:
-				for linkType, url := range dpt.URLs {
+				for linkType, urlPiece := range dpt.URLs {
 					result := map[string]interface{}{}
+					fullURL := fmt.Sprintf("%s/%s", dpt.HubClient.BaseURL(), urlPiece)
 					start := time.Now()
-					err := dpt.HubClient.HttpGetJSON(url, &result, 200)
+					err := dpt.HubClient.HttpGetJSON(fullURL, &result, 200)
 					if err != nil {
+						log.Errorf("unable to GET endpoint %s: %s", fullURL, err.Error())
 						recordError(fmt.Sprintf("unable to fetch %s", linkType))
 					}
 					elapsed := time.Since(start)

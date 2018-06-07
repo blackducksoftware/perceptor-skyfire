@@ -4,7 +4,7 @@
 
   "HubHost": "",
   "HubUser": "sysadmin",
-  "HubUserPasswordEnvVar": "PCP_HUBUSERPASSWORD",
+  "HubPasswordEnvVar": "PCP_HUBUSERPASSWORD",
 
-  "HubRequestBatchPauseSeconds": 5,
+  "HubRequestBatchPauseSeconds": 5
 }
