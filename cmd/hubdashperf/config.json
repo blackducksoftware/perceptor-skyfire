@@ -1,0 +1,10 @@
+{
+  "LogLevel": "debug",
+  "Port": 3011,
+
+  "HubHost": "",
+  "HubUser": "sysadmin",
+  "HubPasswordEnvVar": "PCP_HUBUSERPASSWORD",
+
+  "HubRequestBatchPauseSeconds": 5
+}
