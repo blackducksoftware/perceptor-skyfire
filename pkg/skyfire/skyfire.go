@@ -101,23 +101,7 @@ func (sf *Skyfire) HandleScrapes() {
 }
 
 func (sf *Skyfire) BuildReport() {
-	if sf.LastPerceptorDump == nil {
-		recordError("unable to generate report: perceptor dump is nil")
-		log.Warnf("unable to generate report: perceptor dump is nil")
-		return
-	}
-	if sf.LastHubDump == nil {
-		recordError("unable to generate report: hub dump is nil")
-		log.Warnf("unable to generate report: hub dump is nil")
-		return
-	}
-	if sf.LastKubeDump == nil {
-		recordError("unable to generate report: kube dump is nil")
-		log.Warnf("unable to generate report: kube dump is nil")
-		return
-	}
-
-	dump := report.NewDump(sf.LastKubeDump, sf.LastPerceptorDump, sf.LastHubDump)
+	dump := report.NewDump(sf.LastKubeDump, sf.LastPerceptorDump, sf.LastHubDump, sf.Scraper.HubVersion)
 	sf.LastReport = report.NewReport(dump)
 	IssueReportMetrics(sf.LastReport)
 
@@ -126,10 +110,37 @@ func (sf *Skyfire) BuildReport() {
 }
 
 func IssueReportMetrics(report *report.Report) {
-	IssueHubReportMetrics(report.Hub)
-	IssueKubeReportMetrics(report.Kube)
-	IssuePerceptorHubMetrics(report.PerceptorHub)
-	IssueKubePerceptorReportMetrics(report.KubePerceptor)
+	IssueDumpMetrics(report.Dump)
+	if report.Hub != nil {
+		IssueHubReportMetrics(report.Hub)
+	}
+	if report.Kube != nil {
+		IssueKubeReportMetrics(report.Kube)
+	}
+	if report.PerceptorHub != nil {
+		IssuePerceptorHubMetrics(report.PerceptorHub)
+	}
+	if report.KubePerceptor != nil {
+		IssueKubePerceptorReportMetrics(report.KubePerceptor)
+	}
+}
+
+func IssueDumpMetrics(dump *report.Dump) {
+	if dump.Hub != nil {
+		recordDumpFact("hub_projects_count", len(dump.Hub.Projects))
+	}
+	if dump.Kube != nil {
+		recordDumpFact("kube_pod_count", len(dump.Kube.Pods))
+		recordDumpFact("kube_image_count", len(dump.Kube.ImagesBySha)+len(dump.Kube.ImagesMissingSha))
+	}
+	if dump.Perceptor != nil {
+		recordDumpFact("perceptor_scanned_pod_count", len(dump.Perceptor.ScanResults.Pods))
+		recordDumpFact("perceptor_scanned_image_count", len(dump.Perceptor.ScanResults.Images))
+		recordDumpFact("perceptor_model_pod_count", len(dump.Perceptor.Model.Pods))
+		recordDumpFact("perceptor_model_image_count", len(dump.Perceptor.Model.Images))
+		recordDumpFact("perceptor_model_imagescanqueue_length", len(dump.Perceptor.Model.ImageScanQueue))
+		recordDumpFact("perceptor_model_imagehubcheckqueue_length", len(dump.Perceptor.Model.ImageHubCheckQueue))
+	}
 }
 
 func IssueHubReportMetrics(report *report.HubReport) {

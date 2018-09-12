@@ -61,11 +61,7 @@ func (hd *HubDumper) Dump() (*Dump, error) {
 	if err != nil {
 		return nil, err
 	}
-	hubVersion, err := hd.Version()
-	if err != nil {
-		return nil, err
-	}
-	return NewDump(hubVersion, hubProjects), nil
+	return NewDump(hubProjects), nil
 }
 
 func (hd *HubDumper) Version() (string, error) {

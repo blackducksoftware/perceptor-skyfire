@@ -28,15 +28,17 @@ import (
 )
 
 type Dump struct {
-	Kube      *kube.Dump
-	Perceptor *perceptor.Dump
-	Hub       *hub.Dump
+	Kube       *kube.Dump
+	Perceptor  *perceptor.Dump
+	Hub        *hub.Dump
+	HubVersion string
 }
 
-func NewDump(kube *kube.Dump, perceptor *perceptor.Dump, hub *hub.Dump) *Dump {
+func NewDump(kube *kube.Dump, perceptor *perceptor.Dump, hub *hub.Dump, hubVersion string) *Dump {
 	return &Dump{
-		Kube:      kube,
-		Perceptor: perceptor,
-		Hub:       hub,
+		Kube:       kube,
+		Perceptor:  perceptor,
+		Hub:        hub,
+		HubVersion: hubVersion,
 	}
 }

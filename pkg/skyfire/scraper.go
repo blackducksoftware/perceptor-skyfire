@@ -42,6 +42,7 @@ type Scraper struct {
 	HubDumper                    *hub.HubDumper
 	HubDumps                     chan *hub.Dump
 	HubDumpPauseSeconds          int
+	HubVersion                   string
 }
 
 func NewScraper(config *Config) (*Scraper, error) {
@@ -60,6 +61,10 @@ func NewScraper(config *Config) (*Scraper, error) {
 	if err != nil {
 		return nil, err
 	}
+	hubVersion, err := hubDumper.Version()
+	if err != nil {
+		return nil, err
+	}
 
 	scraper := &Scraper{
 		KubeDumper:                   kubeDumper,
@@ -71,6 +76,7 @@ func NewScraper(config *Config) (*Scraper, error) {
 		HubDumper:                    hubDumper,
 		HubDumps:                     make(chan *hub.Dump),
 		HubDumpPauseSeconds:          config.HubDumpPauseSeconds,
+		HubVersion:                   hubVersion,
 	}
 
 	scraper.StartScraping()

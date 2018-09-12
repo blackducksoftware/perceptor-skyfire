@@ -34,6 +34,9 @@ type HubReport struct {
 }
 
 func NewHubReport(dump *hub.Dump) *HubReport {
+	if dump == nil {
+		return nil
+	}
 	return &HubReport{
 		ProjectsMultipleVersions:           HubProjectsWrongNumberOfVersions(dump),
 		VersionsMultipleCodeLocations:      HubVersionsWrongNumberOfCodeLocations(dump),
@@ -42,6 +45,12 @@ func NewHubReport(dump *hub.Dump) *HubReport {
 }
 
 func (h *HubReport) HumanReadableString() string {
+	if h == nil {
+		return `
+Hub:
+ - no information
+ `
+	}
 	return fmt.Sprintf(`
 Hub:
  - %d project(s) with multiple versions

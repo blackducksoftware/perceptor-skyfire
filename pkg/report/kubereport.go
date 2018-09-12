@@ -35,6 +35,9 @@ type KubeReport struct {
 }
 
 func NewKubeReport(dump *kube.Dump) *KubeReport {
+	if dump == nil {
+		return nil
+	}
 	partiallyAnnotatedKubePods, partiallyLabeledKubePods := PartiallyHandledKubePods(dump)
 	return &KubeReport{
 		UnanalyzeablePods:      UnanalyzeablePods(dump),
@@ -45,6 +48,12 @@ func NewKubeReport(dump *kube.Dump) *KubeReport {
 }
 
 func (k *KubeReport) HumanReadableString() string {
+	if k == nil {
+		return `
+Kubernetes:
+ - no information
+`
+	}
 	return fmt.Sprintf(`
 Kubernetes:
  - %d unanalyzeable pod(s)
