@@ -23,6 +23,7 @@ package skyfire
 
 import (
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
+	"github.com/juju/errors"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -31,15 +32,15 @@ type Config struct {
 	UseInClusterConfig bool
 	MasterURL          string
 	KubeConfigPath     string
-	LogLevel           string
 
 	KubeDumpIntervalSeconds      int
 	PerceptorDumpIntervalSeconds int
 	HubDumpPauseSeconds          int
 
-	Port int
+	Port     int
+	LogLevel string
 
-	HubHost               string
+	HubHosts              []string
 	HubUser               string
 	HubUserPasswordEnvVar string
 
@@ -56,11 +57,11 @@ func ReadConfig(configPath string) (*Config, error) {
 	config := &Config{}
 	err := viper.ReadInConfig()
 	if err != nil {
-		return nil, err
+		return nil, errors.Trace(err)
 	}
 	err = viper.Unmarshal(config)
 	if err != nil {
-		return nil, err
+		return nil, errors.Trace(err)
 	}
 	return config, nil
 }
