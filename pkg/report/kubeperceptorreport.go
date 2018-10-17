@@ -92,7 +92,7 @@ Kubernetes<->Perceptor:
 func KubeNotPerceptorPods(dump *Dump) []string {
 	pods := []string{}
 	for podName := range dump.Kube.PodsByName {
-		_, ok := dump.Perceptor.Model.Pods[podName]
+		_, ok := dump.Perceptor.Model.CoreModel.Pods[podName]
 		if !ok {
 			pods = append(pods, podName)
 		}
@@ -102,7 +102,7 @@ func KubeNotPerceptorPods(dump *Dump) []string {
 
 func PerceptorNotKubePods(dump *Dump) []string {
 	pods := []string{}
-	for podName := range dump.Perceptor.Model.Pods {
+	for podName := range dump.Perceptor.Model.CoreModel.Pods {
 		_, ok := dump.Kube.PodsByName[podName]
 		if !ok {
 			pods = append(pods, podName)
@@ -114,7 +114,7 @@ func PerceptorNotKubePods(dump *Dump) []string {
 func KubeNotPerceptorImages(dump *Dump) []string {
 	images := []string{}
 	for sha := range dump.Kube.ImagesBySha {
-		_, ok := dump.Perceptor.Model.Images[sha]
+		_, ok := dump.Perceptor.Model.CoreModel.Images[sha]
 		if !ok {
 			images = append(images, sha)
 		}
@@ -124,7 +124,7 @@ func KubeNotPerceptorImages(dump *Dump) []string {
 
 func PerceptorNotKubeImages(dump *Dump) []string {
 	images := []string{}
-	for sha := range dump.Perceptor.Model.Images {
+	for sha := range dump.Perceptor.Model.CoreModel.Images {
 		_, ok := dump.Kube.ImagesBySha[sha]
 		if !ok {
 			images = append(images, sha)
