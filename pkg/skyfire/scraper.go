@@ -29,6 +29,7 @@ import (
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/perceptor"
+	"github.com/juju/errors"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -48,7 +49,7 @@ type Scraper struct {
 func NewScraper(config *Config, stop <-chan struct{}) (*Scraper, error) {
 	kubeDumper, err := kube.NewKubeClient(config.KubeClientConfig())
 	if err != nil {
-		return nil, err
+		return nil, errors.Trace(err)
 	}
 
 	perceptorDumper := perceptor.NewPerceptorDumper(config.PerceptorHost, config.PerceptorPort)
@@ -59,7 +60,7 @@ func NewScraper(config *Config, stop <-chan struct{}) (*Scraper, error) {
 	}
 	hubDumper, err := hub.NewHubDumper(config.HubHost, config.HubUser, hubPassword)
 	if err != nil {
-		return nil, err
+		return nil, errors.Trace(err)
 	}
 
 	scraper := &Scraper{
