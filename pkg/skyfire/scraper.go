@@ -22,63 +22,44 @@ under the License.
 package skyfire
 
 import (
-	"fmt"
-	"os"
 	"time"
 
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/perceptor"
-	"github.com/juju/errors"
 	log "github.com/sirupsen/logrus"
 )
 
 type Scraper struct {
-	KubeDumper                   *kube.KubeClient
-	KubeDumps                    chan *kube.Dump
-	KubeDumpIntervalSeconds      int
-	PerceptorDumper              *perceptor.PerceptorDumper
-	PerceptorDumps               chan *perceptor.Dump
-	PerceptorDumpIntervalSeconds int
-	HubDumper                    *hub.HubDumper
-	HubDumps                     chan *hub.Dump
-	HubDumpPauseSeconds          int
-	stop                         <-chan struct{}
+	KubeDumper            kube.ClientInterface
+	KubeDumps             chan *kube.Dump
+	KubeDumpInterval      time.Duration
+	PerceptorDumper       perceptor.ClientInterface
+	PerceptorDumps        chan *perceptor.Dump
+	PerceptorDumpInterval time.Duration
+	HubDumper             hub.ClientInterface
+	HubDumps              chan *hub.Dump
+	HubDumpPause          time.Duration
+	stop                  <-chan struct{}
 }
 
-func NewScraper(config *Config, stop <-chan struct{}) (*Scraper, error) {
-	kubeDumper, err := kube.NewKubeClient(config.KubeClientConfig())
-	if err != nil {
-		return nil, errors.Trace(err)
-	}
-
-	perceptorDumper := perceptor.NewPerceptorDumper(config.PerceptorHost, config.PerceptorPort)
-
-	hubPassword, ok := os.LookupEnv(config.HubUserPasswordEnvVar)
-	if !ok {
-		return nil, fmt.Errorf("unable to get Hub password: environment variable %s not set", config.HubUserPasswordEnvVar)
-	}
-	hubDumper, err := hub.NewHubDumper(config.HubHost, config.HubUser, hubPassword)
-	if err != nil {
-		return nil, errors.Trace(err)
-	}
-
+func NewScraper(kubeDumper kube.ClientInterface, kubeDumpInterval time.Duration, hubDumper hub.ClientInterface, hubDumpInterval time.Duration, perceptorDumper perceptor.ClientInterface, perceptorDumpInterval time.Duration, stop <-chan struct{}) *Scraper {
 	scraper := &Scraper{
-		KubeDumper:                   kubeDumper,
-		KubeDumps:                    make(chan *kube.Dump),
-		KubeDumpIntervalSeconds:      config.KubeDumpIntervalSeconds,
-		PerceptorDumper:              perceptorDumper,
-		PerceptorDumps:               make(chan *perceptor.Dump),
-		PerceptorDumpIntervalSeconds: config.PerceptorDumpIntervalSeconds,
-		HubDumper:                    hubDumper,
-		HubDumps:                     make(chan *hub.Dump),
-		HubDumpPauseSeconds:          config.HubDumpPauseSeconds,
-		stop:                         stop,
+		KubeDumper:            kubeDumper,
+		KubeDumps:             make(chan *kube.Dump),
+		KubeDumpInterval:      kubeDumpInterval,
+		PerceptorDumper:       perceptorDumper,
+		PerceptorDumps:        make(chan *perceptor.Dump),
+		PerceptorDumpInterval: perceptorDumpInterval,
+		HubDumper:             hubDumper,
+		HubDumps:              make(chan *hub.Dump),
+		HubDumpPause:          hubDumpInterval,
+		stop:                  stop,
 	}
 
 	scraper.StartScraping()
 
-	return scraper, nil
+	return scraper
 }
 
 func (sc *Scraper) StartHubScrapes() {
@@ -94,7 +75,7 @@ func (sc *Scraper) StartHubScrapes() {
 		select {
 		case <-sc.stop:
 			return
-		case <-time.After(time.Duration(sc.HubDumpPauseSeconds) * time.Second):
+		case <-time.After(sc.HubDumpPause):
 			// continue
 		}
 	}
@@ -110,11 +91,10 @@ func (sc *Scraper) StartKubeScrapes() {
 			recordError("unable to get kube dump")
 			log.Errorf("unable to get kube dump: %s", err.Error())
 		}
-		time.Sleep(time.Duration(sc.KubeDumpIntervalSeconds) * time.Second)
 		select {
 		case <-sc.stop:
 			return
-		case <-time.After(time.Duration(sc.HubDumpPauseSeconds) * time.Second):
+		case <-time.After(sc.KubeDumpInterval):
 			// continue
 		}
 	}
@@ -130,11 +110,10 @@ func (sc *Scraper) StartPerceptorScrapes() {
 			recordError("unable to get perceptor dump")
 			log.Errorf("unable to get perceptor dump: %s", err.Error())
 		}
-		time.Sleep(time.Duration(sc.PerceptorDumpIntervalSeconds) * time.Second)
 		select {
 		case <-sc.stop:
 			return
-		case <-time.After(time.Duration(sc.HubDumpPauseSeconds) * time.Second):
+		case <-time.After(sc.PerceptorDumpInterval):
 			// continue
 		}
 	}

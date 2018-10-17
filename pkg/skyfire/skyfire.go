@@ -25,11 +25,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/perceptor"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/report"
+	"github.com/juju/errors"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -44,10 +47,24 @@ type Skyfire struct {
 
 func NewSkyfire(config *Config) (*Skyfire, error) {
 	stop := make(chan struct{})
-	scraper, err := NewScraper(config, stop)
+	kubeDumper, err := kube.NewKubeClient(config.KubeClientConfig())
 	if err != nil {
-		return nil, err
+		return nil, errors.Trace(err)
 	}
+	perceptorDumper := perceptor.NewClient(config.PerceptorHost, config.PerceptorPort)
+
+	hubPassword, ok := os.LookupEnv(config.HubUserPasswordEnvVar)
+	if !ok {
+		return nil, fmt.Errorf("unable to get Hub password: environment variable %s not set", config.HubUserPasswordEnvVar)
+	}
+	hubDumper, err := hub.NewHubDumper(config.HubHost, config.HubUser, hubPassword)
+	if err != nil {
+		return nil, errors.Trace(err)
+	}
+	kubeInterval := time.Duration(config.KubeDumpIntervalSeconds) * time.Second
+	hubInterval := time.Duration(config.HubDumpPauseSeconds) * time.Second
+	perceptorInterval := time.Duration(config.PerceptorDumpIntervalSeconds) * time.Second
+	scraper := NewScraper(kubeDumper, kubeInterval, hubDumper, hubInterval, perceptorDumper, perceptorInterval, stop)
 	skyfire := &Skyfire{scraper, nil, nil, nil, nil, stop}
 	go skyfire.HandleScrapes()
 	http.HandleFunc("/latestreport", skyfire.LatestReportHandler())

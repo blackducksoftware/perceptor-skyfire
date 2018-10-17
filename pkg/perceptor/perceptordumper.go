@@ -28,41 +28,46 @@ import (
 
 	api "github.com/blackducksoftware/perceptor/pkg/api"
 	resty "github.com/go-resty/resty"
+	"github.com/juju/errors"
 )
 
-type PerceptorDumper struct {
+type ClientInterface interface {
+	Dump() (*Dump, error)
+}
+
+type Client struct {
 	Resty *resty.Client
 	Host  string
 	Port  int
 }
 
-func NewPerceptorDumper(host string, port int) *PerceptorDumper {
+func NewClient(host string, port int) *Client {
 	restyClient := resty.New()
 	restyClient.SetTimeout(time.Duration(5 * time.Second))
-	return &PerceptorDumper{
+	return &Client{
 		Resty: restyClient,
 		Host:  host,
 		Port:  port,
 	}
 }
 
-func (pd *PerceptorDumper) Dump() (*Dump, error) {
+func (pd *Client) Dump() (*Dump, error) {
 	scanResults, err := pd.DumpScanResults()
 	if err != nil {
-		return nil, err
+		return nil, errors.Annotate(err, "unable to dump scan results")
 	}
 	model, err := pd.DumpModel()
 	if err != nil {
-		return nil, err
+		return nil, errors.Annotate(err, "unable to dump model")
 	}
 	return NewDump(scanResults, model), nil
 }
 
-func (pd *PerceptorDumper) DumpModel() (*api.Model, error) {
+func (pd *Client) DumpModel() (*api.Model, error) {
 	url := fmt.Sprintf("http://%s:%d/model", pd.Host, pd.Port)
 	resp, err := pd.Resty.R().SetResult(&api.Model{}).Get(url)
 	if err != nil {
-		return nil, err
+		return nil, errors.Trace(err)
 	}
 	switch result := resp.Result().(type) {
 	case *api.Model:
@@ -72,11 +77,11 @@ func (pd *PerceptorDumper) DumpModel() (*api.Model, error) {
 	}
 }
 
-func (pd *PerceptorDumper) DumpScanResults() (*api.ScanResults, error) {
+func (pd *Client) DumpScanResults() (*api.ScanResults, error) {
 	url := fmt.Sprintf("http://%s:%d/scanresults", pd.Host, pd.Port)
 	resp, err := pd.Resty.R().SetResult(&api.ScanResults{}).Get(url)
 	if err != nil {
-		return nil, err
+		return nil, errors.Trace(err)
 	}
 	switch result := resp.Result().(type) {
 	case *api.ScanResults:

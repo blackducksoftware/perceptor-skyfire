@@ -31,6 +31,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type ClientInterface interface {
+	Login() error
+	Dump() (*Dump, error)
+}
+
 type HubDumper struct {
 	HubClient   *hubclient.Client
 	HubUsername string

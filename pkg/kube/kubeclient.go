@@ -33,6 +33,10 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
+type ClientInterface interface {
+	Dump() (*Dump, error)
+}
+
 // KubeClient is an implementation of the Client interface for kubernetes
 type KubeClient struct {
 	clientset kubernetes.Clientset
