@@ -42,9 +42,10 @@ type Scraper struct {
 	HubDumper                    *hub.HubDumper
 	HubDumps                     chan *hub.Dump
 	HubDumpPauseSeconds          int
+	stop                         <-chan struct{}
 }
 
-func NewScraper(config *Config) (*Scraper, error) {
+func NewScraper(config *Config, stop <-chan struct{}) (*Scraper, error) {
 	kubeDumper, err := kube.NewKubeClient(config.KubeClientConfig())
 	if err != nil {
 		return nil, err
@@ -71,6 +72,7 @@ func NewScraper(config *Config) (*Scraper, error) {
 		HubDumper:                    hubDumper,
 		HubDumps:                     make(chan *hub.Dump),
 		HubDumpPauseSeconds:          config.HubDumpPauseSeconds,
+		stop:                         stop,
 	}
 
 	scraper.StartScraping()
@@ -88,7 +90,12 @@ func (sc *Scraper) StartHubScrapes() {
 			recordError("unable to get perceptor dump")
 			log.Errorf("unable to get hub dump: %s", err.Error())
 		}
-		time.Sleep(time.Duration(sc.HubDumpPauseSeconds) * time.Second)
+		select {
+		case <-sc.stop:
+			return
+		case <-time.After(time.Duration(sc.HubDumpPauseSeconds) * time.Second):
+			// continue
+		}
 	}
 }
 
@@ -103,6 +110,12 @@ func (sc *Scraper) StartKubeScrapes() {
 			log.Errorf("unable to get kube dump: %s", err.Error())
 		}
 		time.Sleep(time.Duration(sc.KubeDumpIntervalSeconds) * time.Second)
+		select {
+		case <-sc.stop:
+			return
+		case <-time.After(time.Duration(sc.HubDumpPauseSeconds) * time.Second):
+			// continue
+		}
 	}
 }
 
@@ -117,6 +130,12 @@ func (sc *Scraper) StartPerceptorScrapes() {
 			log.Errorf("unable to get perceptor dump: %s", err.Error())
 		}
 		time.Sleep(time.Duration(sc.PerceptorDumpIntervalSeconds) * time.Second)
+		select {
+		case <-sc.stop:
+			return
+		case <-time.After(time.Duration(sc.HubDumpPauseSeconds) * time.Second):
+			// continue
+		}
 	}
 }
 

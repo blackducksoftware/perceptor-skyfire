@@ -42,7 +42,8 @@ type Skyfire struct {
 }
 
 func NewSkyfire(config *Config) (*Skyfire, error) {
-	scraper, err := NewScraper(config)
+	stop := make(chan struct{})
+	scraper, err := NewScraper(config, stop)
 	if err != nil {
 		return nil, err
 	}
