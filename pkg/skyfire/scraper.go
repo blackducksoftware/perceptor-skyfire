@@ -30,6 +30,12 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type hubDumper struct {
+	client hub.ClientInterface
+	dumps  chan *hub.Dump
+	stop   chan struct{}
+}
+
 // Scraper .....
 type Scraper struct {
 	KubeDumper            kube.ClientInterface
@@ -38,14 +44,21 @@ type Scraper struct {
 	PerceptorDumper       perceptor.ClientInterface
 	PerceptorDumps        chan *perceptor.Dump
 	PerceptorDumpInterval time.Duration
-	HubDumper             hub.ClientInterface
-	HubDumps              chan *hub.Dump
+	Hubs                  map[string]*hubDumper
 	HubDumpPause          time.Duration
 	stop                  <-chan struct{}
+	createHubClient       func(host string) (hub.ClientInterface, error)
 }
 
 // NewScraper .....
-func NewScraper(kubeDumper kube.ClientInterface, kubeDumpInterval time.Duration, hubDumper hub.ClientInterface, hubDumpInterval time.Duration, perceptorDumper perceptor.ClientInterface, perceptorDumpInterval time.Duration, stop <-chan struct{}) *Scraper {
+func NewScraper(kubeDumper kube.ClientInterface,
+	kubeDumpInterval time.Duration,
+	createHubClient func(host string) (hub.ClientInterface, error),
+	hubDumpInterval time.Duration,
+	perceptorDumper perceptor.ClientInterface,
+	perceptorDumpInterval time.Duration,
+	stop <-chan struct{}) *Scraper {
+
 	scraper := &Scraper{
 		KubeDumper:            kubeDumper,
 		KubeDumps:             make(chan *kube.Dump),
@@ -53,10 +66,10 @@ func NewScraper(kubeDumper kube.ClientInterface, kubeDumpInterval time.Duration,
 		PerceptorDumper:       perceptorDumper,
 		PerceptorDumps:        make(chan *perceptor.Dump),
 		PerceptorDumpInterval: perceptorDumpInterval,
-		HubDumper:             hubDumper,
-		HubDumps:              make(chan *hub.Dump),
+		Hubs:                  map[string]*hubDumper{},
 		HubDumpPause:          hubDumpInterval,
 		stop:                  stop,
+		createHubClient:       createHubClient,
 	}
 
 	scraper.StartScraping()
@@ -64,21 +77,61 @@ func NewScraper(kubeDumper kube.ClientInterface, kubeDumpInterval time.Duration,
 	return scraper
 }
 
+// SetHubs .....
+func (sc *Scraper) SetHubs(hosts []string) {
+	// add new ones
+	for _, host := range hosts {
+		if sc.Hubs[host] == nil {
+			client, err := sc.createHubClient(host)
+			if err != nil {
+				log.Errorf("unable to instantiate hub client for %s: %s", host, err.Error())
+				continue
+			}
+			newDumper := &hubDumper{
+				client: client,
+				dumps:  make(chan *hub.Dump),
+				stop:   make(chan struct{}),
+			}
+			go func() {
+				startHubScrapes(sc.HubDumpPause, newDumper)
+			}()
+			sc.Hubs[host] = newDumper
+		}
+	}
+	// delete removed ones
+	current := map[string]bool{}
+	for _, v := range hosts {
+		current[v] = true
+	}
+	toDelete := []string{}
+	for old := range sc.Hubs {
+		if !current[old] {
+			toDelete = append(toDelete, old)
+		}
+	}
+	for _, t := range toDelete {
+		hub := sc.Hubs[t]
+		close(hub.stop)
+		delete(sc.Hubs, t)
+		// anything else?
+	}
+}
+
 // StartHubScrapes .....
-func (sc *Scraper) StartHubScrapes() {
+func startHubScrapes(dumpPause time.Duration, dumper *hubDumper) {
 	for {
-		hubDump, err := sc.HubDumper.Dump()
+		hubDump, err := dumper.client.Dump()
 		if err == nil {
-			sc.HubDumps <- hubDump
+			dumper.dumps <- hubDump
 			recordEvent("hub dump")
 		} else {
 			recordError("unable to get perceptor dump")
 			log.Errorf("unable to get hub dump: %s", err.Error())
 		}
 		select {
-		case <-sc.stop:
+		case <-dumper.stop:
 			return
-		case <-time.After(sc.HubDumpPause):
+		case <-time.After(dumpPause):
 			// continue
 		}
 	}
@@ -126,7 +179,6 @@ func (sc *Scraper) StartPerceptorScrapes() {
 
 // StartScraping .....
 func (sc *Scraper) StartScraping() {
-	go sc.StartHubScrapes()
 	go sc.StartKubeScrapes()
 	go sc.StartPerceptorScrapes()
 }

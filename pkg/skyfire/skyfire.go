@@ -40,15 +40,14 @@ import (
 type Skyfire struct {
 	Scraper           *Scraper
 	LastPerceptorDump *perceptor.Dump
-	LastHubDump       *hub.Dump
+	LastHubDumps      map[string]*hub.Dump
 	LastKubeDump      *kube.Dump
 	LastReport        *report.Report
 	stop              <-chan struct{}
 }
 
 // NewSkyfire .....
-func NewSkyfire(config *Config) (*Skyfire, error) {
-	stop := make(chan struct{})
+func NewSkyfire(config *Config, stop <-chan struct{}) (*Skyfire, error) {
 	kubeDumper, err := kube.NewKubeClient(config.KubeClientConfig())
 	if err != nil {
 		return nil, errors.Trace(err)
@@ -59,19 +58,22 @@ func NewSkyfire(config *Config) (*Skyfire, error) {
 	if !ok {
 		return nil, fmt.Errorf("unable to get Hub password: environment variable %s not set", config.HubUserPasswordEnvVar)
 	}
-	hubDumper, err := hub.NewHubDumper(config.HubHost, config.HubUser, hubPassword)
-	if err != nil {
-		return nil, errors.Trace(err)
+	createHubClient := func(host string) (hub.ClientInterface, error) {
+		return hub.NewHubDumper(host, config.HubUser, hubPassword)
 	}
 	kubeInterval := time.Duration(config.KubeDumpIntervalSeconds) * time.Second
 	hubInterval := time.Duration(config.HubDumpPauseSeconds) * time.Second
 	perceptorInterval := time.Duration(config.PerceptorDumpIntervalSeconds) * time.Second
-	scraper := NewScraper(kubeDumper, kubeInterval, hubDumper, hubInterval, perceptorDumper, perceptorInterval, stop)
+	scraper := NewScraper(kubeDumper, kubeInterval, createHubClient, hubInterval, perceptorDumper, perceptorInterval, stop)
 	skyfire := &Skyfire{scraper, nil, nil, nil, nil, stop}
 	go skyfire.HandleScrapes()
 	http.HandleFunc("/latestreport", skyfire.LatestReportHandler())
-	http.HandleFunc("/relogintohub", skyfire.ReloginToHubHandler())
 	return skyfire, nil
+}
+
+// SetHubs ...
+func (sf *Skyfire) SetHubs(hosts []string) {
+	sf.Scraper.SetHubs(hosts)
 }
 
 // LatestReportHandler .....
@@ -86,21 +88,6 @@ func (sf *Skyfire) LatestReportHandler() func(http.ResponseWriter, *http.Request
 		}
 		recordEvent("latest report handler")
 		fmt.Fprint(w, string(bytes))
-	}
-}
-
-// ReloginToHubHandler .....
-func (sf *Skyfire) ReloginToHubHandler() func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		log.Debugf("received relogin to hub request")
-		err := sf.Scraper.HubDumper.Login()
-		if err != nil {
-			recordError("unable to relogin to hub")
-			http.Error(w, err.Error(), 500)
-			return
-		}
-		log.Debugf("successfully logged in to hub")
-		fmt.Fprint(w, "")
 	}
 }
 

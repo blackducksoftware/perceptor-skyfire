@@ -23,9 +23,7 @@ package skyfire
 
 import (
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
-	"github.com/juju/errors"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 // Config .....
@@ -52,21 +50,6 @@ type Config struct {
 // GetLogLevel .....
 func (config *Config) GetLogLevel() (log.Level, error) {
 	return log.ParseLevel(config.LogLevel)
-}
-
-// ReadConfig .....
-func ReadConfig(configPath string) (*Config, error) {
-	viper.SetConfigFile(configPath)
-	config := &Config{}
-	err := viper.ReadInConfig()
-	if err != nil {
-		return nil, errors.Trace(err)
-	}
-	err = viper.Unmarshal(config)
-	if err != nil {
-		return nil, errors.Trace(err)
-	}
-	return config, nil
 }
 
 // KubeClientConfig .....
