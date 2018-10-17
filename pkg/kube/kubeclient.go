@@ -123,7 +123,11 @@ func (client *KubeClient) GetAllServices() ([]*Service, error) {
 	}
 	// Append Service items to the Slice
 	for _, kubeService := range kubeServices.Items {
-		services = append(services, NewService(kubeService.Name))
+		var ports []int32
+		for _, port := range kubeService.Spec.Ports {
+			ports = append(ports, port.Port)
+		}
+		services = append(services, NewService(kubeService.Name, kubeService.Namespace, ports))
 	}
 	return services, nil
 }
