@@ -97,9 +97,9 @@ func (sf *Skyfire) HandleScrapes() {
 		select {
 		case <-sf.stop:
 			return
-		case h := <-sf.Scraper.HubDumps:
-			fmt.Println(h)
-			sf.LastHubDump = h
+		case dump := <-sf.Scraper.HubDumps:
+			fmt.Println(dump)
+			sf.LastHubDumps[dump.host] = dump.dump
 			sf.BuildReport()
 		case k := <-sf.Scraper.KubeDumps:
 			fmt.Println(k)

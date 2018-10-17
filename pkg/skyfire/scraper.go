@@ -36,6 +36,11 @@ type hubDumper struct {
 	stop   chan struct{}
 }
 
+type hubDump struct {
+	host string
+	dump *hub.Dump
+}
+
 // Scraper .....
 type Scraper struct {
 	KubeDumper            kube.ClientInterface
@@ -46,6 +51,7 @@ type Scraper struct {
 	PerceptorDumpInterval time.Duration
 	Hubs                  map[string]*hubDumper
 	HubDumpPause          time.Duration
+	HubDumps              chan *hubDump
 	stop                  <-chan struct{}
 	createHubClient       func(host string) (hub.ClientInterface, error)
 }
@@ -68,6 +74,7 @@ func NewScraper(kubeDumper kube.ClientInterface,
 		PerceptorDumpInterval: perceptorDumpInterval,
 		Hubs:                  map[string]*hubDumper{},
 		HubDumpPause:          hubDumpInterval,
+		HubDumps:              make(chan *hubDump),
 		stop:                  stop,
 		createHubClient:       createHubClient,
 	}
@@ -94,6 +101,16 @@ func (sc *Scraper) SetHubs(hosts []string) {
 			}
 			go func() {
 				startHubScrapes(sc.HubDumpPause, newDumper)
+			}()
+			go func() {
+				for {
+					select {
+					case <-newDumper.stop:
+						return
+					case dump := <-newDumper.dumps:
+						sc.HubDumps <- &hubDump{host: host, dump: dump}
+					}
+				}
 			}()
 			sc.Hubs[host] = newDumper
 		}
