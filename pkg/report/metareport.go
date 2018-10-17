@@ -27,12 +27,14 @@ import (
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 )
 
+// MetaReport .....
 type MetaReport struct {
 	KubeMeta   *kube.Meta
 	HubVersion string
 	//	HubScanClientVersion string // TODO we don't need this, do we?
 }
 
+// NewMetaReport .....
 func NewMetaReport(dump *Dump) *MetaReport {
 	return &MetaReport{
 		KubeMeta:   dump.Kube.Meta,
@@ -40,6 +42,7 @@ func NewMetaReport(dump *Dump) *MetaReport {
 	}
 }
 
+// HumanReadableString .....
 func (m *MetaReport) HumanReadableString() string {
 	return fmt.Sprintf(`
 Overview:

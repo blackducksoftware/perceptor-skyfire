@@ -36,6 +36,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Skyfire .....
 type Skyfire struct {
 	Scraper           *Scraper
 	LastPerceptorDump *perceptor.Dump
@@ -45,6 +46,7 @@ type Skyfire struct {
 	stop              <-chan struct{}
 }
 
+// NewSkyfire .....
 func NewSkyfire(config *Config) (*Skyfire, error) {
 	stop := make(chan struct{})
 	kubeDumper, err := kube.NewKubeClient(config.KubeClientConfig())
@@ -72,6 +74,7 @@ func NewSkyfire(config *Config) (*Skyfire, error) {
 	return skyfire, nil
 }
 
+// LatestReportHandler .....
 func (sf *Skyfire) LatestReportHandler() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Infof("received latest report request")
@@ -86,6 +89,7 @@ func (sf *Skyfire) LatestReportHandler() func(http.ResponseWriter, *http.Request
 	}
 }
 
+// ReloginToHubHandler .....
 func (sf *Skyfire) ReloginToHubHandler() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Debugf("received relogin to hub request")
@@ -100,6 +104,7 @@ func (sf *Skyfire) ReloginToHubHandler() func(http.ResponseWriter, *http.Request
 	}
 }
 
+// HandleScrapes .....
 func (sf *Skyfire) HandleScrapes() {
 	for {
 		select {
@@ -121,6 +126,7 @@ func (sf *Skyfire) HandleScrapes() {
 	}
 }
 
+// BuildReport .....
 func (sf *Skyfire) BuildReport() {
 	if sf.LastPerceptorDump == nil {
 		recordError("unable to generate report: perceptor dump is nil")
@@ -146,6 +152,7 @@ func (sf *Skyfire) BuildReport() {
 	log.Infof("successfully built report")
 }
 
+// IssueReportMetrics .....
 func IssueReportMetrics(report *report.Report) {
 	IssueHubReportMetrics(report.Hub)
 	IssueKubeReportMetrics(report.Kube)
@@ -153,12 +160,14 @@ func IssueReportMetrics(report *report.Report) {
 	IssueKubePerceptorReportMetrics(report.KubePerceptor)
 }
 
+// IssueHubReportMetrics .....
 func IssueHubReportMetrics(report *report.HubReport) {
 	recordReportProblem("hub_projects_multiple_versions", len(report.ProjectsMultipleVersions))
 	recordReportProblem("hub_versions_multiple_code_locations", len(report.VersionsMultipleCodeLocations))
 	recordReportProblem("hub_code_locations_multiple_scan_summaries", len(report.CodeLocationsMultipleScanSummaries))
 }
 
+// IssueKubeReportMetrics .....
 func IssueKubeReportMetrics(report *report.KubeReport) {
 	recordReportProblem("kube_unparseable_images", len(report.UnparseableImages))
 	recordReportProblem("kube_partially_annotated_pods", len(report.PartiallyAnnotatedPods))
@@ -166,6 +175,7 @@ func IssueKubeReportMetrics(report *report.KubeReport) {
 	recordReportProblem("kube_unanalyzeable_pods", len(report.UnanalyzeablePods))
 }
 
+// IssueKubePerceptorReportMetrics .....
 func IssueKubePerceptorReportMetrics(report *report.KubePerceptorReport) {
 	recordReportProblem("kube-perceptor_images_just_in_kube", len(report.JustKubeImages))
 	recordReportProblem("kube-perceptor_pods_just_in_kube", len(report.JustKubePods))
@@ -177,6 +187,7 @@ func IssueKubePerceptorReportMetrics(report *report.KubePerceptorReport) {
 	recordReportProblem("kube-perceptor_finished_pods_just_perceptor", len(report.FinishedJustPerceptorPods))
 }
 
+// IssuePerceptorHubMetrics .....
 func IssuePerceptorHubMetrics(report *report.PerceptorHubReport) {
 	recordReportProblem("perceptor-hub_images_just_in_hub", len(report.JustHubImages))
 	recordReportProblem("perceptor-hub_images_just_in_perceptor", len(report.JustPerceptorImages))

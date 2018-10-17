@@ -38,10 +38,12 @@ const (
 	scrapeHubAPIPause = 20 * time.Second
 )
 
+// PerformanceResults .....
 type PerformanceResults struct {
 	LinkTypeTimings map[string][]float64
 }
 
+// PerformanceTester .....
 type PerformanceTester struct {
 	HubClient        *hubclient.Client
 	HubUsername      string
@@ -51,6 +53,7 @@ type PerformanceTester struct {
 	GetResults       chan func([]*PerformanceResults)
 }
 
+// NewPerformanceTester .....
 func NewPerformanceTester(hubHost string, username string, password string) (*PerformanceTester, error) {
 	var baseURL = fmt.Sprintf("https://%s", hubHost)
 	hubClient, err := hubclient.NewWithSession(baseURL, hubclient.HubClientDebugTimings, 5000*time.Second)
@@ -74,6 +77,7 @@ func NewPerformanceTester(hubHost string, username string, password string) (*Pe
 	return pt, nil
 }
 
+// GetGroupedDurations .....
 func (pt *PerformanceTester) GetGroupedDurations() (map[LinkType][]*time.Duration, []error) {
 	root := fmt.Sprintf("%s/api/projects", pt.HubClient.BaseURL())
 	times, errors := pt.TraverseGraph(root)
@@ -93,6 +97,7 @@ func (pt *PerformanceTester) GetGroupedDurations() (map[LinkType][]*time.Duratio
 	return groupedTimes, errors
 }
 
+// TraverseGraph .....
 func (pt *PerformanceTester) TraverseGraph(root string) (map[string]*time.Duration, []error) {
 	timings := map[string]*time.Duration{}
 	seen := map[string]bool{root: false}
@@ -166,6 +171,7 @@ func (pt *PerformanceTester) TraverseGraph(root string) (map[string]*time.Durati
 // 	return urls, errors
 // }
 
+// FetchLink .....
 func (pt *PerformanceTester) FetchLink(link string) (map[string]interface{}, error) {
 	result := map[string]interface{}{}
 	err := pt.HubClient.HttpGetJSON(link, &result, 200)
@@ -179,12 +185,14 @@ func (pt *PerformanceTester) FetchLink(link string) (map[string]interface{}, err
 	return result, nil
 }
 
+// GetProjects .....
 func (pt *PerformanceTester) GetProjects() (*hubapi.ProjectList, error) {
 	limit := 35000
 	options := &hubapi.GetListOptions{Limit: &limit}
 	return pt.HubClient.ListProjects(options)
 }
 
+// StartReducer .....
 func (pt *PerformanceTester) StartReducer() {
 	for {
 		select {
@@ -211,6 +219,7 @@ func (pt *PerformanceTester) StartReducer() {
 	}
 }
 
+// StartHittingHub .....
 func (pt *PerformanceTester) StartHittingHub() {
 	for {
 		groupedDurations, errors := pt.GetGroupedDurations()
@@ -228,6 +237,7 @@ func (pt *PerformanceTester) StartHittingHub() {
 	}
 }
 
+// AddFreewayResultsHandler .....
 func (pt *PerformanceTester) AddFreewayResultsHandler() {
 	http.HandleFunc("/freewayresults", func(w http.ResponseWriter, r *http.Request) {
 		var wg sync.WaitGroup

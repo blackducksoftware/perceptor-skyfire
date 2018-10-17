@@ -25,6 +25,7 @@ import (
 	"strings"
 )
 
+// Report .....
 type Report struct {
 	Dump          *Dump
 	Meta          *MetaReport
@@ -34,6 +35,7 @@ type Report struct {
 	Hub           *HubReport
 }
 
+// NewReport .....
 func NewReport(dump *Dump) *Report {
 	return &Report{
 		dump,
@@ -45,6 +47,7 @@ func NewReport(dump *Dump) *Report {
 	}
 }
 
+// HumanReadableString .....
 func (r *Report) HumanReadableString() string {
 	chunks := []string{
 		r.Meta.HumanReadableString(),

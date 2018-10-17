@@ -27,6 +27,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Config .....
 type Config struct {
 	LogLevel string
 
@@ -37,10 +38,12 @@ type Config struct {
 	HubPassword string
 }
 
+// GetLogLevel .....
 func (config *Config) GetLogLevel() (log.Level, error) {
 	return log.ParseLevel(config.LogLevel)
 }
 
+// ReadConfig .....
 func ReadConfig(configPath string) (*Config, error) {
 	viper.SetConfigFile(configPath)
 	config := &Config{}

@@ -28,6 +28,7 @@ import (
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// CleanupAllPods .....
 func (client *KubeClient) CleanupAllPods() error {
 	pods := client.clientset.CoreV1().Pods(v1.NamespaceAll)
 	podList, err := pods.List(meta_v1.ListOptions{})

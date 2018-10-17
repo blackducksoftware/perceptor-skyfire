@@ -27,12 +27,14 @@ import (
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/perceptor"
 )
 
+// Dump .....
 type Dump struct {
 	Kube      *kube.Dump
 	Perceptor *perceptor.Dump
 	Hub       *hub.Dump
 }
 
+// NewDump .....
 func NewDump(kube *kube.Dump, perceptor *perceptor.Dump, hub *hub.Dump) *Dump {
 	return &Dump{
 		Kube:      kube,

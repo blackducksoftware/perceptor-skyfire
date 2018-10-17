@@ -31,16 +31,19 @@ import (
 	"github.com/juju/errors"
 )
 
+// ClientInterface .....
 type ClientInterface interface {
 	Dump() (*Dump, error)
 }
 
+// Client .....
 type Client struct {
 	Resty *resty.Client
 	Host  string
 	Port  int
 }
 
+// NewClient .....
 func NewClient(host string, port int) *Client {
 	restyClient := resty.New()
 	restyClient.SetTimeout(time.Duration(5 * time.Second))
@@ -51,6 +54,7 @@ func NewClient(host string, port int) *Client {
 	}
 }
 
+// Dump .....
 func (pd *Client) Dump() (*Dump, error) {
 	scanResults, err := pd.DumpScanResults()
 	if err != nil {
@@ -63,6 +67,7 @@ func (pd *Client) Dump() (*Dump, error) {
 	return NewDump(scanResults, model), nil
 }
 
+// DumpModel .....
 func (pd *Client) DumpModel() (*api.Model, error) {
 	url := fmt.Sprintf("http://%s:%d/model", pd.Host, pd.Port)
 	resp, err := pd.Resty.R().SetResult(&api.Model{}).Get(url)
@@ -77,6 +82,7 @@ func (pd *Client) DumpModel() (*api.Model, error) {
 	}
 }
 
+// DumpScanResults .....
 func (pd *Client) DumpScanResults() (*api.ScanResults, error) {
 	url := fmt.Sprintf("http://%s:%d/scanresults", pd.Host, pd.Port)
 	resp, err := pd.Resty.R().SetResult(&api.ScanResults{}).Get(url)

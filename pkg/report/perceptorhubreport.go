@@ -25,11 +25,13 @@ import (
 	"fmt"
 )
 
+// PerceptorHubReport .....
 type PerceptorHubReport struct {
 	JustPerceptorImages []string
 	JustHubImages       []string
 }
 
+// NewPerceptorHubReport .....
 func NewPerceptorHubReport(dump *Dump) *PerceptorHubReport {
 	return &PerceptorHubReport{
 		JustPerceptorImages: PerceptorNotHubImages(dump),
@@ -37,6 +39,7 @@ func NewPerceptorHubReport(dump *Dump) *PerceptorHubReport {
 	}
 }
 
+// HumanReadableString .....
 func (p *PerceptorHubReport) HumanReadableString() string {
 	return fmt.Sprintf(`
 Perceptor<->Hub:
@@ -47,6 +50,7 @@ Perceptor<->Hub:
 		len(p.JustHubImages))
 }
 
+// PerceptorNotHubImages .....
 func PerceptorNotHubImages(dump *Dump) []string {
 	images := []string{}
 	for sha := range dump.Perceptor.ImagesBySha {
@@ -59,6 +63,7 @@ func PerceptorNotHubImages(dump *Dump) []string {
 	return images
 }
 
+// HubNotPerceptorImages .....
 func HubNotPerceptorImages(dump *Dump) []string {
 	images := []string{}
 	for sha := range dump.Hub.ProjectsBySha {

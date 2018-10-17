@@ -28,6 +28,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Config .....
 type Config struct {
 	UseInClusterConfig bool
 	MasterURL          string
@@ -48,10 +49,12 @@ type Config struct {
 	PerceptorPort int
 }
 
+// GetLogLevel .....
 func (config *Config) GetLogLevel() (log.Level, error) {
 	return log.ParseLevel(config.LogLevel)
 }
 
+// ReadConfig .....
 func ReadConfig(configPath string) (*Config, error) {
 	viper.SetConfigFile(configPath)
 	config := &Config{}
@@ -66,6 +69,7 @@ func ReadConfig(configPath string) (*Config, error) {
 	return config, nil
 }
 
+// KubeClientConfig .....
 func (config *Config) KubeClientConfig() *kube.KubeClientConfig {
 	if config.UseInClusterConfig {
 		return nil

@@ -30,6 +30,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Scraper .....
 type Scraper struct {
 	KubeDumper            kube.ClientInterface
 	KubeDumps             chan *kube.Dump
@@ -43,6 +44,7 @@ type Scraper struct {
 	stop                  <-chan struct{}
 }
 
+// NewScraper .....
 func NewScraper(kubeDumper kube.ClientInterface, kubeDumpInterval time.Duration, hubDumper hub.ClientInterface, hubDumpInterval time.Duration, perceptorDumper perceptor.ClientInterface, perceptorDumpInterval time.Duration, stop <-chan struct{}) *Scraper {
 	scraper := &Scraper{
 		KubeDumper:            kubeDumper,
@@ -62,6 +64,7 @@ func NewScraper(kubeDumper kube.ClientInterface, kubeDumpInterval time.Duration,
 	return scraper
 }
 
+// StartHubScrapes .....
 func (sc *Scraper) StartHubScrapes() {
 	for {
 		hubDump, err := sc.HubDumper.Dump()
@@ -81,6 +84,7 @@ func (sc *Scraper) StartHubScrapes() {
 	}
 }
 
+// StartKubeScrapes .....
 func (sc *Scraper) StartKubeScrapes() {
 	for {
 		kubeDump, err := sc.KubeDumper.Dump()
@@ -100,6 +104,7 @@ func (sc *Scraper) StartKubeScrapes() {
 	}
 }
 
+// StartPerceptorScrapes .....
 func (sc *Scraper) StartPerceptorScrapes() {
 	for {
 		perceptorDump, err := sc.PerceptorDumper.Dump()
@@ -119,6 +124,7 @@ func (sc *Scraper) StartPerceptorScrapes() {
 	}
 }
 
+// StartScraping .....
 func (sc *Scraper) StartScraping() {
 	go sc.StartHubScrapes()
 	go sc.StartKubeScrapes()

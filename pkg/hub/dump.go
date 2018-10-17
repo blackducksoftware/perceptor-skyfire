@@ -21,6 +21,7 @@ under the License.
 
 package hub
 
+// Dump .....
 type Dump struct {
 	Version           string
 	Projects          []*Project
@@ -29,6 +30,7 @@ type Dump struct {
 	ShortProjectNames []string
 }
 
+// NewDump .....
 func NewDump(version string, projects []*Project) *Dump {
 	dump := &Dump{
 		Version:           version,

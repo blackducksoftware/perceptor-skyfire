@@ -29,6 +29,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// KubePerceptorReport .....
 type KubePerceptorReport struct {
 	JustKubePods        []string
 	JustPerceptorPods   []string
@@ -52,6 +53,7 @@ type KubePerceptorReport struct {
 	UnanalyzeablePods []string
 }
 
+// NewKubePerceptorReport .....
 func NewKubePerceptorReport(dump *Dump) *KubePerceptorReport {
 	finishedJustKubePods, conflictingAnnotationsPods, conflictingLabelsPods, unanalyzeablePods := KubeNotPerceptorFinishedPods(dump)
 	return &KubePerceptorReport{
@@ -67,6 +69,7 @@ func NewKubePerceptorReport(dump *Dump) *KubePerceptorReport {
 	}
 }
 
+// HumanReadableString .....
 func (kr *KubePerceptorReport) HumanReadableString() string {
 	return fmt.Sprintf(`
 Kubernetes<->Perceptor:
@@ -89,6 +92,7 @@ Kubernetes<->Perceptor:
 		len(kr.FinishedJustPerceptorPods))
 }
 
+// KubeNotPerceptorPods .....
 func KubeNotPerceptorPods(dump *Dump) []string {
 	pods := []string{}
 	for podName := range dump.Kube.PodsByName {
@@ -100,6 +104,7 @@ func KubeNotPerceptorPods(dump *Dump) []string {
 	return pods
 }
 
+// PerceptorNotKubePods .....
 func PerceptorNotKubePods(dump *Dump) []string {
 	pods := []string{}
 	for podName := range dump.Perceptor.Model.CoreModel.Pods {
@@ -111,6 +116,7 @@ func PerceptorNotKubePods(dump *Dump) []string {
 	return pods
 }
 
+// KubeNotPerceptorImages .....
 func KubeNotPerceptorImages(dump *Dump) []string {
 	images := []string{}
 	for sha := range dump.Kube.ImagesBySha {
@@ -122,6 +128,7 @@ func KubeNotPerceptorImages(dump *Dump) []string {
 	return images
 }
 
+// PerceptorNotKubeImages .....
 func PerceptorNotKubeImages(dump *Dump) []string {
 	images := []string{}
 	for sha := range dump.Perceptor.Model.CoreModel.Images {
@@ -133,6 +140,7 @@ func PerceptorNotKubeImages(dump *Dump) []string {
 	return images
 }
 
+// KubeNotPerceptorFinishedPods .....
 func KubeNotPerceptorFinishedPods(dump *Dump) (finishedKubePods []string, incorrectAnnotationsPods []string, incorrectLabelsPods []string, unanalyzeablePods []string) {
 	finishedKubePods = []string{}
 	incorrectAnnotationsPods = []string{}
@@ -197,6 +205,7 @@ func KubeNotPerceptorFinishedPods(dump *Dump) (finishedKubePods []string, incorr
 	return
 }
 
+// PerceptorNotKubeFinishedPods .....
 func PerceptorNotKubeFinishedPods(dump *Dump) []string {
 	pods := []string{}
 	for podName := range dump.Perceptor.PodsByName {
@@ -212,6 +221,7 @@ func PerceptorNotKubeFinishedPods(dump *Dump) []string {
 	return pods
 }
 
+// PodShas .....
 func PodShas(pod *kube.Pod) ([]string, error) {
 	imageShas := []string{}
 	for _, cont := range pod.Containers {
@@ -224,6 +234,7 @@ func PodShas(pod *kube.Pod) ([]string, error) {
 	return imageShas, nil
 }
 
+// ExpectedPodAnnotations .....
 func ExpectedPodAnnotations(podName string, imageShas []string, dump *Dump) (map[string]string, error) {
 	perceptor := dump.Perceptor
 	annotations := map[string]string{}
@@ -286,6 +297,7 @@ func RemoveRegistryInfo(d string) string {
 	return strings.Join(s, ".")
 }
 
+// ExpectedPodLabels .....
 func ExpectedPodLabels(podName string, imageShas []string, dump *Dump) (map[string]string, error) {
 	perceptor := dump.Perceptor
 	labels := map[string]string{}
