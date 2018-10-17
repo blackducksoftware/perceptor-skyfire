@@ -47,6 +47,8 @@ func main() {
 
 	log.Infof("received config %+v", config)
 
+	log.Infof("Launching Skyfire")
+
 	skyfire, err := skyfire.NewSkyfire(config)
 	if err != nil {
 		panic(err)
