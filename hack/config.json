@@ -9,7 +9,7 @@
       "static_configs": [
         {
           "targets": [
-            "localhost:3010"
+            "host.docker.internal:3010"
           ]
         }
       ]
