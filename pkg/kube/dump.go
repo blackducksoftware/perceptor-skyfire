@@ -32,6 +32,19 @@ type Dump struct {
 	ImagesMissingSha   []*Image
 }
 
+type ServiceDump struct {
+	Meta     *Meta
+	Services []*Service
+}
+
+func NewServiceDump(meta *Meta, services []*Service) *ServiceDump {
+	dump := &ServiceDump{
+		Meta:     meta,
+		Services: services,
+	}
+	return dump
+}
+
 func NewDump(meta *Meta, pods []*Pod) *Dump {
 	dump := &Dump{
 		Meta:               meta,
