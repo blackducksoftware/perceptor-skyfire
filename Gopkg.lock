@@ -163,6 +163,14 @@
   version = "v1.1.5"
 
 [[projects]]
+  branch = "master"
+  digest = "1:cdc32003a67007f608c767cfbea5b7a07ed7418ec9aed579707e3185086a6878"
+  name = "github.com/juju/errors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "a4583d0a56eac4bdd939e38050d0c69abe0a9b41"
+
+[[projects]]
   digest = "1:0a69a1c0db3591fcefb47f115b224592c8dfa4368b7ba9fae509d5e16cdc95c8"
   name = "github.com/konsorten/go-windows-terminal-sequences"
   packages = ["."]
@@ -621,6 +629,7 @@
     "github.com/blackducksoftware/hub-client-go/hubclient",
     "github.com/blackducksoftware/perceptor/pkg/api",
     "github.com/go-resty/resty",
+    "github.com/juju/errors",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
     "github.com/prometheus/client_golang/prometheus",
