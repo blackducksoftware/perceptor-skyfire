@@ -30,6 +30,7 @@ import (
 
 	"github.com/blackducksoftware/hub-client-go/hubapi"
 	"github.com/blackducksoftware/hub-client-go/hubclient"
+	"github.com/juju/errors"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -54,8 +55,7 @@ func NewPerformanceTester(hubHost string, username string, password string) (*Pe
 	var baseURL = fmt.Sprintf("https://%s", hubHost)
 	hubClient, err := hubclient.NewWithSession(baseURL, hubclient.HubClientDebugTimings, 5000*time.Second)
 	if err != nil {
-		log.Errorf("unable to get hub client: %s", err.Error())
-		return nil, err
+		return nil, errors.Annotatef(err, "unable to get hub client for %s", hubHost)
 	}
 	pt := &PerformanceTester{
 		HubClient:        hubClient,
@@ -66,8 +66,7 @@ func NewPerformanceTester(hubHost string, username string, password string) (*Pe
 		GetResults:       make(chan func([]*PerformanceResults))}
 	err = hubClient.Login(username, password)
 	if err != nil {
-		log.Errorf("unable to log in to hub: %s", err.Error())
-		return nil, err
+		return nil, errors.Annotatef(err, "unable to log in to hub %s", hubHost)
 	}
 	go pt.StartHittingHub()
 	go pt.StartReducer()

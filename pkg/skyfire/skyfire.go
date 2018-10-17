@@ -39,6 +39,7 @@ type Skyfire struct {
 	LastHubDump       *hub.Dump
 	LastKubeDump      *kube.Dump
 	LastReport        *report.Report
+	stop              <-chan struct{}
 }
 
 func NewSkyfire(config *Config) (*Skyfire, error) {
@@ -47,7 +48,7 @@ func NewSkyfire(config *Config) (*Skyfire, error) {
 	if err != nil {
 		return nil, err
 	}
-	skyfire := &Skyfire{scraper, nil, nil, nil, nil}
+	skyfire := &Skyfire{scraper, nil, nil, nil, nil, stop}
 	go skyfire.HandleScrapes()
 	http.HandleFunc("/latestreport", skyfire.LatestReportHandler())
 	http.HandleFunc("/relogintohub", skyfire.ReloginToHubHandler())
@@ -85,6 +86,8 @@ func (sf *Skyfire) ReloginToHubHandler() func(http.ResponseWriter, *http.Request
 func (sf *Skyfire) HandleScrapes() {
 	for {
 		select {
+		case <-sf.stop:
+			return
 		case h := <-sf.Scraper.HubDumps:
 			fmt.Println(h)
 			sf.LastHubDump = h

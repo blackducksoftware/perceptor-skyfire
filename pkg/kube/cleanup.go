@@ -22,6 +22,7 @@ under the License.
 package kube
 
 import (
+	"github.com/juju/errors"
 	log "github.com/sirupsen/logrus"
 	"k8s.io/api/core/v1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -31,8 +32,7 @@ func (client *KubeClient) CleanupAllPods() error {
 	pods := client.clientset.CoreV1().Pods(v1.NamespaceAll)
 	podList, err := pods.List(meta_v1.ListOptions{})
 	if err != nil {
-		log.Errorf("unable to list pods: %s", err.Error())
-		return err
+		return errors.Annotatef(err, "unable to list pods")
 	}
 	for _, pod := range podList.Items {
 		log.Debugf("annotations before:\n%+v", pod.Annotations)
@@ -46,8 +46,7 @@ func (client *KubeClient) CleanupAllPods() error {
 		nsPods := client.clientset.CoreV1().Pods(pod.Namespace)
 		_, err := nsPods.Update(&pod)
 		if err != nil {
-			log.Errorf("unable to update pod %+v: %s", pod, err.Error())
-			return err
+			return errors.Annotatef(err, "unable to update pod %+v", pod)
 		}
 	}
 	return nil

@@ -199,7 +199,7 @@ func KubeNotPerceptorFinishedPods(dump *Dump) (finishedKubePods []string, incorr
 
 func PerceptorNotKubeFinishedPods(dump *Dump) []string {
 	pods := []string{}
-	for podName, _ := range dump.Perceptor.PodsByName {
+	for podName := range dump.Perceptor.PodsByName {
 		kubePod, ok := dump.Kube.PodsByName[podName]
 		if !ok {
 			// this should be handled elsewhere, right?

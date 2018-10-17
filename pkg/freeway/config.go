@@ -22,6 +22,7 @@ under the License.
 package freeway
 
 import (
+	"github.com/juju/errors"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -45,11 +46,11 @@ func ReadConfig(configPath string) (*Config, error) {
 	config := &Config{}
 	err := viper.ReadInConfig()
 	if err != nil {
-		return nil, err
+		return nil, errors.Trace(err)
 	}
 	err = viper.Unmarshal(config)
 	if err != nil {
-		return nil, err
+		return nil, errors.Trace(err)
 	}
 	return config, nil
 }
