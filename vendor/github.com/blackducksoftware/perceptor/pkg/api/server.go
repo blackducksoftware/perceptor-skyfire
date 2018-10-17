@@ -30,6 +30,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// SetupHTTPServer .....
 func SetupHTTPServer(responder Responder) {
 	// state of the program
 	http.HandleFunc("/model", func(w http.ResponseWriter, r *http.Request) {
@@ -164,6 +165,26 @@ func SetupHTTPServer(responder Responder) {
 		}
 	})
 
+	// for handling messages
+	http.HandleFunc("/command", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "POST" {
+			body, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				responder.Error(w, r, err, 400)
+				return
+			}
+			var commands PostCommand
+			err = json.Unmarshal(body, &commands)
+			if err != nil {
+				responder.Error(w, r, err, 400)
+				return
+			}
+			responder.PostCommand(&commands)
+		} else {
+			responder.NotFound(w, r)
+		}
+	})
+
 	// for providing data to scanners
 	http.HandleFunc("/nextimage", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "POST" {
@@ -195,27 +216,6 @@ func SetupHTTPServer(responder Responder) {
 				return
 			}
 			responder.PostFinishScan(scanResults)
-			fmt.Fprint(w, "")
-		} else {
-			responder.NotFound(w, r)
-		}
-	})
-
-	// internal use
-	http.HandleFunc("/concurrentscanlimit", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "POST" {
-			body, err := ioutil.ReadAll(r.Body)
-			if err != nil {
-				responder.Error(w, r, err, 400)
-				return
-			}
-			var limit SetConcurrentScanLimit
-			err = json.Unmarshal(body, &limit)
-			if err != nil {
-				responder.Error(w, r, err, 400)
-				return
-			}
-			responder.SetConcurrentScanLimit(limit)
 			fmt.Fprint(w, "")
 		} else {
 			responder.NotFound(w, r)

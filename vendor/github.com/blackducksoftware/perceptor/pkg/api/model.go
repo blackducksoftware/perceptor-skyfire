@@ -22,34 +22,131 @@ under the License.
 package api
 
 import (
-	"github.com/blackducksoftware/perceptor/pkg/hub"
+	"time"
 )
 
+// Model ...
 type Model struct {
-	Pods                map[string]*Pod
-	Images              map[string]*ModelImageInfo
-	ImageScanQueue      []string
-	ImageHubCheckQueue  []string
+	Hubs      map[string]*ModelHub
+	CoreModel *CoreModel
+	Config    *ModelConfig
+	Scheduler *ModelScanScheduler
+}
+
+// ModelScanScheduler ...
+type ModelScanScheduler struct {
 	ConcurrentScanLimit int
-	Config              *ModelConfig
-	HubVersion          string
+	TotalScanLimit      int
 }
 
+// CoreModel .....
+type CoreModel struct {
+	Pods             map[string]*Pod
+	Images           map[string]*ModelImageInfo
+	ImageScanQueue   []map[string]interface{}
+	ImageTransitions []*ModelImageTransition
+}
+
+// ModelImageTransition .....
+type ModelImageTransition struct {
+	Sha  string
+	From string
+	To   string
+	Err  string
+	Time string
+}
+
+// ModelHubConfig ...
+type ModelHubConfig struct {
+	User                string
+	PasswordEnvVar      string
+	ClientTimeout       ModelTime
+	Port                int
+	ConcurrentScanLimit int
+	TotalScanLimit      int
+}
+
+// ModelConfig .....
 type ModelConfig struct {
-	HubHost                 string
-	HubUser                 string
-	HubPassword             string
-	HubClientTimeoutSeconds int
-	ConcurrentScanLimit     int
-	UseMockMode             bool
-	Port                    int
-	LogLevel                string
+	Timings  *ModelTimings
+	Hub      *ModelHubConfig
+	Port     int
+	LogLevel string
 }
 
+// ModelTime ...
+type ModelTime struct {
+	duration     time.Duration
+	Minutes      float64
+	Seconds      float64
+	Milliseconds float64
+}
+
+// NewModelTime consumes a time.Duration and calculates the minutes, seconds,
+// and milliseconds
+func NewModelTime(duration time.Duration) *ModelTime {
+	return &ModelTime{
+		duration:     duration,
+		Minutes:      float64(duration) / float64(time.Minute),
+		Seconds:      float64(duration) / float64(time.Second),
+		Milliseconds: float64(duration) / float64(time.Millisecond),
+	}
+}
+
+// ModelTimings ...
+type ModelTimings struct {
+	CheckForStalledScansPause ModelTime
+	StalledScanClientTimeout  ModelTime
+	ModelMetricsPause         ModelTime
+	UnknownImagePause         ModelTime
+}
+
+// ModelImageInfo .....
 type ModelImageInfo struct {
 	ScanStatus             string
 	TimeOfLastStatusChange string
-	ScanResults            *hub.ImageScan
+	ScanResults            interface{}
 	ImageSha               string
-	ImageNames             []string
+	RepoTags               []*ModelRepoTag
+	Priority               int
+}
+
+// ModelRepoTag ...
+type ModelRepoTag struct {
+	Repository string
+	Tag        string
+}
+
+// ModelCircuitBreaker ...
+type ModelCircuitBreaker struct {
+	State               string
+	NextCheckTime       *time.Time
+	MaxBackoffDuration  ModelTime
+	ConsecutiveFailures int
+}
+
+// ModelHub describes a hub client model
+type ModelHub struct {
+	// can we log in to the hub?
+	//	IsLoggedIn bool
+	// have all the projects been sucked in?
+	HasLoadedAllCodeLocations bool
+	// map of project name to ... ? hub URL?
+	//	Projects map[string]string
+	// map of code location name to mapped project version url
+	CodeLocations  map[string]*ModelCodeLocation
+	Errors         []string
+	Status         string
+	CircuitBreaker *ModelCircuitBreaker
+	Host           string
+}
+
+// ModelCodeLocation ...
+type ModelCodeLocation struct {
+	Stage                string
+	Href                 string
+	URL                  string
+	MappedProjectVersion string
+	UpdatedAt            string
+	ComponentsHref       string
 }
