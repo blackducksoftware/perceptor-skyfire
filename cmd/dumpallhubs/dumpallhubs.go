@@ -26,12 +26,17 @@ func main() {
 		panic(err)
 	}
 
-	username := config.Username
-	password := config.Password
+	username, ok := os.LookupEnv(config.Username)
+	if !ok {
+		panic("Could not read Username")
+	}
+	password, ok := os.LookupEnv(config.Password)
+	if !ok {
+		panic("Could not read Password")
+	}
 
 	fmt.Println("Iterate through URLs", len(config.Hub_URLs))
 	for _, url := range config.Hub_URLs {
-		fmt.Println("Found a URL")
 		hubDumper, err := hub.NewHubDumper(url, username, password)
 		if err != nil {
 			panic(err)

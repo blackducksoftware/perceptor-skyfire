@@ -1,7 +1,7 @@
 {
     "hub_URLs": [
         "aci-471-aci-471.10.1.176.130.xip.io",
-        "codeprint-codeprint.10.1.176.130.xip.io"
+        "codeprint-large-codeprint-large.10.1.176.130.xip.io"
     ],
     "username": "HUB_USERNAME",
     "password": "HUB_PASSWORD"
