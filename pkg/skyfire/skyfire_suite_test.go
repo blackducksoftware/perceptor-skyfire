@@ -29,6 +29,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// TestUtil .....
 func TestUtil(t *testing.T) {
 	RegisterFailHandler(Fail)
 	log.SetLevel(log.DebugLevel)

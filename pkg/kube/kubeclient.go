@@ -31,11 +31,17 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
+// ClientInterface .....
+type ClientInterface interface {
+	Dump() (*Dump, error)
+}
+
 // KubeClient is an implementation of the Client interface for kubernetes
 type KubeClient struct {
 	clientset kubernetes.Clientset
 }
 
+// NewKubeClient .....
 func NewKubeClient(config *KubeClientConfig) (*KubeClient, error) {
 	if config != nil {
 		return NewKubeClientFromOutsideCluster(config.MasterURL, config.KubeConfigPath)
@@ -74,6 +80,7 @@ func newKubeClientHelper(config *rest.Config) (*KubeClient, error) {
 	return &KubeClient{clientset: *clientset}, nil
 }
 
+// Dump .....
 func (client *KubeClient) Dump() (*Dump, error) {
 	kubePods, err := client.GetAllPods()
 	if err != nil {
@@ -86,6 +93,7 @@ func (client *KubeClient) Dump() (*Dump, error) {
 	return NewDump(kubeMeta, kubePods), nil
 }
 
+// GetAllPods .....
 func (client *KubeClient) GetAllPods() ([]*Pod, error) {
 	pods := []*Pod{}
 	kubePods, err := client.clientset.CoreV1().Pods(v1.NamespaceAll).List(meta_v1.ListOptions{})
@@ -98,6 +106,7 @@ func (client *KubeClient) GetAllPods() ([]*Pod, error) {
 	return pods, nil
 }
 
+// DumpServices .....
 func (client *KubeClient) DumpServices() (*ServiceDump, error) {
 	// Get a Slice of Service items for all services
 	kubeServices, err := client.GetAllServices()
@@ -113,6 +122,7 @@ func (client *KubeClient) DumpServices() (*ServiceDump, error) {
 	return NewServiceDump(kubeMeta, kubeServices), nil
 }
 
+// GetAllServices .....
 func (client *KubeClient) GetAllServices() ([]*Service, error) {
 	// Empty Slice to store Service type items
 	services := []*Service{}
@@ -132,6 +142,7 @@ func (client *KubeClient) GetAllServices() ([]*Service, error) {
 	return services, nil
 }
 
+// GetMeta .....
 func (client *KubeClient) GetMeta() (*Meta, error) {
 	nodeList, err := client.clientset.CoreV1().Nodes().List(meta_v1.ListOptions{})
 	if err != nil {

@@ -22,13 +22,15 @@ under the License.
 package skyfire
 
 import (
+	"time"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Scraper", func() {
 	It("Scraper", func() {
-		_, err := NewScraper(&Config{}, make(chan struct{}))
-		Expect(err).To(BeNil())
+		s := NewScraper(nil, 1*time.Second, nil, 1*time.Second, nil, 1*time.Second, make(chan struct{}))
+		Expect(s).NotTo(BeNil())
 	})
 })

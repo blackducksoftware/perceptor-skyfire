@@ -29,16 +29,19 @@ import (
 
 var authToken = "pRuvP8nq4nX0D8TpS1Kh5yyCrqt21d047PbBEWyv"
 
+// Hipchat .....
 type Hipchat struct {
 	Room string
 }
 
+// NewHipchat .....
 func NewHipchat(room string) *Hipchat {
 	return &Hipchat{
 		Room: room,
 	}
 }
 
+// Send .....
 func (h *Hipchat) Send(message string) (*resty.Response, error) {
 	url := BuildURL(h.Room)
 	data := map[string]string{
@@ -52,6 +55,7 @@ func (h *Hipchat) Send(message string) (*resty.Response, error) {
 		Post(url)
 }
 
+// BuildURL .....
 func BuildURL(room string) string {
 	return fmt.Sprintf("https://api.hipchat.com/v2/room/%s/notification", room)
 }

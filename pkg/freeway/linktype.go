@@ -26,6 +26,7 @@ import (
 	"regexp"
 )
 
+// LinkType .....
 type LinkType int
 
 const (
@@ -47,11 +48,13 @@ const (
 	LinkTypeScanSummaries        LinkType = iota
 )
 
+// MarshalJSON .....
 func (l LinkType) MarshalJSON() ([]byte, error) {
 	jsonString := fmt.Sprintf(`"%s"`, l.String())
 	return []byte(jsonString), nil
 }
 
+// MarshalText .....
 func (l LinkType) MarshalText() (text []byte, err error) {
 	return []byte(l.String()), nil
 }
@@ -75,6 +78,7 @@ var allLinkTypes = []LinkType{
 	LinkTypeScanSummaries,
 }
 
+// String .....
 func (l LinkType) String() string {
 	switch l {
 	case LinkTypeProjs:
@@ -113,6 +117,7 @@ func (l LinkType) String() string {
 	panic(fmt.Errorf("invalid link type: %d", l))
 }
 
+// Regex .....
 func (l LinkType) Regex() *regexp.Regexp {
 	switch l {
 	case LinkTypeProjs:
@@ -151,6 +156,7 @@ func (l LinkType) Regex() *regexp.Regexp {
 	panic(fmt.Errorf("invalid link type: %d", l))
 }
 
+// AnalyzeLink .....
 func AnalyzeLink(link string) (*LinkType, error) {
 	for _, linkType := range allLinkTypes {
 		match := linkType.Regex().FindAllString(link, -1)

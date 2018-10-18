@@ -22,9 +22,12 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:622d4d2198c61775bd4943acecbe3a20fab797f206cd3bd6b1aa703f8e08dcc8"
+  digest = "1:8bc9576bb9923248f2594e19954afe352f57f53e0927441b648dc83d039079c1"
   name = "github.com/blackducksoftware/perceptor"
-  packages = ["pkg/api"]
+  packages = [
+    "pkg/api",
+    "pkg/util",
+  ]
   pruneopts = "UT"
   revision = "97fc416b668a992607a7cdc7c5852e2b0f7c87ad"
 
@@ -628,6 +631,7 @@
     "github.com/blackducksoftware/hub-client-go/hubapi",
     "github.com/blackducksoftware/hub-client-go/hubclient",
     "github.com/blackducksoftware/perceptor/pkg/api",
+    "github.com/blackducksoftware/perceptor/pkg/util",
     "github.com/go-resty/resty",
     "github.com/juju/errors",
     "github.com/onsi/ginkgo",

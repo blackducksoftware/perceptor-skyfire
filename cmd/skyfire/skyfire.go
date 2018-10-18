@@ -23,42 +23,13 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 
 	skyfire "github.com/blackducksoftware/perceptor-skyfire/pkg/skyfire"
-	"github.com/prometheus/client_golang/prometheus"
-	log "github.com/sirupsen/logrus"
 )
 
 func main() {
 	configPath := os.Args[1]
 	fmt.Printf("Config path: %s", configPath)
-	config, err := skyfire.ReadConfig(configPath)
-	if err != nil {
-		panic(err)
-	}
-
-	logLevel, err := config.GetLogLevel()
-	if err != nil {
-		panic(err)
-	}
-	log.SetLevel(logLevel)
-
-	log.Infof("received config %+v", config)
-
-	log.Infof("Launching Skyfire")
-
-	skyfire, err := skyfire.NewSkyfire(config)
-	if err != nil {
-		panic(err)
-	}
-	log.Infof("instantiated skyfire: %+v", skyfire)
-
-	http.Handle("/metrics", prometheus.Handler())
-	addr := fmt.Sprintf(":%d", config.Port)
-	go http.ListenAndServe(addr, nil)
-	log.Infof("running http server on %s", addr)
-
-	select {}
+	skyfire.RunSkyfire(configPath)
 }
