@@ -29,13 +29,25 @@ import (
 type PerceptorHubReport struct {
 	JustPerceptorImages []string
 	JustHubImages       []string
+	allHubImages        []string
+	allHubImagesSet     map[string]bool
 }
 
 // NewPerceptorHubReport .....
 func NewPerceptorHubReport(dump *Dump) *PerceptorHubReport {
+	images := []string{}
+	imagesSet := map[string]bool{}
+	for _, hubDump := range dump.Hubs {
+		for _, scan := range hubDump.Scans {
+			images = append(images, scan.Name)
+			imagesSet[scan.Name] = true
+		}
+	}
 	return &PerceptorHubReport{
-		JustPerceptorImages: PerceptorNotHubImages(dump),
+		JustPerceptorImages: PerceptorNotHubImages(dump, imagesSet),
 		JustHubImages:       HubNotPerceptorImages(dump),
+		allHubImages:        images,
+		allHubImagesSet:     imagesSet,
 	}
 }
 
@@ -51,22 +63,21 @@ Perceptor<->Hub:
 }
 
 // PerceptorNotHubImages .....
-func PerceptorNotHubImages(dump *Dump) []string {
+func PerceptorNotHubImages(dump *Dump, allHubImagesSet map[string]bool) []string {
 	images := []string{}
-	// TODO
-	// for sha := range dump.Perceptor.ImagesBySha {
-	// 	sha20 := sha[:20]
-	// 	_, ok := dump.Hub.ProjectsBySha[sha20]
-	// 	if !ok {
-	// 		images = append(images, sha)
-	// 	}
-	// }
+	for sha := range dump.Perceptor.ImagesBySha {
+		_, ok := allHubImagesSet[sha]
+		if !ok {
+			images = append(images, sha)
+		}
+	}
 	return images
 }
 
 // HubNotPerceptorImages .....
 func HubNotPerceptorImages(dump *Dump) []string {
 	images := []string{}
+	// TODO
 	// for sha := range dump.Hub.ProjectsBySha {
 	// 	foundMatch := false
 	// 	// can't do a dictionary lookup, because hub sha only has first 20 characters
