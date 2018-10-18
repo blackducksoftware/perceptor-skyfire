@@ -35,6 +35,7 @@ import (
 // 	}
 // }
 
+// FindLinks .....
 func FindLinks(obj interface{}) ([]string, []error) {
 	switch v := obj.(type) {
 	case map[string]interface{}:
@@ -46,6 +47,7 @@ func FindLinks(obj interface{}) ([]string, []error) {
 	}
 }
 
+// FindLinksDict .....
 func FindLinksDict(dict map[string]interface{}) ([]string, []error) {
 	links := []string{}
 	errors := []error{}
@@ -87,6 +89,7 @@ func FindLinksDict(dict map[string]interface{}) ([]string, []error) {
 	return links, errors
 }
 
+// FindLinksArray .....
 func FindLinksArray(array []interface{}) ([]string, []error) {
 	links := []string{}
 	errors := []error{}

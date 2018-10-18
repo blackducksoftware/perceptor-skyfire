@@ -29,12 +29,14 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// DashboardPerformanceTester .....
 type DashboardPerformanceTester struct {
 	HubClient         *hubclient.Client
 	URLs              map[string]string
 	RequestBatchPause time.Duration
 }
 
+// NewDashboardPerformanceTester .....
 func NewDashboardPerformanceTester(hubHost string, username string, password string, urls map[string]string, requestBatchPause time.Duration) (*DashboardPerformanceTester, error) {
 	var baseURL = fmt.Sprintf("https://%s", hubHost)
 	hubClient, err := hubclient.NewWithSession(baseURL, hubclient.HubClientDebugTimings, 5000*time.Second)
@@ -50,6 +52,7 @@ func NewDashboardPerformanceTester(hubHost string, username string, password str
 	return dpt, nil
 }
 
+// Start .....
 func (dpt *DashboardPerformanceTester) Start(stop <-chan struct{}) {
 	go func() {
 		for {

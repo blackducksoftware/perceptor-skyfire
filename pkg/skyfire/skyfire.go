@@ -25,36 +25,58 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/perceptor"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/report"
+	"github.com/juju/errors"
 	log "github.com/sirupsen/logrus"
 )
 
+// Skyfire .....
 type Skyfire struct {
 	Scraper           *Scraper
 	LastPerceptorDump *perceptor.Dump
-	LastHubDump       *hub.Dump
+	LastHubDumps      map[string]*hub.Dump
 	LastKubeDump      *kube.Dump
 	LastReport        *report.Report
 	stop              <-chan struct{}
 }
 
-func NewSkyfire(config *Config) (*Skyfire, error) {
-	stop := make(chan struct{})
-	scraper, err := NewScraper(config, stop)
+// NewSkyfire .....
+func NewSkyfire(config *Config, stop <-chan struct{}) (*Skyfire, error) {
+	kubeDumper, err := kube.NewKubeClient(config.KubeClientConfig())
 	if err != nil {
-		return nil, err
+		return nil, errors.Trace(err)
 	}
+	perceptorDumper := perceptor.NewClient(config.PerceptorHost, config.PerceptorPort)
+
+	hubPassword, ok := os.LookupEnv(config.HubUserPasswordEnvVar)
+	if !ok {
+		return nil, fmt.Errorf("unable to get Hub password: environment variable %s not set", config.HubUserPasswordEnvVar)
+	}
+	createHubClient := func(host string) (hub.ClientInterface, error) {
+		return hub.NewHubDumper(host, config.HubUser, hubPassword)
+	}
+	kubeInterval := time.Duration(config.KubeDumpIntervalSeconds) * time.Second
+	hubInterval := time.Duration(config.HubDumpPauseSeconds) * time.Second
+	perceptorInterval := time.Duration(config.PerceptorDumpIntervalSeconds) * time.Second
+	scraper := NewScraper(kubeDumper, kubeInterval, createHubClient, hubInterval, perceptorDumper, perceptorInterval, stop)
 	skyfire := &Skyfire{scraper, nil, nil, nil, nil, stop}
 	go skyfire.HandleScrapes()
 	http.HandleFunc("/latestreport", skyfire.LatestReportHandler())
-	http.HandleFunc("/relogintohub", skyfire.ReloginToHubHandler())
 	return skyfire, nil
 }
 
+// SetHubs ...
+func (sf *Skyfire) SetHubs(hosts []string) {
+	sf.Scraper.SetHubs(hosts)
+}
+
+// LatestReportHandler .....
 func (sf *Skyfire) LatestReportHandler() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Infof("received latest report request")
@@ -69,28 +91,15 @@ func (sf *Skyfire) LatestReportHandler() func(http.ResponseWriter, *http.Request
 	}
 }
 
-func (sf *Skyfire) ReloginToHubHandler() func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		log.Debugf("received relogin to hub request")
-		err := sf.Scraper.HubDumper.Login()
-		if err != nil {
-			recordError("unable to relogin to hub")
-			http.Error(w, err.Error(), 500)
-			return
-		}
-		log.Debugf("successfully logged in to hub")
-		fmt.Fprint(w, "")
-	}
-}
-
+// HandleScrapes .....
 func (sf *Skyfire) HandleScrapes() {
 	for {
 		select {
 		case <-sf.stop:
 			return
-		case h := <-sf.Scraper.HubDumps:
-			fmt.Println(h)
-			sf.LastHubDump = h
+		case dump := <-sf.Scraper.HubDumps:
+			fmt.Println(dump)
+			sf.LastHubDumps[dump.host] = dump.dump
 			sf.BuildReport()
 		case k := <-sf.Scraper.KubeDumps:
 			fmt.Println(k)
@@ -104,15 +113,11 @@ func (sf *Skyfire) HandleScrapes() {
 	}
 }
 
+// BuildReport .....
 func (sf *Skyfire) BuildReport() {
 	if sf.LastPerceptorDump == nil {
 		recordError("unable to generate report: perceptor dump is nil")
 		log.Warnf("unable to generate report: perceptor dump is nil")
-		return
-	}
-	if sf.LastHubDump == nil {
-		recordError("unable to generate report: hub dump is nil")
-		log.Warnf("unable to generate report: hub dump is nil")
 		return
 	}
 	if sf.LastKubeDump == nil {
@@ -121,7 +126,7 @@ func (sf *Skyfire) BuildReport() {
 		return
 	}
 
-	dump := report.NewDump(sf.LastKubeDump, sf.LastPerceptorDump, sf.LastHubDump)
+	dump := report.NewDump(sf.LastKubeDump, sf.LastPerceptorDump, sf.LastHubDumps)
 	sf.LastReport = report.NewReport(dump)
 	IssueReportMetrics(sf.LastReport)
 
@@ -129,19 +134,24 @@ func (sf *Skyfire) BuildReport() {
 	log.Infof("successfully built report")
 }
 
+// IssueReportMetrics .....
 func IssueReportMetrics(report *report.Report) {
-	IssueHubReportMetrics(report.Hub)
+	IssueHubReportMetrics(report.Hubs)
 	IssueKubeReportMetrics(report.Kube)
 	IssuePerceptorHubMetrics(report.PerceptorHub)
 	IssueKubePerceptorReportMetrics(report.KubePerceptor)
 }
 
-func IssueHubReportMetrics(report *report.HubReport) {
-	recordReportProblem("hub_projects_multiple_versions", len(report.ProjectsMultipleVersions))
-	recordReportProblem("hub_versions_multiple_code_locations", len(report.VersionsMultipleCodeLocations))
-	recordReportProblem("hub_code_locations_multiple_scan_summaries", len(report.CodeLocationsMultipleScanSummaries))
+// IssueHubReportMetrics .....
+func IssueHubReportMetrics(reports map[string]*report.HubReport) {
+	for host, report := range reports {
+		recordReportProblem(fmt.Sprintf("%s-hub_projects_multiple_versions", host), len(report.ProjectsMultipleVersions))
+		recordReportProblem(fmt.Sprintf("%s-hub_versions_multiple_code_locations", host), len(report.VersionsMultipleCodeLocations))
+		recordReportProblem(fmt.Sprintf("%s-hub_code_locations_multiple_scan_summaries", host), len(report.CodeLocationsMultipleScanSummaries))
+	}
 }
 
+// IssueKubeReportMetrics .....
 func IssueKubeReportMetrics(report *report.KubeReport) {
 	recordReportProblem("kube_unparseable_images", len(report.UnparseableImages))
 	recordReportProblem("kube_partially_annotated_pods", len(report.PartiallyAnnotatedPods))
@@ -149,6 +159,7 @@ func IssueKubeReportMetrics(report *report.KubeReport) {
 	recordReportProblem("kube_unanalyzeable_pods", len(report.UnanalyzeablePods))
 }
 
+// IssueKubePerceptorReportMetrics .....
 func IssueKubePerceptorReportMetrics(report *report.KubePerceptorReport) {
 	recordReportProblem("kube-perceptor_images_just_in_kube", len(report.JustKubeImages))
 	recordReportProblem("kube-perceptor_pods_just_in_kube", len(report.JustKubePods))
@@ -160,6 +171,7 @@ func IssueKubePerceptorReportMetrics(report *report.KubePerceptorReport) {
 	recordReportProblem("kube-perceptor_finished_pods_just_perceptor", len(report.FinishedJustPerceptorPods))
 }
 
+// IssuePerceptorHubMetrics .....
 func IssuePerceptorHubMetrics(report *report.PerceptorHubReport) {
 	recordReportProblem("perceptor-hub_images_just_in_hub", len(report.JustHubImages))
 	recordReportProblem("perceptor-hub_images_just_in_perceptor", len(report.JustPerceptorImages))

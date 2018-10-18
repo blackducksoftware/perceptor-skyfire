@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2018 Black Duck Software, Inc.
+Copyright (C) 2018 Synopsys, Inc.
 
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements. See the NOTICE file
@@ -19,26 +19,35 @@ specific language governing permissions and limitations
 under the License.
 */
 
-package report
+package util
 
 import (
-	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
-	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
-	"github.com/blackducksoftware/perceptor-skyfire/pkg/perceptor"
+	"bytes"
+	"runtime"
+	"runtime/pprof"
 )
 
-// Dump .....
-type Dump struct {
-	Kube      *kube.Dump
-	Perceptor *perceptor.Dump
-	Hubs      map[string]*hub.Dump
+// See: https://play.golang.org/p/0hVB0_LMdm
+
+// DumpRuntimeStack uses runtime to inspect goroutines
+func DumpRuntimeStack() string {
+	buf := make([]byte, 1<<16)
+	runtime.Stack(buf, true)
+	return string(bytes.Trim(buf, "\x00"))
 }
 
-// NewDump .....
-func NewDump(kube *kube.Dump, perceptor *perceptor.Dump, hubs map[string]*hub.Dump) *Dump {
-	return &Dump{
-		Kube:      kube,
-		Perceptor: perceptor,
-		Hubs:      hubs,
-	}
+// DumpPProfStack uses pprof to inspect goroutines
+func DumpPProfStack() (string, int) {
+	pprofBuffer := new(bytes.Buffer)
+	profile := pprof.Lookup("goroutine")
+	profile.WriteTo(pprofBuffer, 1)
+	return pprofBuffer.String(), profile.Count()
+}
+
+// DumpHeap uses pprof to inspect the heap
+func DumpHeap() (string, int) {
+	heapBuffer := new(bytes.Buffer)
+	profile := pprof.Lookup("heap")
+	profile.WriteTo(heapBuffer, 1)
+	return heapBuffer.String(), profile.Count()
 }

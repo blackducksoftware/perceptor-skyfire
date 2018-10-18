@@ -22,84 +22,139 @@ under the License.
 package skyfire
 
 import (
-	"fmt"
-	"os"
 	"time"
 
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/hub"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 	"github.com/blackducksoftware/perceptor-skyfire/pkg/perceptor"
-	"github.com/juju/errors"
 	log "github.com/sirupsen/logrus"
 )
 
-type Scraper struct {
-	KubeDumper                   *kube.KubeClient
-	KubeDumps                    chan *kube.Dump
-	KubeDumpIntervalSeconds      int
-	PerceptorDumper              *perceptor.PerceptorDumper
-	PerceptorDumps               chan *perceptor.Dump
-	PerceptorDumpIntervalSeconds int
-	HubDumper                    *hub.HubDumper
-	HubDumps                     chan *hub.Dump
-	HubDumpPauseSeconds          int
-	stop                         <-chan struct{}
+type hubDumper struct {
+	client hub.ClientInterface
+	dumps  chan *hub.Dump
+	stop   chan struct{}
 }
 
-func NewScraper(config *Config, stop <-chan struct{}) (*Scraper, error) {
-	kubeDumper, err := kube.NewKubeClient(config.KubeClientConfig())
-	if err != nil {
-		return nil, errors.Trace(err)
-	}
+type hubDump struct {
+	host string
+	dump *hub.Dump
+}
 
-	perceptorDumper := perceptor.NewPerceptorDumper(config.PerceptorHost, config.PerceptorPort)
+// Scraper .....
+type Scraper struct {
+	KubeDumper            kube.ClientInterface
+	KubeDumps             chan *kube.Dump
+	KubeDumpInterval      time.Duration
+	PerceptorDumper       perceptor.ClientInterface
+	PerceptorDumps        chan *perceptor.Dump
+	PerceptorDumpInterval time.Duration
+	Hubs                  map[string]*hubDumper
+	HubDumpPause          time.Duration
+	HubDumps              chan *hubDump
+	stop                  <-chan struct{}
+	createHubClient       func(host string) (hub.ClientInterface, error)
+}
 
-	hubPassword, ok := os.LookupEnv(config.HubUserPasswordEnvVar)
-	if !ok {
-		return nil, fmt.Errorf("unable to get Hub password: environment variable %s not set", config.HubUserPasswordEnvVar)
-	}
-	hubDumper, err := hub.NewHubDumper(config.HubHost, config.HubUser, hubPassword)
-	if err != nil {
-		return nil, errors.Trace(err)
-	}
+// NewScraper .....
+func NewScraper(kubeDumper kube.ClientInterface,
+	kubeDumpInterval time.Duration,
+	createHubClient func(host string) (hub.ClientInterface, error),
+	hubDumpInterval time.Duration,
+	perceptorDumper perceptor.ClientInterface,
+	perceptorDumpInterval time.Duration,
+	stop <-chan struct{}) *Scraper {
 
 	scraper := &Scraper{
-		KubeDumper:                   kubeDumper,
-		KubeDumps:                    make(chan *kube.Dump),
-		KubeDumpIntervalSeconds:      config.KubeDumpIntervalSeconds,
-		PerceptorDumper:              perceptorDumper,
-		PerceptorDumps:               make(chan *perceptor.Dump),
-		PerceptorDumpIntervalSeconds: config.PerceptorDumpIntervalSeconds,
-		HubDumper:                    hubDumper,
-		HubDumps:                     make(chan *hub.Dump),
-		HubDumpPauseSeconds:          config.HubDumpPauseSeconds,
-		stop:                         stop,
+		KubeDumper:            kubeDumper,
+		KubeDumps:             make(chan *kube.Dump),
+		KubeDumpInterval:      kubeDumpInterval,
+		PerceptorDumper:       perceptorDumper,
+		PerceptorDumps:        make(chan *perceptor.Dump),
+		PerceptorDumpInterval: perceptorDumpInterval,
+		Hubs:                  map[string]*hubDumper{},
+		HubDumpPause:          hubDumpInterval,
+		HubDumps:              make(chan *hubDump),
+		stop:                  stop,
+		createHubClient:       createHubClient,
 	}
 
 	scraper.StartScraping()
 
-	return scraper, nil
+	return scraper
 }
 
-func (sc *Scraper) StartHubScrapes() {
+// SetHubs .....
+func (sc *Scraper) SetHubs(hosts []string) {
+	// add new ones
+	for _, host := range hosts {
+		if sc.Hubs[host] == nil {
+			client, err := sc.createHubClient(host)
+			if err != nil {
+				log.Errorf("unable to instantiate hub client for %s: %s", host, err.Error())
+				continue
+			}
+			newDumper := &hubDumper{
+				client: client,
+				dumps:  make(chan *hub.Dump),
+				stop:   make(chan struct{}),
+			}
+			go func() {
+				startHubScrapes(sc.HubDumpPause, newDumper)
+			}()
+			go func() {
+				for {
+					select {
+					case <-newDumper.stop:
+						return
+					case dump := <-newDumper.dumps:
+						sc.HubDumps <- &hubDump{host: host, dump: dump}
+					}
+				}
+			}()
+			sc.Hubs[host] = newDumper
+		}
+	}
+	// delete removed ones
+	current := map[string]bool{}
+	for _, v := range hosts {
+		current[v] = true
+	}
+	toDelete := []string{}
+	for old := range sc.Hubs {
+		if !current[old] {
+			toDelete = append(toDelete, old)
+		}
+	}
+	for _, t := range toDelete {
+		hub := sc.Hubs[t]
+		close(hub.stop)
+		delete(sc.Hubs, t)
+		// anything else?
+	}
+}
+
+// StartHubScrapes .....
+func startHubScrapes(dumpPause time.Duration, dumper *hubDumper) {
 	for {
-		hubDump, err := sc.HubDumper.Dump()
+		hubDump, err := dumper.client.Dump()
 		if err == nil {
-			sc.HubDumps <- hubDump
+			dumper.dumps <- hubDump
 			recordEvent("hub dump")
 		} else {
 			recordError("unable to get perceptor dump")
 			log.Errorf("unable to get hub dump: %s", err.Error())
 		}
 		select {
-		case <-sc.stop:
+		case <-dumper.stop:
 			return
-		case <-time.After(time.Duration(sc.HubDumpPauseSeconds) * time.Second):
+		case <-time.After(dumpPause):
 			// continue
 		}
 	}
 }
 
+// StartKubeScrapes .....
 func (sc *Scraper) StartKubeScrapes() {
 	for {
 		kubeDump, err := sc.KubeDumper.Dump()
@@ -110,16 +165,16 @@ func (sc *Scraper) StartKubeScrapes() {
 			recordError("unable to get kube dump")
 			log.Errorf("unable to get kube dump: %s", err.Error())
 		}
-		time.Sleep(time.Duration(sc.KubeDumpIntervalSeconds) * time.Second)
 		select {
 		case <-sc.stop:
 			return
-		case <-time.After(time.Duration(sc.HubDumpPauseSeconds) * time.Second):
+		case <-time.After(sc.KubeDumpInterval):
 			// continue
 		}
 	}
 }
 
+// StartPerceptorScrapes .....
 func (sc *Scraper) StartPerceptorScrapes() {
 	for {
 		perceptorDump, err := sc.PerceptorDumper.Dump()
@@ -130,18 +185,17 @@ func (sc *Scraper) StartPerceptorScrapes() {
 			recordError("unable to get perceptor dump")
 			log.Errorf("unable to get perceptor dump: %s", err.Error())
 		}
-		time.Sleep(time.Duration(sc.PerceptorDumpIntervalSeconds) * time.Second)
 		select {
 		case <-sc.stop:
 			return
-		case <-time.After(time.Duration(sc.HubDumpPauseSeconds) * time.Second):
+		case <-time.After(sc.PerceptorDumpInterval):
 			// continue
 		}
 	}
 }
 
+// StartScraping .....
 func (sc *Scraper) StartScraping() {
-	go sc.StartHubScrapes()
 	go sc.StartKubeScrapes()
 	go sc.StartPerceptorScrapes()
 }
