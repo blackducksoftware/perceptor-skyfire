@@ -4,11 +4,26 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"time"
 
 	kube "github.com/blackducksoftware/perceptor-skyfire/pkg/kube"
 )
 
 func main() {
+	//GetServicesMetrics()
+	DumpServices()
+}
+
+func GetServicesMetrics() {
+	for {
+		// Get Metrics
+
+		// Sleep
+		time.Sleep(20 * time.Second)
+	}
+}
+
+func DumpServices() {
 	// Get config file info from command line arguments
 	kubeConfigPath := os.Args[1]
 	masterURL := os.Args[2]
