@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
 	"os"
 	"time"
 
@@ -10,16 +12,20 @@ import (
 )
 
 func main() {
+	http.Handle("/metrics", prometheus.Handler())
+	addr := fmt.Sprintf(":%d", 3010)
+	go http.ListenAndServe(addr, nil)
+
 	startServicesMetricsRoutine()
 	//DumpServices()
 }
 
 func startServicesMetricsRoutine() {
-	for i := 0; i < 3; i++ {
+	for {
 		// Get Metrics
 		GetServicesMetrics()
 		// Sleep
-		time.Sleep(3 * time.Second)
+		time.Sleep(10 * time.Second)
 	}
 }
 
@@ -28,6 +34,7 @@ func GetServicesMetrics() {
 }
 
 func DumpServices() {
+	start := time.Now()
 	// Get config file info from command line arguments
 	kubeConfigPath := os.Args[1]
 	masterURL := os.Args[2]
@@ -58,24 +65,55 @@ func DumpServices() {
 	//}
 
 	//fmt.Println(string(bytes))
+	elapsedMilliseconds := float64(time.Since(start).Seconds() / 1000.0)
 
 	log.Infof("Number of Services: %d", len(kubeServicesDump.Services))
+	recordServicesQuery("Services Query")
+	recordNumServices("Number of Services", len(kubeServicesDump.Services))
+	recordServicesLatency("Services Latency", elapsedMilliseconds)
 
 }
 
-var servicesHistogram *prometheus.HistogramVec
+var servicesQueryCount *prometheus.CounterVec
+var numServicesGauge *prometheus.GaugeVec
+var servicesLatencyHistogram *prometheus.HistogramVec
 
-func recordServicesCount(name string, count int) {
-	servicesHistogram.With(prometheus.Labels{"name": name}).Observe(float64(count))
+func recordServicesQuery(name string) {
+	servicesQueryCount.With(prometheus.Labels{"name": name}).Inc()
+}
+
+func recordNumServices(name string, count int) {
+	numServicesGauge.With(prometheus.Labels{"name": name}).Set(float64(count))
+}
+
+func recordServicesLatency(name string, latencymMilliseconds float64) {
+	servicesLatencyHistogram.With(prometheus.Labels{"name": name}).Observe(latencymMilliseconds)
 }
 
 func init() {
-	servicesHistogram = prometheus.NewHistogramVec(prometheus.HistogramOpts{
+
+	servicesQueryCount = prometheus.NewCounterVec(prometheus.CounterOpts{
 		Namespace: "perceptor",
 		Subsystem: "skyfire",
-		Name:      "hub_api_services_count",
-		Help:      "Number of Services running",
+		Name:      "services_queries",
+		Help:      "Count of service queries",
+	}, []string{"name"})
+	prometheus.MustRegister(servicesQueryCount)
+
+	numServicesGauge = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Namespace: "perceptor",
+		Subsystem: "skyfire",
+		Name:      "number_services",
+		Help:      "Number of services running",
+	}, []string{"name"})
+	prometheus.MustRegister(numServicesGauge)
+
+	servicesLatencyHistogram = prometheus.NewHistogramVec(prometheus.HistogramOpts{
+		Namespace: "perceptor",
+		Subsystem: "skyfire",
+		Name:      "services_latency",
+		Help:      "Latency of getting services",
 		Buckets:   prometheus.ExponentialBuckets(1, 2, 20),
-	}, []string{"servicesCnt"})
-	prometheus.MustRegister(servicesHistogram)
+	}, []string{"name"})
+	prometheus.MustRegister(servicesLatencyHistogram)
 }
