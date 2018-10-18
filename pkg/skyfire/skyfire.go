@@ -65,7 +65,13 @@ func NewSkyfire(config *Config, stop <-chan struct{}) (*Skyfire, error) {
 	hubInterval := time.Duration(config.HubDumpPauseSeconds) * time.Second
 	perceptorInterval := time.Duration(config.PerceptorDumpIntervalSeconds) * time.Second
 	scraper := NewScraper(kubeDumper, kubeInterval, createHubClient, hubInterval, perceptorDumper, perceptorInterval, stop)
-	skyfire := &Skyfire{scraper, nil, nil, nil, nil, stop}
+	skyfire := &Skyfire{
+		Scraper:           scraper,
+		LastPerceptorDump: nil,
+		LastHubDumps:      map[string]*hub.Dump{},
+		LastKubeDump:      nil,
+		LastReport:        nil,
+		stop:              stop}
 	go skyfire.HandleScrapes()
 	http.HandleFunc("/latestreport", skyfire.LatestReportHandler())
 	return skyfire, nil
@@ -98,18 +104,13 @@ func (sf *Skyfire) HandleScrapes() {
 		case <-sf.stop:
 			return
 		case dump := <-sf.Scraper.HubDumps:
-			fmt.Println(dump)
 			sf.LastHubDumps[dump.host] = dump.dump
-			sf.BuildReport()
 		case k := <-sf.Scraper.KubeDumps:
-			fmt.Println(k)
 			sf.LastKubeDump = k
-			sf.BuildReport()
 		case p := <-sf.Scraper.PerceptorDumps:
-			fmt.Println(p)
 			sf.LastPerceptorDump = p
-			sf.BuildReport()
 		}
+		sf.BuildReport()
 	}
 }
 
