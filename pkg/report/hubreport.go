@@ -44,13 +44,14 @@ func NewHubReport(dump *hub.Dump) *HubReport {
 }
 
 // HumanReadableString .....
-func (h *HubReport) HumanReadableString() string {
+func (h *HubReport) HumanReadableString(host string) string {
 	return fmt.Sprintf(`
-Hub:
+Hub %s:
  - %d project(s) with multiple versions
  - %d version(s) with multiple code locations
  - %d code location(s) with multiple scan summaries
 `,
+		host,
 		len(h.ProjectsMultipleVersions),
 		len(h.VersionsMultipleCodeLocations),
 		len(h.CodeLocationsMultipleScanSummaries))

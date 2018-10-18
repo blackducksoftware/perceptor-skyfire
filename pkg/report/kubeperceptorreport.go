@@ -253,9 +253,9 @@ func ExpectedPodAnnotations(podName string, imageShas []string, dump *Dump) (map
 		annotations[kube.PodImageAnnotationKeyVulnerabilities.String(i)] = fmt.Sprintf("%d", image.Vulnerabilities)
 		annotations[kube.PodImageAnnotationKeyPolicyViolations.String(i)] = fmt.Sprintf("%d", image.PolicyViolations)
 		annotations[kube.PodImageAnnotationKeyProjectEndpoint.String(i)] = image.ComponentsURL
-		annotations[kube.PodImageAnnotationKeyScannerVersion.String(i)] = dump.Hub.Version
-		annotations[kube.PodImageAnnotationKeyServerVersion.String(i)] = dump.Hub.Version
-		name, _, _ := dump.Kube.ImagesBySha[sha].ParseImageID() // just ignore errors and missing values!  maybe not a good idea TODO
+		annotations[kube.PodImageAnnotationKeyScannerVersion.String(i)] = "TODO -- implement" // dump.Hub.Version
+		annotations[kube.PodImageAnnotationKeyServerVersion.String(i)] = "TODO -- implement"  // dump.Hub.Version
+		name, _, _ := dump.Kube.ImagesBySha[sha].ParseImageID()                               // just ignore errors and missing values!  maybe not a good idea TODO
 		name = strings.Replace(name, "/", ".", -1)
 		name = strings.Replace(name, ":", ".", -1)
 		annotations[kube.PodImageAnnotationKeyImage.String(i)] = name
@@ -264,8 +264,8 @@ func ExpectedPodAnnotations(podName string, imageShas []string, dump *Dump) (map
 	annotations[kube.PodAnnotationKeyOverallStatus.String()] = pod.OverallStatus
 	annotations[kube.PodAnnotationKeyVulnerabilities.String()] = fmt.Sprintf("%d", pod.Vulnerabilities)
 	annotations[kube.PodAnnotationKeyPolicyViolations.String()] = fmt.Sprintf("%d", pod.PolicyViolations)
-	annotations[kube.PodAnnotationKeyScannerVersion.String()] = dump.Hub.Version
-	annotations[kube.PodAnnotationKeyServerVersion.String()] = dump.Hub.Version
+	annotations[kube.PodAnnotationKeyScannerVersion.String()] = "TODO -- implement" // dump.Hub.Version
+	annotations[kube.PodAnnotationKeyServerVersion.String()] = "TODO -- implement"  // dump.Hub.Version
 
 	return annotations, nil
 }

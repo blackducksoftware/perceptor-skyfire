@@ -53,31 +53,32 @@ Perceptor<->Hub:
 // PerceptorNotHubImages .....
 func PerceptorNotHubImages(dump *Dump) []string {
 	images := []string{}
-	for sha := range dump.Perceptor.ImagesBySha {
-		sha20 := sha[:20]
-		_, ok := dump.Hub.ProjectsBySha[sha20]
-		if !ok {
-			images = append(images, sha)
-		}
-	}
+	// TODO
+	// for sha := range dump.Perceptor.ImagesBySha {
+	// 	sha20 := sha[:20]
+	// 	_, ok := dump.Hub.ProjectsBySha[sha20]
+	// 	if !ok {
+	// 		images = append(images, sha)
+	// 	}
+	// }
 	return images
 }
 
 // HubNotPerceptorImages .....
 func HubNotPerceptorImages(dump *Dump) []string {
 	images := []string{}
-	for sha := range dump.Hub.ProjectsBySha {
-		foundMatch := false
-		// can't do a dictionary lookup, because hub sha only has first 20 characters
-		for _, perceptorImage := range dump.Perceptor.ScanResults.Images {
-			if perceptorImage.Sha[:20] == sha {
-				foundMatch = true
-				break
-			}
-		}
-		if !foundMatch {
-			images = append(images, sha)
-		}
-	}
+	// for sha := range dump.Hub.ProjectsBySha {
+	// 	foundMatch := false
+	// 	// can't do a dictionary lookup, because hub sha only has first 20 characters
+	// 	for _, perceptorImage := range dump.Perceptor.ScanResults.Images {
+	// 		if perceptorImage.Sha[:20] == sha {
+	// 			foundMatch = true
+	// 			break
+	// 		}
+	// 	}
+	// 	if !foundMatch {
+	// 		images = append(images, sha)
+	// 	}
+	// }
 	return images
 }

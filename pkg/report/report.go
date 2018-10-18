@@ -32,18 +32,22 @@ type Report struct {
 	Kube          *KubeReport
 	KubePerceptor *KubePerceptorReport
 	PerceptorHub  *PerceptorHubReport
-	Hub           *HubReport
+	Hubs          map[string]*HubReport
 }
 
 // NewReport .....
 func NewReport(dump *Dump) *Report {
+	hubReports := map[string]*HubReport{}
+	for host, hubDump := range dump.Hubs {
+		hubReports[host] = NewHubReport(hubDump)
+	}
 	return &Report{
 		dump,
 		NewMetaReport(dump),
 		NewKubeReport(dump.Kube),
 		NewKubePerceptorReport(dump),
 		NewPerceptorHubReport(dump),
-		NewHubReport(dump.Hub),
+		hubReports,
 	}
 }
 
@@ -54,7 +58,9 @@ func (r *Report) HumanReadableString() string {
 		r.Kube.HumanReadableString(),
 		r.KubePerceptor.HumanReadableString(),
 		r.PerceptorHub.HumanReadableString(),
-		r.Hub.HumanReadableString(),
+	}
+	for host, report := range r.Hubs {
+		chunks = append(chunks, report.HumanReadableString(host))
 	}
 	return strings.Join(chunks, "\n\n")
 }

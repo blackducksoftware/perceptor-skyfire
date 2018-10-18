@@ -120,18 +120,13 @@ func (sf *Skyfire) BuildReport() {
 		log.Warnf("unable to generate report: perceptor dump is nil")
 		return
 	}
-	if sf.LastHubDump == nil {
-		recordError("unable to generate report: hub dump is nil")
-		log.Warnf("unable to generate report: hub dump is nil")
-		return
-	}
 	if sf.LastKubeDump == nil {
 		recordError("unable to generate report: kube dump is nil")
 		log.Warnf("unable to generate report: kube dump is nil")
 		return
 	}
 
-	dump := report.NewDump(sf.LastKubeDump, sf.LastPerceptorDump, sf.LastHubDump)
+	dump := report.NewDump(sf.LastKubeDump, sf.LastPerceptorDump, sf.LastHubDumps)
 	sf.LastReport = report.NewReport(dump)
 	IssueReportMetrics(sf.LastReport)
 
@@ -141,17 +136,19 @@ func (sf *Skyfire) BuildReport() {
 
 // IssueReportMetrics .....
 func IssueReportMetrics(report *report.Report) {
-	IssueHubReportMetrics(report.Hub)
+	IssueHubReportMetrics(report.Hubs)
 	IssueKubeReportMetrics(report.Kube)
 	IssuePerceptorHubMetrics(report.PerceptorHub)
 	IssueKubePerceptorReportMetrics(report.KubePerceptor)
 }
 
 // IssueHubReportMetrics .....
-func IssueHubReportMetrics(report *report.HubReport) {
-	recordReportProblem("hub_projects_multiple_versions", len(report.ProjectsMultipleVersions))
-	recordReportProblem("hub_versions_multiple_code_locations", len(report.VersionsMultipleCodeLocations))
-	recordReportProblem("hub_code_locations_multiple_scan_summaries", len(report.CodeLocationsMultipleScanSummaries))
+func IssueHubReportMetrics(reports map[string]*report.HubReport) {
+	for host, report := range reports {
+		recordReportProblem(fmt.Sprintf("%s-hub_projects_multiple_versions", host), len(report.ProjectsMultipleVersions))
+		recordReportProblem(fmt.Sprintf("%s-hub_versions_multiple_code_locations", host), len(report.VersionsMultipleCodeLocations))
+		recordReportProblem(fmt.Sprintf("%s-hub_code_locations_multiple_scan_summaries", host), len(report.CodeLocationsMultipleScanSummaries))
+	}
 }
 
 // IssueKubeReportMetrics .....

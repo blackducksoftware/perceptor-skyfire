@@ -38,7 +38,7 @@ type MetaReport struct {
 func NewMetaReport(dump *Dump) *MetaReport {
 	return &MetaReport{
 		KubeMeta:   dump.Kube.Meta,
-		HubVersion: dump.Hub.Version,
+		HubVersion: "TODO -- implement", // dump.Hub.Version,
 	}
 }
 
