@@ -63,59 +63,19 @@ func DumpServices() {
 
 }
 
-//var linkTypeDurationHistogram *prometheus.HistogramVec
-var problemsGauge *prometheus.GaugeVec
-var errorCounter *prometheus.CounterVec
-var eventCounter *prometheus.CounterVec
+var servicesHistogram *prometheus.HistogramVec
 
-/*func recordLinkTypeDuration(linkType LinkType, duration time.Duration) {
-	milliseconds := float64(duration / time.Millisecond)
-	linkTypeDurationHistogram.With(prometheus.Labels{"linkType": linkType.String()}).Observe(milliseconds)
-}*/
-
-func recordReportProblem(name string, count int) {
-	problemsGauge.With(prometheus.Labels{"name": name}).Set(float64(count))
-}
-
-func recordError(name string) {
-	errorCounter.With(prometheus.Labels{"name": name}).Inc()
-}
-
-func recordEvent(name string) {
-	eventCounter.With(prometheus.Labels{"name": name}).Inc()
+func recordServicesCount(name string, count int) {
+	servicesHistogram.With(prometheus.Labels{"name": name}).Observe(float64(count))
 }
 
 func init() {
-	/*linkTypeDurationHistogram = prometheus.NewHistogramVec(prometheus.HistogramOpts{
+	servicesHistogram = prometheus.NewHistogramVec(prometheus.HistogramOpts{
 		Namespace: "perceptor",
 		Subsystem: "skyfire",
-		Name:      "hub_api_link_duration",
-		Help:      "durations for hub API calls in milliseconds, grouped by link type",
+		Name:      "hub_api_services_count",
+		Help:      "Number of Services running",
 		Buckets:   prometheus.ExponentialBuckets(1, 2, 20),
-	}, []string{"linkType"})
-	prometheus.MustRegister(linkTypeDurationHistogram)*/
-
-	problemsGauge = prometheus.NewGaugeVec(prometheus.GaugeOpts{
-		Namespace: "perceptor",
-		Subsystem: "skyfire",
-		Name:      "test_issues",
-		Help:      "names and counts for issues discovered in perceptor testing",
-	}, []string{"name"})
-	prometheus.MustRegister(problemsGauge)
-
-	errorCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Namespace: "perceptor",
-		Subsystem: "skyfire",
-		Name:      "errors",
-		Help:      "internal skyfire errors",
-	}, []string{"name"})
-	prometheus.MustRegister(errorCounter)
-
-	eventCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Namespace: "perceptor",
-		Subsystem: "skyfire",
-		Name:      "events",
-		Help:      "internal skyfire events",
-	}, []string{"name"})
-	prometheus.MustRegister(eventCounter)
+	}, []string{"servicesCnt"})
+	prometheus.MustRegister(servicesHistogram)
 }
