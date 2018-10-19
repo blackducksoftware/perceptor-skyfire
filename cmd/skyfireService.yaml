@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: skyfire
+spec:
+  ports:
+    - port: 3010
+      protocol: TCP
+      targetPort: 3010
+  selector:
+    name: skyfire
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

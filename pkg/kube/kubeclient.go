@@ -106,6 +106,16 @@ func (client *KubeClient) GetAllPods() ([]*Pod, error) {
 	return pods, nil
 }
 
+/* DumpServices .....
+func (client *KubeClient) GetAnnotations() {
+	pods, x := client.GetAllPods()
+	for _, pod := range pods {
+		for k,v :=  range pod.BDAnnotations {
+			log.Infof("annotation !!!  %v %v",k,v)
+		}
+	}
+}*/
+
 // DumpServices .....
 func (client *KubeClient) DumpServices() (*ServiceDump, error) {
 	// Get a Slice of Service items for all services

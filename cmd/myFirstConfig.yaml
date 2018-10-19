@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  skyfire.yaml: >-
+    {"UseInClusterConfig": false,"MasterURL": "https://internal-saas.dc1.lan:8443","KubeConfigPath": "/Users/hammer/.kube/config","LogLevel": "debug","Port": 3010,"HubHost": "mihub-mi.10.1.176.130.xip.io","HubUser": "sysadmin","HubUserPasswordEnvVar": "PCP_HUBUSERPASSWORD", "KubeDumpIntervalSeconds": 15,"PerceptorDumpIntervalSeconds": 15,"HubDumpPauseSeconds": 30,"PerceptorHost": "http://perceptor-mi.10.1.176.130.xip.io","PerceptorPort": 80}
+kind: ConfigMap
+metadata:
+  name: skyfire

@@ -16,25 +16,6 @@ func main() {
 	addr := fmt.Sprintf(":%d", 3010)
 	go http.ListenAndServe(addr, nil)
 
-	startServicesMetricsRoutine()
-	//DumpServices()
-}
-
-func startServicesMetricsRoutine() {
-	for {
-		// Get Metrics
-		GetServicesMetrics()
-		// Sleep
-		time.Sleep(10 * time.Second)
-	}
-}
-
-func GetServicesMetrics() {
-	DumpServices()
-}
-
-func DumpServices() {
-	start := time.Now()
 	// Get config file info from command line arguments
 	kubeConfigPath := os.Args[1]
 	masterURL := os.Args[2]
@@ -48,26 +29,44 @@ func DumpServices() {
 		panic(err)
 	}
 
+	startServicesMetricsRoutine(kubeDumper)
+}
+
+func startServicesMetricsRoutine(kubeDumper *kube.KubeClient) {
+	for {
+		// Get Metrics
+		GetServicesMetrics(kubeDumper)
+		// Sleep
+		time.Sleep(10 * time.Second)
+	}
+}
+
+func GetServicesMetrics(kubeDumper *kube.KubeClient) {
+	DumpServices(kubeDumper)
+}
+
+func DumpServices(kubeDumper *kube.KubeClient) {
+
 	// Use Kube Client method to get a Service Dump
+	start := time.Now()
 	kubeServicesDump, err := kubeDumper.DumpServices()
 	if err != nil {
 		panic(err)
 	}
+	elapsedMilliseconds := float64(time.Since(start) / time.Millisecond)
 
 	// Create a map of the Service Dump for JSON formatting
 	//dict := map[string]interface{}{
 	//	"Dump": kubeServicesDump,
 	//}
-
 	//bytes, err := json.MarshalIndent(dict, "", "  ")
 	//if err != nil {
 	//	panic(err)
 	//}
-
 	//fmt.Println(string(bytes))
-	elapsedMilliseconds := float64(time.Since(start).Seconds() / 1000.0)
 
 	log.Infof("Number of Services: %d", len(kubeServicesDump.Services))
+	log.Infof("Latency of Query: %f", elapsedMilliseconds)
 	recordServicesQuery("Services Query")
 	recordNumServices("Number of Services", len(kubeServicesDump.Services))
 	recordServicesLatency("Services Latency", elapsedMilliseconds)
