@@ -92,6 +92,9 @@ func (pd *Client) DumpScanResults() (*api.ScanResults, error) {
 	if err != nil {
 		return nil, errors.Trace(err)
 	}
+	if resp.IsError() {
+		return nil, fmt.Errorf("http request to %s failed with status code %d", url, resp.StatusCode())
+	}
 	switch result := resp.Result().(type) {
 	case *api.ScanResults:
 		return result, nil
