@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: luigi
+- apiVersion: v1
+  kind: ClusterRole
+  metadata:
+    name: luigi
+  rules:
+  - apiGroups:
+    - '*'
+    attributeRestrictions: null
+    resources:
+    - pods
+    verbs:
+    - get
+    - list
+    - update
+    - watch
+- apiVersion: v1
+  groupNames: null
+  kind: ClusterRoleBinding
+  metadata:
+    name: luigi
+  roleRef:
+    name: luigi
+  subjects:
+  - kind: ServiceAccount
+    name: luigi
+    namespace: l1
+  userNames:
+  - system:serviceaccount:l1:luigi
