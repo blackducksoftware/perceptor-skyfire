@@ -3,7 +3,7 @@ kind: List
 items:
 - apiVersion: v1
   data:
-    luigi.json: '{"PerceptorURL": "", "HubURL": "", "Port": 3101}'
+    luigi.json: '{"PerceptorURL": "", "HubURL": "", "Port": 3101, "UseInClusterConfig": true}'
   kind: ConfigMap
   metadata:
     name: luigi
