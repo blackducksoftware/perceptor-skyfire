@@ -5,9 +5,9 @@ import sys
 
 def get_kube_client(use_incluster_config):
 	"""
-	Pass in None to use in-cluster-config.
-	Pass in	a string (path to kube-config file)
-	to use an external cluster.
+	Pass in True to use in-cluster-config.
+	Pass in	False to use the cluster that your
+	`oc` or `kubectl` is currently pointing to.
 	"""
 	if use_incluster_config is None:
 		kubernetes.config.load_incluster_config()
@@ -33,7 +33,7 @@ with open(sys.argv[1]) as f:
 
 print("config:" + str(config))
 
-kube_client = get_kube_client(config.get(['UseInClusterConfig']))
+kube_client = get_kube_client(config.get('UseInClusterConfig'))
 
 i = 0
 while True:
