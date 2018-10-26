@@ -20,7 +20,7 @@ def main():
 
     # Create Clients to access Cluster Data
     k8s_client = K8sClient()
-    hub_client = HubClient('engsreepath471-engsreepath471.10.1.176.130.xip.io')
+    hub_client = HubClient(config['HubURL'])
     opssight_client = OpsSightClient()
 
     # Put a Hub and OpsSight into the Cluster
