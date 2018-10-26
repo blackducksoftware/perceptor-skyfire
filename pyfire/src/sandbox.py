@@ -1,9 +1,7 @@
 import sys 
 import os
 import json
-import subprocess
 from cluster_clients import *
-import pprint 
 
 def main():
     if len(sys.argv) < 2:
@@ -22,7 +20,7 @@ def main():
         test_config_json = json.load(f)
 
     opssight_url = test_config_json["PerceptorURL"]
-    hub_url = test_config_json["HubURL"]
+    hub_url = test_config_json["HubURL"] 
     port = test_config_json["Port"]
     usr = test_config_json["Username"]
     password = test_config_json["Password"]
