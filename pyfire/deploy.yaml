@@ -27,7 +27,7 @@ items:
   spec:
     containers:
     - args:
-      - ./src/run.py
+      - ./src/main.py
       - /etc/luigi/luigi.json
       command:
       - python3
