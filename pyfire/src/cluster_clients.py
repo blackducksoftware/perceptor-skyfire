@@ -30,18 +30,18 @@ class myHandler(BaseHTTPRequestHandler):
         pass
 
 
-class K8sClientWrapper:
-     # TO DO
-     # name of pod, containers, iamges in containers, annotations and labels 
-
-    def __init__(self):
-        config.load_kube_config()
+class KubeClientWrapper:
+    def __init__(self, in_cluster):
+        if in_cluster:
+            config.load_incluster_config()
+        else:
+            config.load_kube_config()
         self.v1 = client.CoreV1Api()
 
     def get_namespaces(self):
         return [ns.metadata.name for ns in self.v1.list_namespace()]
 
-    def get_pods(self, namespace):
+    def get_pods(self, namespace="all-namespaces"):
         if namespace == "all-namespaces":
             return self.v1.list_pod_for_all_namespaces(watch=False)
         else:
@@ -65,27 +65,15 @@ class K8sClientWrapper:
 
     def get_labels(self):
         return [pod.metadata.labels for pod in self.v1.list_pod_for_all_namespaces()]
-    
-    
 
-
-class CloudNativeClient:
-    k8s = K8sClientWrapper()
-
-    def __init__(self):
-        pass
-
-class HubClient(CloudNativeClient):
-    def __init__(self, host_name=None, username="", password="", yaml_path="hub.yml"):
+class HubClient():
+    def __init__(self, host_name=None, username="", password="", in_cluster=False):
+        self.kube = KubeClientWrapper(in_cluster)
         self.host_name = host_name
         self.username = username
         self.password = password 
         self.secure_login_cookie = self.get_secure_login_cookie()
-        self.yaml_path = yaml_path
         self.max_projects = 10000000
-        
-    def create_yaml(self):
-        ns, err = subprocess.Popen(["./create-hub-yaml.sh"], stdout=subprocess.PIPE).communicate()
 
     def get_secure_login_cookie(self):
         security_headers = {'Content-Type':'application/x-www-form-urlencoded'}
@@ -126,13 +114,10 @@ class HubClient(CloudNativeClient):
         pass 
 
 
-class OpsSightClient(CloudNativeClient):
-    def __init__(self, host_name=None, yaml_path="opssight.yml"):
+class OpsSightClient():
+    def __init__(self, host_name=None, in_cluster=False):
+        self.kube = KubeClientWrapper(in_cluster)
         self.host_name = host_name
-        self.yaml_path = yaml_path
-
-    def create_yaml(self):
-        ns, err = subprocess.Popen(["./create-opssight-yaml.sh"], stdout=subprocess.PIPE).communicate()
     
     def get_dump(self):
         while True:
