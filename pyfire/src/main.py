@@ -9,7 +9,7 @@ def get_kube_client(use_incluster_config):
 	Pass in	False to use the cluster that your
 	`oc` or `kubectl` is currently pointing to.
 	"""
-	if use_incluster_config is None:
+	if use_incluster_config:
 		kubernetes.config.load_incluster_config()
 	else:
 		kubernetes.config.load_kube_config()
