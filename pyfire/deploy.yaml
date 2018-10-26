@@ -31,7 +31,7 @@ items:
 #      - /etc/luigi/luigi.json
       command:
       - python3
-      image: gcr.io/saas-hub-stg/blackducksoftware/pyfire
+      image: gcr.io/saas-hub-stg/blackducksoftware/pyfire:master
       imagePullPolicy: Always
       name: luigi
       ports:
