@@ -14,30 +14,37 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/$PROJECT_ID/blackducksoftware/skyfire:$BRANCH_NAME']
 
-# Freeway: Hub performance testing
+# Pyfire: python-based Perceptor test platform
 
-- name: 'gcr.io/cloud-builders/go'
-  args: ['build', '-o', './cmd/freeway/freeway', './cmd/freeway/freeway.go']
-  env:
-  - 'PROJECT_ROOT=github.com/blackducksoftware/perceptor-skyfire'
-  - 'CGO_ENABLED=0'
-  - 'GOOS=linux'
-  - 'GOARCH=amd64'
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/blackducksoftware/freeway:$BRANCH_NAME', './cmd/freeway/.']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/blackducksoftware/pyfire:$BRANCH_NAME', './pyfire/.']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/blackducksoftware/freeway:$BRANCH_NAME']
+  args: ['push', 'gcr.io/$PROJECT_ID/blackducksoftware/pyfire:$BRANCH_NAME']
 
-# HubDashPerf: more Hub performance testing
-
-- name: 'gcr.io/cloud-builders/go'
-  args: ['build', '-o', './cmd/hubdashperf/hubdashperf', './cmd/hubdashperf/hubdashperf.go']
-  env:
-  - 'PROJECT_ROOT=github.com/blackducksoftware/perceptor-skyfire'
-  - 'CGO_ENABLED=0'
-  - 'GOOS=linux'
-  - 'GOARCH=amd64'
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/blackducksoftware/hubdashperf:$BRANCH_NAME', './cmd/hubdashperf/.']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/blackducksoftware/hubdashperf:$BRANCH_NAME']
+## Freeway: Hub performance testing
+#
+#- name: 'gcr.io/cloud-builders/go'
+#  args: ['build', '-o', './cmd/freeway/freeway', './cmd/freeway/freeway.go']
+#  env:
+#  - 'PROJECT_ROOT=github.com/blackducksoftware/perceptor-skyfire'
+#  - 'CGO_ENABLED=0'
+#  - 'GOOS=linux'
+#  - 'GOARCH=amd64'
+#- name: 'gcr.io/cloud-builders/docker'
+#  args: ['build', '-t', 'gcr.io/$PROJECT_ID/blackducksoftware/freeway:$BRANCH_NAME', './cmd/freeway/.']
+#- name: 'gcr.io/cloud-builders/docker'
+#  args: ['push', 'gcr.io/$PROJECT_ID/blackducksoftware/freeway:$BRANCH_NAME']
+#
+## HubDashPerf: more Hub performance testing
+#
+# - name: 'gcr.io/cloud-builders/go'
+#  args: ['build', '-o', './cmd/hubdashperf/hubdashperf', './cmd/hubdashperf/hubdashperf.go']
+#  env:
+#  - 'PROJECT_ROOT=github.com/blackducksoftware/perceptor-skyfire'
+#  - 'CGO_ENABLED=0'
+#  - 'GOOS=linux'
+#  - 'GOARCH=amd64'
+# - name: 'gcr.io/cloud-builders/docker'
+#  args: ['build', '-t', 'gcr.io/$PROJECT_ID/blackducksoftware/hubdashperf:$BRANCH_NAME', './cmd/hubdashperf/.']
+#- name: 'gcr.io/cloud-builders/docker'
+#  args: ['push', 'gcr.io/$PROJECT_ID/blackducksoftware/hubdashperf:$BRANCH_NAME']
