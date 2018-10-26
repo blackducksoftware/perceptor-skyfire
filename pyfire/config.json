@@ -1,5 +1,7 @@
 {
     "PerceptorURL": "",
     "HubURL": "",
-    "Port": 3101
+    "Port": 3101,
+
+    "UseInClusterConfig": false
 }
