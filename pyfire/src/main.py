@@ -1,5 +1,15 @@
 from kubernetes import config, client
 import time
+import json
+import sys
+
+
+if len(sys.argv) < 2:
+	print("USAGE:")
+	sys.exit("Wrong Number of Parameters")
+
+with open(sys.argv[1]) as f:
+	print("config:" + str(json.load(f)))
 
 
 def get_pods():

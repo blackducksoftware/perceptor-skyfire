@@ -3,7 +3,7 @@ kind: List
 items:
 - apiVersion: v1
   data:
-    luigi.json: '{"Port": 3101}'
+    luigi.json: '{"PerceptorURL": "", "HubURL": "", "Port": 3101}'
   kind: ConfigMap
   metadata:
     name: luigi
@@ -27,11 +27,11 @@ items:
   spec:
     containers:
     - args:
-      - run.py
-#      - /etc/luigi/luigi.json
+      - ./src/main.py
+      - /etc/luigi/luigi.json
       command:
       - python3
-      image: docker.io/mfenwickbd/luigi:latest
+      image: gcr.io/saas-hub-stg/blackducksoftware/pyfire:master
       imagePullPolicy: Always
       name: luigi
       ports:

@@ -30,9 +30,9 @@ def main():
     # Create Kubernetes, OpsSight, and Hub Clients
     opssight_client = OpsSightClient(opssight_url)
     hub_client = HubClient(hub_url, usr, password)
-    #hub_client = HubClient("int-eric-int-eric.10.1.176.130.xip.io", usr, password)
-    #hub_client = HubClient("jim-emea-scaffold-jim-emea-scaffold.10.1.176.130.xip.io", usr, password)
-    #hub_client = HubClient("hammerp-hammerp.10.1.176.130.xip.io", usr, password)
+    #hub_client = HubClient("???", usr, password)
+    #hub_client = HubClient("???", usr, password)
+    #hub_client = HubClient("???", usr, password)
 
     # TO DO - Add Functinality to the Hub
     print(json.dumps( hub_client.get_projects_dump() ,indent=2))
