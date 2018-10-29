@@ -74,7 +74,7 @@ class HubAnalysis():
         self.data = {}
 
     def __repr__(self):
-        output = ""
+        output = "== Hub Analysis ==\n"
         num_projects = len(self.data.keys())
         num_code_locations = 0
         for project_ID, project_data in self.data.items():
@@ -218,7 +218,7 @@ class OpsSightAnalysis:
         self.data = {}
 
     def __repr__(self):
-        output = ""
+        output = "== OpsSight Analysis ==\n"
         output += "Hub Count: "+str(len(self.get_hubs_IDs()))+"\n"
         output += "Total Pod Count: "+str(len(self.get_pods_IDs()))+"\n"
         output += "Total Image Count: "+str(len(self.get_images_IDs()))+"\n"
@@ -238,6 +238,13 @@ class OpsSightAnalysis:
             for container in pod_data["Containers"]:
                 images.append(container['Image']['Sha'])
         return images
+
+    def get_pods_repositories(self):
+        repositories = []
+        for pod_ID, pod_data in self.data["CoreModel"]["Pods"].items():
+            for container in pod_data["Containers"]:
+                repositories.append(container['Image']['Repository'])
+        return repositories
         
     def get_images_IDs(self):
         return self.data["CoreModel"]["Images"].keys()
