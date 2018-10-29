@@ -73,8 +73,24 @@ class HubAnalysis():
         self.time_stamp = datetime.datetime.now()
         self.data = {}
 
-    def get_something(self):
-        pass 
+    def __repr__(self):
+        output = ""
+        num_projects = len(self.data.keys())
+        num_code_locations = 0
+        for project_ID, project_data in self.data.items():
+            for version_ID, version_data in project_data["versions"].items():
+                num_code_locations += len(version_data['codelocations'].keys())
+        output += "Num Projects: "+str(num_projects)+"\n"
+        output += "Total Code Locations: "+str(num_code_locations)+"\n"
+        return output 
+
+    def get_code_location_shas(self):
+        shas = []
+        for project_ID, project_data in self.data.items():
+            for version_ID, version_data in project_data["versions"].items():
+                for code_location_ID, code_location_data in version_data['codelocations'].items():
+                    shas.append(code_location_data['sha'])
+        return shas 
 
 class HubClient():
     def __init__(self, host_name=None, username="", password="", in_cluster=False):
@@ -201,14 +217,36 @@ class OpsSightAnalysis:
         self.time_stamp = datetime.datetime.now()
         self.data = {}
 
-    def get_hubs_names(self):
+    def __repr__(self):
+        output = ""
+        output += "Hub Count: "+str(len(self.get_hubs_IDs()))+"\n"
+        output += "Total Pod Count: "+str(len(self.get_pods_IDs()))+"\n"
+        output += "Total Image Count: "+str(len(self.get_images_IDs()))+"\n"
+        output += " - Images Scanned: "+str(len(self.get_images_IDs()) - len(self.get_scan_queue_images()))+"\n"
+        output += " - Images Queued: "+str(len(self.get_scan_queue_images()))+"\n"
+        return output 
+
+    def get_hubs_IDs(self):
         return self.data["Hubs"].keys()
 
-    def get_pods_names(self):
+    def get_pods_IDs(self):
         return self.data["CoreModel"]["Pods"].keys()
+
+    def get_pods_images(self):
+        images = []
+        for pod_ID, pod_data in self.data["CoreModel"]["Pods"].items():
+            for container in pod_data["Containers"]:
+                images.append(container['Image']['Sha'])
+        return images
         
-    def get_shas_names(self):
+    def get_images_IDs(self):
         return self.data["CoreModel"]["Images"].keys()
+
+    def get_scan_queue_images(self):
+        images = []
+        for elem in self.data["CoreModel"]["ImageScanQueue"]:
+            images.append(elem['Key'])
+        return images
 
 class OpsSightClient():
     def __init__(self, host_name=None, in_cluster=False):
