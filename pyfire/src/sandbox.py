@@ -29,11 +29,19 @@ def main():
     opssight_client = OpsSightClient(opssight_url, incluster)
     hub_client = HubClient(hub_url, usr, password, incluster)
 
-    # TO DO - Add Functinality to the Hub
-    print(json.dumps( hub_client.get_projects_dump() ,indent=2))
+    # TO DO - Hub Testing
+    #print(json.dumps( hub_client.get_projects_dump() ,indent=2))
 
-    print(hub_client.get_projects_names())
-    print(hub_client.get_projects_link("versions"))
+    #print(hub_client.get_projects_names())
+    #print(hub_client.get_projects_link("versions"))
+    #print(json.dumps(hub_client.get_hub_health() ,indent=2))
+    #print(json.dumps(hub_client.get_project_version_risk_profile() ,indent=2))
+    #print(json.dumps(hub_client.get_project_version_policy_status() ,indent=2))
+
+
+    # TO DO - OpsSight Testing
+
+    print(json.dumps( opssight_client.get_dump() ,indent=2))
 
 
 

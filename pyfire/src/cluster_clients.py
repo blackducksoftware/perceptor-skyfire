@@ -81,16 +81,23 @@ class HubClient():
         # verify=False does not verify SSL connection - insecure
         r = requests.post("https://"+self.host_name+":443/j_spring_security_check", verify=False, data=security_data, headers=security_headers)
         return r.cookies 
-        
+
+    def api_get(self, url_extension):
+        # Try to request data 50 times
+        for i in range(50):
+            r = requests.get("https://"+self.host_name+":443/api/"+url_extension, verify=False, cookies=self.secure_login_cookie)
+            if r.status_code == 200:
+                return r
+        print("Could not contact: "+url_extension)
+
     def get_projects_dump(self): 
-        r = requests.get("https://"+self.host_name+":443/api/projects?limit="+str(self.max_projects),verify=False, cookies=self.secure_login_cookie)
-        return r.json()
+        return self.api_get("/projects?limit="+str(self.max_projects)).json()
 
     def get_projects_names(self):
         return [project['name'] for project in self.get_projects_dump()['items']]
 
     def get_code_locations_dump(self):
-        r = requests.get("https://"+self.host_name+":443/api/codelocations?limit="+str(self.max_projects),verify=False, cookies=self.secure_login_cookie)
+        r = self.api_get("/codelocations?limit="+str(self.max_projects))
         return r.json()
 
     def get_code_locations_names(self):
@@ -104,14 +111,21 @@ class HubClient():
                     links.append(link['href'])
         return links
 
+    def get_hub_health(self):
+        liveness = self.api_get("/health-checks/liveness").json()["healthy"]
+        readiness = self.api_get("/health-checks/readiness").json()["healthy"]
+        return {"liveness" : liveness, "readiness" : readiness}
+
     def get_scan_summaries(self):
         pass
 
     def get_project_version_risk_profile(self):
-        pass 
+        catalog_risk_profile = self.api_get("/catalog-risk-profile-dashboard").json()
+        risk_profile = self.api_get("/risk-profile-dashboard").json()
+        return {"catalog-risk-profile-dashboard" : catalog_risk_profile, "risk-profile-dashboard" : risk_profile}
 
     def get_project_version_policy_status(self):
-        pass 
+        return self.api_get("/policy-rules").json()
 
 
 class OpsSightClient():
@@ -124,7 +138,13 @@ class OpsSightClient():
             r = requests.get("http://"+self.host_name+"/model")
             if r.status_code == 200:
                 return json.loads(r.text)
+
+    def get_hubs_names(self):
+        return self.get_dump()["Hubs"].keys()
+
+    def get_pods_names(self):
+        return self.get_dump()["CoreModel"]["Pods"].keys()
         
     def get_shas_names(self):
-        return self.get_dump()['CoreModel']['Images'].keys()
+        return self.get_dump()["CoreModel"]["Images"].keys()
 
