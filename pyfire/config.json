@@ -1,7 +1,19 @@
 {
-    "PerceptorURL": "",
-    "HubURL": "",
-    "Port": 3101,
-
-    "UseInClusterConfig": false
+    "Skyfire": {
+        "Port": 3101,
+        "UseInClusterConfig": false,
+        "HubClientTimeoutSeconds": 120,
+        "KubeDumpIntervalSeconds": 60,
+        "PerceptorDumpIntervalSeconds": 60,
+        "HubDumpPauseSeconds": 240
+    },
+    "Perceptor": {
+        "URL": ""
+    },
+    "Hub": {
+        "Hosts": [],
+        "User": "",
+        "Port": 443,
+        "PasswordEnvVar": ""
+    }
 }
