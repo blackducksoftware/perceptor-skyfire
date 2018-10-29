@@ -1,6 +1,8 @@
 import json
 import subprocess
 import requests
+import urllib3
+import datetime 
 import time
 import sys
 from kubernetes import client, config
@@ -9,14 +11,14 @@ import logging
 
 class myHandler(BaseHTTPRequestHandler):
     def __init__(self):
-        self.status = "UNKNOWN"
+        self.data = "UNKNOWN"
         self.port = None
 
     def do_GET(self):
         self.send_response(200)
         self.send_header('Content-type','text/html')
         self.end_headers()
-        self.wfile.write(self.status)
+        self.wfile.write(self.data)
 
     def serve(self):
         try:
@@ -66,6 +68,11 @@ class KubeClientWrapper:
     def get_labels(self):
         return [pod.metadata.labels for pod in self.v1.list_pod_for_all_namespaces()]
 
+class HubAnalysis():
+    def __init__(self):
+        self.time_stamp = datetime.datetime.now()
+        self.data = {}
+
 class HubClient():
     def __init__(self, host_name=None, username="", password="", in_cluster=False):
         self.kube = KubeClientWrapper(in_cluster)
@@ -73,60 +80,118 @@ class HubClient():
         self.username = username
         self.password = password 
         self.secure_login_cookie = self.get_secure_login_cookie()
+        # Hub Constants
         self.max_projects = 10000000
+        self.analysis = []
 
     def get_secure_login_cookie(self):
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         security_headers = {'Content-Type':'application/x-www-form-urlencoded'}
         security_data = {'j_username': self.username,'j_password': self.password}
         # verify=False does not verify SSL connection - insecure
         r = requests.post("https://"+self.host_name+":443/j_spring_security_check", verify=False, data=security_data, headers=security_headers)
         return r.cookies 
 
-    def api_get(self, url_extension):
+    def api_get(self, url):
         # Try to request data 50 times
         for i in range(50):
-            r = requests.get("https://"+self.host_name+":443/api/"+url_extension, verify=False, cookies=self.secure_login_cookie)
+            r = requests.get(url, verify=False, cookies=self.secure_login_cookie)
             if r.status_code == 200:
                 return r
-        print("Could not contact: "+url_extension)
+        print("Could not contact: "+url)
 
-    def get_projects_dump(self): 
-        return self.api_get("/projects?limit="+str(self.max_projects)).json()
+    def analyze_hub(self):
+        hub_analysis = HubAnalysis()
+        hub_analysis.data = self.crawl_hub()
+        self.analysis.append(hub_analysis)
+        return hub_analysis 
 
-    def get_projects_names(self):
-        return [project['name'] for project in self.get_projects_dump()['items']]
-
-    def get_code_locations_dump(self):
-        r = self.api_get("/codelocations?limit="+str(self.max_projects))
-        return r.json()
-
-    def get_code_locations_names(self):
-        return [x['name'] for x in self.get_code_locations_dump()['items']]
-
-    def get_projects_link(self, link_name):
-        links = []
-        for project in self.get_projects_dump()['items']:
+    def crawl_hub(self):
+        dump = self.get_projects_dump()
+        projects = {}
+        for project in dump['items']:
+            project_href = project['_meta']['href'] 
+            project_name = project['name']
+            # map link to link name
+            project_links = {}
             for link in project['_meta']['links']:
-                if link['rel'] == link_name:
-                    links.append(link['href'])
-        return links
+                project_links[link['rel']] = link['href']
+            # get data from version url
+            project_versions = self.crawl_version(project_links['versions'])
+            projects[project_href] = {"name" : project_name, "links" : project_links, "versions" : project_versions}
+        return projects 
+    
+    def crawl_version(self, version_url):
+        dump = self.api_get(version_url).json()
+        versions = {}
+        for version in dump['items']:
+            version_href = version['_meta']["href"]
+            # map link to link name
+            version_links = {}
+            for link in version['_meta']["links"]:
+                version_links[link['rel']] = link['href']
+            version_risk_profile = self.crawl_risk_profile(version_links['riskProfile'])
+            version_policy_status = self.crawl_policy_status(version_links['policy-status'])
+            version_code_locations = self.crawl_code_location(version_links['codelocations'])
+            versions[version_href] = {
+                "links" : version_links, 
+                "policy-status" : version_policy_status,
+                "riskProfile" : version_risk_profile, 
+                "codelocations" : version_code_locations
+            }
+        return versions 
 
-    def get_hub_health(self):
-        liveness = self.api_get("/health-checks/liveness").json()["healthy"]
-        readiness = self.api_get("/health-checks/readiness").json()["healthy"]
-        return {"liveness" : liveness, "readiness" : readiness}
+    def crawl_policy_status(self, policy_status_url):
+        dump = self.api_get(policy_status_url).json()
+        policy_status_overall_status = dump['overallStatus']
+        try:
+            policy_status_updated_at = dump['updatedAt']
+        except:
+            policy_status_updated_at = None
+        # map component count name to value
+        policy_status_component_version_status_counts = {}
+        for status_count in dump['componentVersionStatusCounts']:
+            policy_status_component_version_status_counts[status_count['name']] = status_count['value']
+        return {'overallStatus' : policy_status_overall_status, 
+                'updatedAt' : policy_status_updated_at,
+                'compnentVersionStatusCounts' : policy_status_component_version_status_counts
+                }
 
-    def get_scan_summaries(self):
-        pass
+    def crawl_risk_profile(self, risk_profile_url):
+        dump = self.api_get(risk_profile_url).json()
+        return {'categories' : dump['categories']}
 
-    def get_project_version_risk_profile(self):
-        catalog_risk_profile = self.api_get("/catalog-risk-profile-dashboard").json()
-        risk_profile = self.api_get("/risk-profile-dashboard").json()
-        return {"catalog-risk-profile-dashboard" : catalog_risk_profile, "risk-profile-dashboard" : risk_profile}
+    def crawl_code_location(self, code_location_url):
+        dump = self.api_get(code_location_url).json()
+        code_locations = {}
+        for code_location in dump['items']:
+            code_location_href = code_location['_meta']['href'] 
+            code_location_sha = code_location['name']
+            code_location_links = {}
+            for link in code_location['_meta']['links']:
+                code_location_links[link['rel']] = link['href']
+            code_location_scan_summaries = self.crawl_scan_summary(code_location_links['scans'])
+            code_locations[code_location_href] = {
+                'sha' : code_location_sha,
+                'links' : code_location_links,
+                'scans' : code_location_scan_summaries
+            }
+        return code_locations
 
-    def get_project_version_policy_status(self):
-        return self.api_get("/policy-rules").json()
-
+    def crawl_scan_summary(self, scan_summary_url):
+        dump = self.api_get(scan_summary_url).json()
+        scan_summaries = {}
+        for scan_summary in dump['items']:
+            scan_summary_href = scan_summary['_meta']['href']
+            scan_summary_status = scan_summary["createdAt"]
+            scan_summary_created_at = scan_summary["createdAt"]
+            scan_summary_updated_at = scan_summary["updatedAt"]
+            scan_summaries[scan_summary_href] = {
+                'createdAt' : scan_summary_created_at,
+                'status' : scan_summary_status,
+                'updatedAt' : scan_summary_updated_at
+            }
+        return scan_summaries 
 
 class OpsSightClient():
     def __init__(self, host_name=None, in_cluster=False):
