@@ -73,6 +73,9 @@ class HubAnalysis():
         self.time_stamp = datetime.datetime.now()
         self.data = {}
 
+    def get_something(self):
+        pass 
+
 class HubClient():
     def __init__(self, host_name=None, username="", password="", in_cluster=False):
         self.kube = KubeClientWrapper(in_cluster)
@@ -107,7 +110,7 @@ class HubClient():
         return hub_analysis 
 
     def crawl_hub(self):
-        dump = self.get_projects_dump()
+        dump = self.api_get("https://"+self.host_name+":443/api"+"/projects?limit="+str(self.max_projects)).json()
         projects = {}
         for project in dump['items']:
             project_href = project['_meta']['href'] 
@@ -193,23 +196,38 @@ class HubClient():
             }
         return scan_summaries 
 
+class OpsSightAnalysis:
+    def __init__(self):
+        self.time_stamp = datetime.datetime.now()
+        self.data = {}
+
+    def get_hubs_names(self):
+        return self.data["Hubs"].keys()
+
+    def get_pods_names(self):
+        return self.data["CoreModel"]["Pods"].keys()
+        
+    def get_shas_names(self):
+        return self.data["CoreModel"]["Images"].keys()
+
 class OpsSightClient():
     def __init__(self, host_name=None, in_cluster=False):
         self.kube = KubeClientWrapper(in_cluster)
         self.host_name = host_name
-    
+        self.analysis = []
+
+    def get_analysis(self):
+        opssight_analysis = OpsSightAnalysis()
+        dump = self.get_dump()
+        opssight_analysis.data = dump 
+        self.analysis.append(opssight_analysis)
+        return opssight_analysis
+
     def get_dump(self):
         while True:
             r = requests.get("http://"+self.host_name+"/model")
             if r.status_code == 200:
                 return json.loads(r.text)
 
-    def get_hubs_names(self):
-        return self.get_dump()["Hubs"].keys()
 
-    def get_pods_names(self):
-        return self.get_dump()["CoreModel"]["Pods"].keys()
-        
-    def get_shas_names(self):
-        return self.get_dump()["CoreModel"]["Images"].keys()
 
