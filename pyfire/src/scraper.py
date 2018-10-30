@@ -3,6 +3,8 @@ import time
 import threading
 from cluster_clients import *
 import metrics
+import json 
+import sys
 
 class Scraper(object):
     def __init__(self, perceptor_pause=30, kube_pause=30, hub_pause=60, my_config=None):
