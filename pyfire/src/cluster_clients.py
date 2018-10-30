@@ -1,6 +1,6 @@
 import json
 import requests
-# import urllib3
+import urllib3
 import datetime 
 import time
 from kubernetes import client, config
@@ -62,6 +62,7 @@ class KubeClientWrapper:
 class HubScrape():
     def __init__(self):
         self.time_stamp = datetime.datetime.now()
+        self.hub = ""
         self.data = {}
 
     def __repr__(self):
@@ -93,7 +94,7 @@ class HubClient():
         self.max_projects = 10000000
 
     def get_secure_login_cookie(self):
-        # urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         security_headers = {'Content-Type':'application/x-www-form-urlencoded'}
         security_data = {'j_username': self.username,'j_password': self.password}
         # verify=False does not verify SSL connection - insecure
@@ -110,6 +111,7 @@ class HubClient():
 
     def get_scrape(self):
         hub_scrape = HubScrape()
+        hub_scrape.hub = self.host_name
         hub_scrape.data = self.crawl_hub()
         return hub_scrape 
 
