@@ -2,7 +2,7 @@ import queue
 import time
 import threading
 from cluster_clients import *
-
+import metrics
 
 class Scraper(object):
     def __init__(self, perceptor_pause=30, kube_pause=30, hub_pause=60, my_config=None):
@@ -46,6 +46,8 @@ class Scraper(object):
 #            print("perceptor", i)
             perceptor_scrape = self.perceptor_client.get_scrape()
             self.q.put(perceptor_scrape)
+            self.q.put("p" + str(i))
+            metrics.record_event("perceptorDump")
             i += 1
             time.sleep(self.perceptor_pause)
     
@@ -55,6 +57,8 @@ class Scraper(object):
 #            print("kube", i)
             kube_scrape = self.kube_client.get_scrape()
             self.q.put(kube_scrape)
+            self.q.put("k" + str(i))
+            metrics.record_event("kubeDump")
             i += 1
             time.sleep(self.kube_pause)
 
@@ -64,6 +68,8 @@ class Scraper(object):
 #            print("hub", i)
             hub_scrape = self.hub_clients[list(self.hub_clients.keys())[0]].get_scrape()
             self.q.put(hub_scrape)
+            self.q.put("h" + str(i))
+            metrics.record_event("hubDump")
             i += 1
             time.sleep(self.hub_pause)
 
