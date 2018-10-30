@@ -50,8 +50,8 @@ class MockModel:
     def get_latest_report(self):
         return {'abc': 123}
 
-def start_http_server(port):
-    server = ThreadedHTTPServer(('', port), new_handler(MockModel()))
+def start_http_server(port, model):
+    server = ThreadedHTTPServer(('', port), new_handler(model))
     print('Starting http server...')
     try:
         server.serve_forever()
@@ -62,4 +62,4 @@ def start_http_server(port):
 
 
 if __name__ == "__main__":
-    start_http_server(3102)
+    start_http_server(3102, MockModel())

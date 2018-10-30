@@ -4,7 +4,8 @@ import time
 import json
 import sys
 from webserver import start_http_server
-import scraper
+from scraper import Scraper
+from skyfire import Skyfire
 
 def main():
 	if len(sys.argv) < 2:
@@ -16,10 +17,12 @@ def main():
 
 	print("config: " + json.dumps(config, indent=2))
 
-	scr = scraper.Scraper()
-	scr.start()
+	scraper = Scraper()
+	scraper.start()
 
-	start_http_server(int(config['Skyfire']['Port']))
+	skyfire = Skyfire(scraper)
+
+	start_http_server(int(config['Skyfire']['Port']), skyfire)
 
 
 main()
