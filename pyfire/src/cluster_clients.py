@@ -32,6 +32,19 @@ class myHandler(BaseHTTPRequestHandler):
         pass
 
 
+class kubeScrape:
+    def __init__(self):
+        self.time_stamp = datetime.datetime.now()
+        self.data = []
+    
+    def __repr__(self):
+        output = "== Kube Analysis ==\n"
+        num_images = len(self.data)
+        output += "Num Images: "+str(num_images)+"\n"
+        return output         
+
+    
+
 class KubeClientWrapper:
     def __init__(self, in_cluster):
         if in_cluster:
@@ -39,6 +52,11 @@ class KubeClientWrapper:
         else:
             config.load_kube_config()
         self.v1 = client.CoreV1Api()
+
+    def get_scrape(self):
+        kube_scrape = kubeScrape()
+        kube_scrape.data = self.get_images()
+        return kube_scrape 
 
     def get_namespaces(self):
         return [ns.metadata.name for ns in self.v1.list_namespace()]
@@ -68,7 +86,7 @@ class KubeClientWrapper:
     def get_labels(self):
         return [pod.metadata.labels for pod in self.v1.list_pod_for_all_namespaces()]
 
-class HubAnalysis():
+class HubScrape():
     def __init__(self):
         self.time_stamp = datetime.datetime.now()
         self.data = {}
@@ -99,9 +117,7 @@ class HubClient():
         self.username = username
         self.password = password 
         self.secure_login_cookie = self.get_secure_login_cookie()
-        # Hub Constants
         self.max_projects = 10000000
-        self.analysis = []
 
     def get_secure_login_cookie(self):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -119,11 +135,10 @@ class HubClient():
                 return r
         print("Could not contact: "+url)
 
-    def analyze_hub(self):
-        hub_analysis = HubAnalysis()
-        hub_analysis.data = self.crawl_hub()
-        self.analysis.append(hub_analysis)
-        return hub_analysis 
+    def get_scrape(self):
+        hub_scrape = HubScrape()
+        hub_scrape.data = self.crawl_hub()
+        return hub_scrape 
 
     def crawl_hub(self):
         dump = self.api_get("https://"+self.host_name+":443/api"+"/projects?limit="+str(self.max_projects)).json()
@@ -212,7 +227,7 @@ class HubClient():
             }
         return scan_summaries 
 
-class OpsSightAnalysis:
+class PerceptorScrape:
     def __init__(self):
         self.time_stamp = datetime.datetime.now()
         self.data = {}
@@ -255,18 +270,15 @@ class OpsSightAnalysis:
             images.append(elem['Key'])
         return images
 
-class OpsSightClient():
-    def __init__(self, host_name=None, in_cluster=False):
-        self.kube = KubeClientWrapper(in_cluster)
+class PerceptorClient():
+    def __init__(self, host_name="", in_cluster=False):
         self.host_name = host_name
-        self.analysis = []
 
-    def get_analysis(self):
-        opssight_analysis = OpsSightAnalysis()
+    def get_scrape(self):
+        perceptor_scrape = PerceptorScrape()
         dump = self.get_dump()
-        opssight_analysis.data = dump 
-        self.analysis.append(opssight_analysis)
-        return opssight_analysis
+        perceptor_scrape.data = dump 
+        return perceptor_scrape
 
     def get_dump(self):
         while True:
