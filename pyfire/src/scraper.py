@@ -1,6 +1,7 @@
 import queue
 import time
 import threading
+import metrics
 
 
 class Scraper(object):
@@ -39,6 +40,7 @@ class Scraper(object):
         while self.is_running:
 #            print("perceptor", i)
             self.q.put("p" + str(i))
+            metrics.record_event("perceptorDump")
             i += 1
             time.sleep(self.perceptor_pause)
     
@@ -47,6 +49,7 @@ class Scraper(object):
         while self.is_running:
 #            print("kube", i)
             self.q.put("k" + str(i))
+            metrics.record_event("kubeDump")
             i += 1
             time.sleep(self.kube_pause)
 
@@ -55,6 +58,7 @@ class Scraper(object):
         while self.is_running:
 #            print("hub", i)
             self.q.put("h" + str(i))
+            metrics.record_event("hubDump")
             i += 1
             time.sleep(self.hub_pause)
 
