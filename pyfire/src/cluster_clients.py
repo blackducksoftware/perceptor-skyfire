@@ -1,36 +1,10 @@
 import json
-import subprocess
 import requests
-import urllib3
+# import urllib3
 import datetime 
 import time
-import sys
 from kubernetes import client, config
-from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging 
-
-class myHandler(BaseHTTPRequestHandler):
-    def __init__(self):
-        self.data = "UNKNOWN"
-        self.port = None
-
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type','text/html')
-        self.end_headers()
-        self.wfile.write(self.data)
-
-    def serve(self):
-        try:
-            server = HTTPServer(('', self.port), myHandler)
-            server.serve_forever()
-        except:
-            server.socket.close()
-
-    def my_own_server_function(self):
-        # TO DO
-        pass
-
 
 class KubeClientWrapper:
     def __init__(self, in_cluster):
@@ -104,7 +78,7 @@ class HubClient():
         self.analysis = []
 
     def get_secure_login_cookie(self):
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        # urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         security_headers = {'Content-Type':'application/x-www-form-urlencoded'}
         security_data = {'j_username': self.username,'j_password': self.password}
         # verify=False does not verify SSL connection - insecure
