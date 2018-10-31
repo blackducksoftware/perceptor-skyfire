@@ -25,6 +25,7 @@ class Config:
         self.hub_user = hub['User']
         self.hub_port = hub['Port']
         self.hub_password_env_var = hub['PasswordEnvVar']
+        self.log_level = blob['LogLevel']
 
 
 def main():
@@ -39,6 +40,8 @@ def main():
     print("config: " + json.dumps(config_blob, indent=2))
 
     config = Config(config_blob)
+
+    logging.getLogger().setLevel(config.log_level.upper())
 
     skyfire = Skyfire()
 

@@ -1,13 +1,9 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from socketserver import ThreadingMixIn
+from http.server import BaseHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
 import threading
 import json
 import time
 import queue
 
-
-class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-    """Handle requests in a separate thread."""
 
 paths = set(['/latestreport'])
 
@@ -51,7 +47,7 @@ class MockModel:
         return {'abc': 123}
 
 def start_http_server(port, model):
-    server = ThreadedHTTPServer(('', port), new_handler(model))
+    server = ThreadingHTTPServer(('', port), new_handler(model))
     print('Starting http server...')
     try:
         server.serve_forever()
