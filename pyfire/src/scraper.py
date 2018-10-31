@@ -86,7 +86,7 @@ def reader():
         'abc': MockScraper("hubabc"),
         'def': MockScraper("hubdef")
     }
-    s = Scraper(MockScraper("perceptor"), MockScraper("kube"), hub_clients, perceptor_pause=1.0, kube_pause=1.5, hub_pause=2.0)
+    s = Scraper(MockScraper("perceptor"), MockScraper("kube"), hub_clients, perceptor_pause=2, kube_pause=3, hub_pause=4)
     s.start()
     while True:
         item = s.q.get()
@@ -119,8 +119,13 @@ def real_reader(conf):
 
 
 if __name__ == "__main__":
-    config_path = sys.argv[1]
-    with open(config_path) as f:
-        config_json = json.load(f)
+    run_demo_1 = True
+    if run_demo_1:
+        t = threading.Thread(target=reader)
+        t.start()
+    else:
+        config_path = sys.argv[1]
+        with open(config_path) as f:
+            config_json = json.load(f)
 
-    real_reader(config_json)  
+        real_reader(config_json)
