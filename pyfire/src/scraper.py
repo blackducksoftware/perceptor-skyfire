@@ -83,17 +83,17 @@ class MockDelegate:
     def hub_dump(self, host, dump):
         self.q.put(("hub", dump, host))
     
+class MockScraper:
+    def __init__(self, name):
+        self.name = name
+    def get_scrape(self):
+        return {'scrape_type': self.name}
+
 
 def reader():
     """
     This is just an example, don't use it in production data centers!
     """
-    class MockScraper:
-        def __init__(self, name):
-            self.name = name
-        def get_scrape(self):
-            return {'scrape_type': self.name}
-    
     delegate = MockDelegate()
     hub_clients = {
         'abc': MockScraper("hubabc"),

@@ -16,12 +16,23 @@ def main():
 
     print("config: " + json.dumps(config, indent=2))
 
-    scraper = Scraper()
+    skyfire = Skyfire()
+
+    # TODO switch to using real clients
+    from scraper import MockScraper
+    perceptor_client = MockScraper("perceptor")
+    kube_client = MockScraper("kube")
+    hub_clients = {
+        'abc': MockScraper("hubabc"),
+        'def': MockScraper("hubdef")
+    }
+    # end TODO
+    scraper = Scraper(skyfire, perceptor_client, kube_client, hub_clients)
+
+    skyfire.start()
     scraper.start()
 
-    skyfire = Skyfire(scraper)
-
-    prometheus_port = 3201
+    prometheus_port = config['Skyfire']['PrometheusPort']
     print("starting prometheus server on port", prometheus_port)
     metrics.start_http_server(prometheus_port)
 
