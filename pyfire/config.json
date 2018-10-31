@@ -1,6 +1,7 @@
 {
     "Skyfire": {
         "Port": 3101,
+        "PrometheusPort": 3102,
         "UseInClusterConfig": false,
         "HubClientTimeoutSeconds": 120,
         "KubeDumpIntervalSeconds": 60,
@@ -8,7 +9,7 @@
         "HubDumpPauseSeconds": 240
     },
     "Perceptor": {
-        "URL": "",
+        "Host": "",
         "Port": 12345
     },
     "Hub": {

@@ -1,24 +1,25 @@
-import queue
 import time
 import threading
-from cluster_clients import *
 import metrics
-import json 
 import sys
+import logging 
+
 
 class Scraper(object):
-    def __init__(self, perceptor_pause=30, kube_pause=30, hub_pause=60, my_config=None):
-        self.q = queue.Queue()
+    def __init__(self, delegate, perceptor_client, kube_client, hub_clients, perceptor_pause=30, kube_pause=30, hub_pause=60):
+        self.delegate = delegate
 
-        p = my_config['Perceptor']['URL']
-        self.perceptor_client = PerceptorClient(p, my_config["Skyfire"]["UseInClusterConfig"])
+        self.perceptor_client = perceptor_client
         self.perceptor_thread = threading.Thread(target=self.perceptor)
         self.perceptor_pause = perceptor_pause
 
-        self.kube_client = KubeClientWrapper(my_config["Skyfire"]["UseInClusterConfig"])
+        self.kube_client = kube_client
         self.kube_thread = threading.Thread(target=self.kube)
         self.kube_pause = kube_pause
 
+        # TODO
+        #  1. allow creation, deletion of hub clients dynamically
+        #  2. use one thread per hub client
         self.hub_clients = {}
         self.hub_threads = {}
         for url in my_config["Hub"]["Hosts"]:
@@ -44,102 +45,116 @@ class Scraper(object):
         assumes `start` has already been called
         """
         self.is_running = False
+        self.perceptor_thread.join()
+        self.kube_thread.join()
+        self.hub_thread.join()
 
     def perceptor(self):
-        i = 0
         while self.is_running:
-            perceptor_scrape = self.perceptor_client.get_scrape()
-            self.q.put(perceptor_scrape)
+            scrape = self.perceptor_client.get_scrape()
+            self.delegate.perceptor_dump(scrape)
+            logging.debug("got perceptor dump")
             metrics.record_event("perceptorDump")
-            i += 1
             time.sleep(self.perceptor_pause)
     
     def kube(self):
-        i = 0
         while self.is_running:
-            kube_scrape = self.kube_client.get_scrape()
-            self.q.put(kube_scrape)
+            scrape = self.kube_client.get_scrape()
+            self.delegate.kube_dump(scrape)
+            logging.debug("got kube dump")
             metrics.record_event("kubeDump")
-            i += 1
             time.sleep(self.kube_pause)
 
-    def hub(self, hub_url):
-        def hub_instance():
-            i = 0
+    def hub(self, hub_host):
+        def hub_thread():
             while self.is_running:
-                hub_scrape = self.hub_clients[hub_url].get_scrape()
-                self.q.put(hub_scrape)
-                metrics.record_event("hubDump:"+hub_url)
-                i += 1
+                scrape = self.hub_clients[hub_host].get_scrape()
+                self.delegate.hub_dump(hub_host, scrape)
+                logging.debug("got hub dump")
+                metrics.record_event("hubDump"+hub_host)
                 time.sleep(self.hub_pause)
         return hub_instance
 
-def reader(c):
-    s = Scraper(perceptor_pause=15.0, kube_pause=15.5, hub_pause=15.0, my_config=c)
+class MockDelegate:
+    def __init__(self):
+        import queue
+        self.q = queue.Queue()
+    def perceptor_dump(self, dump):
+        self.q.put(("perceptor", dump))
+    def kube_dump(self, dump):
+        self.q.put(("kube", dump))
+    def hub_dump(self, host, dump):
+        self.q.put(("hub", dump, host))
+    
+class MockScraper:
+    def __init__(self, name):
+        self.name = name
+    def get_scrape(self):
+        return {'scrape_type': self.name}
+
+
+def reader():
+    """
+    This is just an example, don't use it in production data centers!
+    """
+    delegate = MockDelegate()
+    hub_clients = {
+        'abc': MockScraper("hubabc"),
+        'def': MockScraper("hubdef")
+    }
+    s = Scraper(
+        delegate,
+        MockScraper("perceptor"),
+        MockScraper("kube"), 
+        hub_clients, 
+        perceptor_pause=2, 
+        kube_pause=3, 
+        hub_pause=4)
     s.start()
 
-    perceptor_scrape = None 
-    kube_scrape = None 
-    hub_scrapes = {}
-    for url in c["Hub"]["Hosts"]:
-        hub_scrapes[url] = None
-
     while True:
-        item = s.q.get()
-        #print("got next:", item)
+        item = delegate.q.get()
+        print("got next:", item)
         if item is None:
             break
+#        f(item)
+        delegate.q.task_done()
 
-        if isinstance(item, kubeScrape):
-            kube_scrape = item 
-        elif isinstance(item, PerceptorScrape):
-            perceptor_scrape = item
-        else:
-            hub_scrapes[item.hub] = item
-        
-        if perceptor_scrape != None and True in [True for x in list(hub_scrapes.values()) if x != None]:
-            print("== Perceptor vs Hub ==")
-            opssight_pod_images = set(perceptor_scrape.get_pods_images())
-            hub_code_location_images = []
-            for hub_url, hub_scrape in hub_scrapes.items():
-                if hub_scrape != None:
-                    hub_code_location_images.extend(hub_scrape.get_code_location_shas())
-                else:
-                    print("Missing Data for Hub:",hub_url)
-            hub_code_location_images = set(hub_code_location_images)
-            inter = opssight_pod_images.intersection(hub_code_location_images)
+def real_reader(conf):
+    """
+    Another example not to be used in PDCs!
+    """
+    from cluster_clients import PerceptorClient, KubeClientWrapper, HubClient
 
-            print("OpsSight Images: " + str(len(opssight_pod_images)))
-            print("Hub Images: "+str(len(hub_code_location_images)))
-            print("Images From Hub that OpsSight Found: "+str(len(inter)))
-        else:
-            print("No Hub Data or Perceptor Data Available")
-        print("")
-    
-        if perceptor_scrape != None and kube_scrape != None:
-            print("== Perceptor vs Kube ==")
-            opsight_repositories = set(perceptor_scrape.get_pods_repositories())
-            kube_images = set([x.split(":")[0] for x in kube_scrape.data])
-            inter = kube_images.intersection(opsight_repositories)
-            diff_images = kube_images.difference(opsight_repositories)
+    perceptor_client = PerceptorClient(conf['Perceptor']['Host'])
 
-            print("Images in Cluster: "+str(len(kube_images)))
-            print("Images in Cluster that OpsSight Found: "+str(len(inter)))
-            print("Images Untracked in Cluster: "+str(len(diff_images)))
-        else:
-            print("No Perceptor or Kube Data Available")
-        print("")
+    kube_client = KubeClientWrapper(conf["Skyfire"]["UseInClusterConfig"])
 
-        s.q.task_done()
+    hub_clients = {}
+    for host in conf["Hub"]["Hosts"]:
+        hub_clients[host] = HubClient(host, conf["Hub"]["User"], conf["Hub"]["PasswordEnvVar"])
 
+    delegate = MockDelegate()
+    s = Scraper(delegate, perceptor_client, kube_client, hub_clients, perceptor_pause=15, kube_pause=15, hub_pause=30)
+    s.start()
+
+    while True:
+        item = delegate.q.get()
+        print("got next:", item)
+        if item is None:
+            break
+        delegate.q.task_done()
 
 
 if __name__ == "__main__":
-    config_path = sys.argv[1]
-    with open(config_path) as f:
-        config_json = json.load(f)
+    run_demo_1 = True
+    if run_demo_1:
+        t = threading.Thread(target=reader)
+        t.start()
+    else:
+        import json
+        config_path = sys.argv[1]
+        with open(config_path) as f:
+            config_json = json.load(f)
 
-    reader(config_json)
-    
-
-    
+        real_reader(config_json)

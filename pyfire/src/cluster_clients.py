@@ -91,8 +91,7 @@ class HubScrape():
         return shas 
 
 class HubClient():
-    def __init__(self, host_name=None, username="", password="", in_cluster=False):
-        self.kube = KubeClientWrapper(in_cluster)
+    def __init__(self, host_name, username, password):
         self.host_name = host_name
         self.username = username
         self.password = password 
@@ -255,7 +254,7 @@ class PerceptorScrape:
         return images
 
 class PerceptorClient():
-    def __init__(self, host_name="", in_cluster=False):
+    def __init__(self, host_name):
         self.host_name = host_name
 
     def get_scrape(self):
