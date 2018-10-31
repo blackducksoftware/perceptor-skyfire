@@ -7,16 +7,19 @@ from kubernetes import client, config
 import logging 
 
 
-class kubeScrape:
-    def __init__(self):
+class KubeScrape:
+    def __init__(self, data=[]):
         self.time_stamp = datetime.datetime.now()
-        self.data = []
+        self.data = data
     
-    def __repr__(self):
+    def pretty_print(self):
         output = "== Kube Analysis ==\n"
         num_images = len(self.data)
         output += "Num Images: "+str(num_images)+"\n"
-        return output         
+        print(output)
+
+    def load_data(self, data):
+        self.data = data
 
 class KubeClientWrapper:
     def __init__(self, in_cluster):
@@ -27,7 +30,7 @@ class KubeClientWrapper:
         self.v1 = client.CoreV1Api()
 
     def get_scrape(self):
-        kube_scrape = kubeScrape()
+        kube_scrape = KubeScrape()
         kube_scrape.data = self.get_images()
         return kube_scrape 
 
@@ -60,12 +63,12 @@ class KubeClientWrapper:
         return [pod.metadata.labels for pod in self.v1.list_pod_for_all_namespaces()]
 
 class HubScrape():
-    def __init__(self):
+    def __init__(self, data={}):
         self.time_stamp = datetime.datetime.now()
         self.hub = ""
-        self.data = {}
+        self.data = data
 
-    def __repr__(self):
+    def pretty_print(self):
         output = "== Hub Analysis ==\n"
         num_projects = len(self.data.keys())
         num_code_locations = 0
@@ -74,7 +77,10 @@ class HubScrape():
                 num_code_locations += len(version_data['codelocations'].keys())
         output += "Num Projects: "+str(num_projects)+"\n"
         output += "Total Code Locations: "+str(num_code_locations)+"\n"
-        return output 
+        print(output)
+
+    def load_data(self, data):
+        self.data = data
 
     def get_code_location_shas(self):
         shas = []
@@ -203,18 +209,21 @@ class HubClient():
         return scan_summaries 
 
 class PerceptorScrape:
-    def __init__(self):
+    def __init__(self, data={}):
         self.time_stamp = datetime.datetime.now()
-        self.data = {}
+        self.data = data
 
-    def __repr__(self):
+    def pretty_print(self):
         output = "== OpsSight Analysis ==\n"
         output += "Hub Count: "+str(len(self.get_hubs_IDs()))+"\n"
         output += "Total Pod Count: "+str(len(self.get_pods_IDs()))+"\n"
         output += "Total Image Count: "+str(len(self.get_images_IDs()))+"\n"
         output += " - Images Scanned: "+str(len(self.get_images_IDs()) - len(self.get_scan_queue_images()))+"\n"
         output += " - Images Queued: "+str(len(self.get_scan_queue_images()))+"\n"
-        return output 
+        print(output)
+
+    def load_data(self, data):
+        self.data = data
 
     def get_hubs_IDs(self):
         return self.data["Hubs"].keys()
@@ -256,10 +265,12 @@ class PerceptorClient():
         return perceptor_scrape
 
     def get_dump(self):
-        while True:
+        for i in range(50):
+            print("http://"+self.host_name+"/model")
             r = requests.get("http://"+self.host_name+"/model")
             if r.status_code == 200:
                 return json.loads(r.text)
+        print(r.status_code)
 
 
 
