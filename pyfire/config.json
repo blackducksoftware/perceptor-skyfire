@@ -8,7 +8,7 @@
         "HubDumpPauseSeconds": 240
     },
     "Perceptor": {
-        "URL": "",
+        "Host": "",
         "Port": 12345
     },
     "Hub": {
