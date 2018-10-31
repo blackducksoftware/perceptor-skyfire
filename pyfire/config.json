@@ -1,6 +1,7 @@
 {
     "Skyfire": {
         "Port": 3101,
+        "PrometheusPort": 3102,
         "UseInClusterConfig": false,
         "HubClientTimeoutSeconds": 120,
         "KubeDumpIntervalSeconds": 60,
