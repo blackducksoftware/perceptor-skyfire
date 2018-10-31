@@ -1,26 +1,26 @@
-import queue
 import time
 import threading
-from cluster_clients import *
 import metrics
-import json 
 import sys
+import logging 
+
 
 class Scraper(object):
-    def __init__(self, perceptor_pause=30, kube_pause=30, hub_pause=60, my_config=None):
-        self.q = queue.Queue()
-        p = my_config['Perceptor']['URL']
-        self.perceptor_client = PerceptorClient(p, my_config["Skyfire"]["UseInClusterConfig"])
+    def __init__(self, delegate, perceptor_client, kube_client, hub_clients, perceptor_pause=30, kube_pause=30, hub_pause=60):
+        self.delegate = delegate
+
+        self.perceptor_client = perceptor_client
         self.perceptor_thread = threading.Thread(target=self.perceptor)
         self.perceptor_pause = perceptor_pause
 
-        self.kube_client = KubeClientWrapper(my_config["Skyfire"]["UseInClusterConfig"])
+        self.kube_client = kube_client
         self.kube_thread = threading.Thread(target=self.kube)
         self.kube_pause = kube_pause
 
-        self.hub_clients = {}
-        for url in my_config["Hub"]["Hosts"]:
-            self.hub_clients[url] = HubClient(url, my_config["Hub"]["User"], my_config["Hub"]["PasswordEnvVar"], my_config["Skyfire"]["UseInClusterConfig"])
+        # TODO
+        #  1. allow creation, deletion of hub clients dynamically
+        #  2. use one thread per hub client
+        self.hub_clients = dict((host, client) for (host, client) in hub_clients.items())
         self.hub_thread = threading.Thread(target=self.hub)
         self.hub_pause = hub_pause
 
@@ -41,69 +41,117 @@ class Scraper(object):
         assumes `start` has already been called
         """
         self.is_running = False
+        self.perceptor_thread.join()
+        self.kube_thread.join()
+        self.hub_thread.join()
 
     def perceptor(self):
-        i = 0
         while self.is_running:
-#            print("perceptor", i)
-            perceptor_scrape = self.perceptor_client.get_scrape()
-            self.q.put(perceptor_scrape)
-            self.q.put("p" + str(i))
+            scrape = self.perceptor_client.get_scrape()
+            self.delegate.perceptor_dump(scrape)
+            logging.debug("got perceptor dump")
             metrics.record_event("perceptorDump")
-            i += 1
             time.sleep(self.perceptor_pause)
     
     def kube(self):
-        i = 0
         while self.is_running:
-#            print("kube", i)
-            kube_scrape = self.kube_client.get_scrape()
-            self.q.put(kube_scrape)
-            self.q.put("k" + str(i))
+            scrape = self.kube_client.get_scrape()
+            self.delegate.kube_dump(scrape)
+            logging.debug("got kube dump")
             metrics.record_event("kubeDump")
-            i += 1
             time.sleep(self.kube_pause)
 
     def hub(self):
-        i = 0
         while self.is_running:
-#            print("hub", i)
-            hub_scrape = self.hub_clients[list(self.hub_clients.keys())[0]].get_scrape()
-            self.q.put(hub_scrape)
-            self.q.put("h" + str(i))
+            # TODO use one thread per hub
+            for hub_host, hub_client in self.hub_clients.items():
+                scrape = hub_client.get_scrape()
+                self.delegate.hub_dump(hub_host, scrape)
+            logging.debug("got hub dump")
             metrics.record_event("hubDump")
-            i += 1
             time.sleep(self.hub_pause)
 
+
+class MockDelegate:
+    def __init__(self):
+        import queue
+        self.q = queue.Queue()
+    def perceptor_dump(self, dump):
+        self.q.put(("perceptor", dump))
+    def kube_dump(self, dump):
+        self.q.put(("kube", dump))
+    def hub_dump(self, host, dump):
+        self.q.put(("hub", dump, host))
+    
+class MockScraper:
+    def __init__(self, name):
+        self.name = name
+    def get_scrape(self):
+        return {'scrape_type': self.name}
+
+
 def reader():
-    s = Scraper(perceptor_pause=1.0, kube_pause=1.5, hub_pause=2.0, my_config=c)
+    """
+    This is just an example, don't use it in production data centers!
+    """
+    delegate = MockDelegate()
+    hub_clients = {
+        'abc': MockScraper("hubabc"),
+        'def': MockScraper("hubdef")
+    }
+    s = Scraper(
+        delegate,
+        MockScraper("perceptor"),
+        MockScraper("kube"), 
+        hub_clients, 
+        perceptor_pause=2, 
+        kube_pause=3, 
+        hub_pause=4)
     s.start()
+
     while True:
-        item = s.q.get()
+        item = delegate.q.get()
         print("got next:", item)
         if item is None:
             break
 #        f(item)
-        s.q.task_done()
+        delegate.q.task_done()
 
-def my_reader(c):
-    s = Scraper(perceptor_pause=1.0, kube_pause=1.5, hub_pause=2.0, my_config=c)
+def real_reader(conf):
+    """
+    Another example not to be used in PDCs!
+    """
+    from cluster_clients import PerceptorClient, KubeClientWrapper, HubClient
+
+    perceptor_client = PerceptorClient(conf['Perceptor']['Host'])
+
+    kube_client = KubeClientWrapper(conf["Skyfire"]["UseInClusterConfig"])
+
+    hub_clients = {}
+    for host in conf["Hub"]["Hosts"]:
+        hub_clients[host] = HubClient(host, conf["Hub"]["User"], conf["Hub"]["PasswordEnvVar"])
+
+    delegate = MockDelegate()
+    s = Scraper(delegate, perceptor_client, kube_client, hub_clients, perceptor_pause=15, kube_pause=15, hub_pause=30)
     s.start()
+
     while True:
-        item = s.q.get()
+        item = delegate.q.get()
         print("got next:", item)
         if item is None:
             break
-        s.q.task_done()
-
+        delegate.q.task_done()
 
 
 if __name__ == "__main__":
-    config_path = sys.argv[1]
-    with open(config_path) as f:
-        config_json = json.load(f)
+    run_demo_1 = True
+    if run_demo_1:
+        t = threading.Thread(target=reader)
+        t.start()
+    else:
+        import json
+        config_path = sys.argv[1]
+        with open(config_path) as f:
+            config_json = json.load(f)
 
-    my_reader(config_json)
-    
-
-    
+        real_reader(config_json)
