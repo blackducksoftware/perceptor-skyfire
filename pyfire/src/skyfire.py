@@ -1,6 +1,7 @@
 import threading
 import json
 import queue
+import logging
 
 
 class Skyfire:
@@ -13,45 +14,61 @@ class Skyfire:
         self.hubs = {}
 
     def start(self):
-        self.event_thread.start()
+        logging.info("starting skyfire event thread")
         self.is_running = True
+        self.event_thread.start()
     
     def stop(self):
+        logging.info("stopping skyfire event thread")
         self.is_running = False
         self.event_thread.join()
     
     def read_events(self):
         while self.is_running:
+            logging.debug("waiting for item to process")
             item = self.q.get()
-            (dump_type, dump) = item[0], item[1]
-            if dump_type == "opssight":
-                self.opssight = dump
-            elif dump_type == "kube":
-                self.kube = dump
-            elif dump_type == "hub":
-                host = item[2]
-                self.hubs[host] = dump
-            else:
-                raise Exception("invalid dump type {}".format(dump_type))
+            logging.debug("got item to process")
+            try:
+                item()
+            except Exception as e:
+                logging.error("unable to process event: %s", e)
+            logging.debug("finished processing item")
             self.q.task_done()
+        logging.info("exiting skyfire event thread")
     
     ### Scraper Delegate interface
 
     def perceptor_dump(self, dump):
-        self.q.put(("perceptor", dump))
+        def f():
+            self.opssight = dump
+        self.q.put(f)
 
     def kube_dump(self, dump):
-        self.q.put(("kube", dump))
+        def f():
+            self.kube = dump
+        self.q.put(f)
 
     def hub_dump(self, host, dump):
-        self.q.put(("hub", dump, host))
+        def f():
+            self.hubs[host] = dump
+        self.q.put(f)
 
     ### Web Server interface
 
     def get_latest_report(self):
-        # TODO: this should be made thread-safe
-        return json.dumps({
-            'opssight': self.opssight,
-            'kube': self.kube,
-            'hub': self.hubs,
-        })
+        logging.debug("skyfire: get_latest_report")
+        b = threading.Barrier(2)
+        # this nasty `wrapper` hack is because python doesn't like capturing+mutating strings
+        wrapper = {}
+        def f():
+            wrapper['json'] = {
+                'opssight': self.opssight,
+                'kube': self.kube,
+                'hub': dict((host, dump) for (host, dump) in self.hubs.items())
+            }
+            logging.debug("waiting inside f")
+            b.wait()
+        self.q.put(f)
+        logging.debug("waiting after putting item in q")
+        b.wait()
+        return wrapper['json']

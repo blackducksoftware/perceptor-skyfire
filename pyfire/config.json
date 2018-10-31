@@ -17,5 +17,6 @@
         "User": "",
         "Port": 443,
         "PasswordEnvVar": ""
-    }
+    },
+    "LogLevel": "debug"
 }
