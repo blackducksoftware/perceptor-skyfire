@@ -48,7 +48,7 @@ class Skyfire:
 
     ### Web Server interface
 
-    def model(self):
+    def get_latest_report(self):
         # TODO: this should be made thread-safe
         return json.dumps({
             'opssight': self.opssight,
