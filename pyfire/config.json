@@ -6,7 +6,8 @@
         "HubClientTimeoutSeconds": 120,
         "KubeDumpIntervalSeconds": 60,
         "PerceptorDumpIntervalSeconds": 60,
-        "HubDumpPauseSeconds": 240
+        "HubDumpPauseSeconds": 240,
+        "UseMockMode": true
     },
     "Perceptor": {
         "Host": "",
@@ -16,7 +17,7 @@
         "Hosts": [],
         "User": "",
         "Port": 443,
-        "PasswordEnvVar": ""
+        "PasswordEnvVar": "BD_HUB_PASSWORD"
     },
     "LogLevel": "debug"
 }

@@ -7,17 +7,20 @@ from kubernetes import client, config
 import logging 
 
 
-class KubeScrape:
-    def __init__(self,data=[]):
-        self.time_stamp = datetime.datetime.now()
-        self.data = data
+def get_current_datetime():
+    return str(datetime.datetime.now())
+
+class kubeScrape:
+    def __init__(self):
+        self.time_stamp = get_current_datetime()
+        self.data = []
     
     def __repr__(self):
         output = "== Kube Analysis ==\n"
         num_images = len(self.data)
         output += "Num Images: "+str(num_images)+"\n"
-        return output         
-
+        return output
+    
 class KubeClientWrapper:
     def __init__(self, in_cluster):
         if in_cluster:
@@ -61,7 +64,7 @@ class KubeClientWrapper:
 
 class HubScrape():
     def __init__(self, data={}):
-        self.time_stamp = datetime.datetime.now()
+        self.time_stamp = get_current_datetime()
         self.data = data
 
         self.project_urls = []
@@ -122,19 +125,22 @@ class HubScrape():
         return shas 
 
 class HubClient():
-    def __init__(self, host_name, username, password):
+    def __init__(self, host_name, port, username, password, client_timeout_seconds):
         self.host_name = host_name
+        self.port = port
         self.username = username
-        self.password = password 
+        self.password = password
         self.secure_login_cookie = self.get_secure_login_cookie()
         self.max_projects = 10000000
+        # TODO do something with this
+        self.client_timeout_seconds = client_timeout_seconds
 
     def get_secure_login_cookie(self):
-        # urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         security_headers = {'Content-Type':'application/x-www-form-urlencoded'}
         security_data = {'j_username': self.username,'j_password': self.password}
         # verify=False does not verify SSL connection - insecure
-        r = requests.post("https://"+self.host_name+":443/j_spring_security_check", verify=False, data=security_data, headers=security_headers)
+        url = "https://{}:{}/j_spring_security_check".format(self.host_name, self.port)
+        r = requests.post(url, verify=False, data=security_data, headers=security_headers)
         return r.cookies 
 
     def api_get(self, url):
@@ -240,7 +246,7 @@ class HubClient():
 
 class PerceptorScrape:
     def __init__(self, data={}):
-        self.time_stamp = datetime.datetime.now()
+        self.time_stamp = get_current_datetime()
         self.data = data
 
         self.hub_names = []
@@ -329,18 +335,17 @@ class PerceptorScrape:
         return images
 
 class PerceptorClient():
-    def __init__(self, host_name):
+    def __init__(self, host_name, port):
         self.host_name = host_name
+        self.port = port
 
     def get_scrape(self):
-        perceptor_scrape = PerceptorScrape()
         dump = self.get_dump()
-        perceptor_scrape.data = dump 
-        return perceptor_scrape
+        return PerceptorScrape(dump)
 
     def get_dump(self):
         while True:
-            r = requests.get("http://"+self.host_name+"/model")
+            r = requests.get("http://{}:{}/model".format(self.host_name, self.port))
             if r.status_code == 200:
                 return json.loads(r.text)
 

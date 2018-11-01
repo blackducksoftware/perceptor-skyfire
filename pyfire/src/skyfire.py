@@ -2,53 +2,61 @@ import threading
 import json
 import queue
 import logging
-from reports import PerceptorReport
+from reports import PerceptorReport, KubeReport
 
 
 class Skyfire:
-    def __init__(self):
+    def __init__(self, logger=logging.getLogger("skyfire")):
+        self.logger = logger
+
         self.q = queue.Queue()
         self.event_thread = threading.Thread(target=self.read_events)
-        self.is_running = False
+        self.event_thread.daemon = True
+        self.is_running = True
+        self.logger.info("starting skyfire event thread")
+        self.event_thread.start()
+
         self.opssight = None
         self.opssight_report = None
-        self.kube = None
-        self.hubs = {}
 
-    def start(self):
-        logging.info("starting skyfire event thread")
-        self.is_running = True
-        self.event_thread.start()
+        self.kube = None
+        self.kube_report = None
+        self.kube_opssight_report = None
+
+        self.hubs = {}
     
     def stop(self):
-        logging.info("stopping skyfire event thread")
+        self.logger.info("stopping skyfire event thread")
         self.is_running = False
         self.event_thread.join()
     
     def read_events(self):
         while self.is_running:
-            logging.debug("waiting for item to process")
+            self.logger.debug("waiting for item to process")
             item = self.q.get()
-            logging.debug("got item to process")
+            self.logger.debug("got item to process")
             try:
                 item()
             except Exception as e:
-                logging.error("unable to process event: %s", e)
-            logging.debug("finished processing item")
+                self.logger.error("unable to process event: %s", e)
+            self.logger.debug("finished processing item")
             self.q.task_done()
-        logging.info("exiting skyfire event thread")
+        self.logger.info("exiting skyfire event thread")
     
     ### Scraper Delegate interface
 
     def perceptor_dump(self, dump):
+        report = PerceptorReport(dump)
         def f():
             self.opssight = dump
-            self.opssight_report = PerceptorReport(dump)
+            self.opssight_report = report
         self.q.put(f)
 
     def kube_dump(self, dump):
+        report = KubeReport(dump)
         def f():
             self.kube = dump
+            self.kube_report = report
         self.q.put(f)
 
     def hub_dump(self, host, dump):
@@ -59,20 +67,22 @@ class Skyfire:
     ### Web Server interface
 
     def get_latest_report(self):
-        logging.debug("skyfire: get_latest_report")
+        self.logger.debug("skyfire: get_latest_report")
         b = threading.Barrier(2)
         # this nasty `wrapper` hack is because python doesn't like capturing+mutating strings
         wrapper = {}
         def f():
-            wrapper['json'] = {
-                'opssight': self.opssight.json(),
-                'opssight-report': self.opssight_report.json(),
+            dump_dict = {
+                'opssight': self.opssight,
+                'opssight-report': self.opssight_report,
                 'kube': self.kube,
+                'kube-report': self.kube_report,
                 'hub': dict((host, dump) for (host, dump) in self.hubs.items())
             }
-            logging.debug("waiting inside f")
+            wrapper['json'] = json.dumps(dump_dict, default=lambda o: o.__dict__, indent=2)
+            self.logger.debug("waiting inside f")
             b.wait()
         self.q.put(f)
-        logging.debug("waiting after putting item in q")
+        self.logger.debug("waiting after putting item in q")
         b.wait()
         return wrapper['json']
