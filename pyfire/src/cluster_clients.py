@@ -252,13 +252,14 @@ class PerceptorScrape:
         self.repositories = []
 
         self.image_shas = []
+        self.image_repositories = []
         self.image_sha_to_risk_profile = {}
         self.image_sha_to_policy_status = {}
         self.image_sha_to_scans = {}
         self.image_sha_to_respositories = {}
 
         self.load_data(data)
-        
+
     
     def json(self):
         return self.data
@@ -293,6 +294,7 @@ class PerceptorScrape:
             self.image_sha_to_respositories[image_sha] = []
             for repo in image_data["RepoTags"]:
                 self.image_sha_to_respositories[image_sha].append(repo["Repository"]) 
+                self.image_repositories.append(repo["Repository"])
 
         for image_sha in data["CoreModel"]["ImageScanQueue"]:
             pass 

@@ -1,29 +1,5 @@
 import logging
-'''
-    opssight_analysis = opssight_client.get_analysis()
-    print(opssight_analysis)
-    #print(json.dumps( opssight_analysis.data ,indent=2))
-    #print(opssight_analysis.get_pods_images())
 
-    print("== OpsSight vs Hub ==")
-    opssight_pod_images = set(opssight_analysis.get_pods_images())
-    hub_code_location_images = set(hub_analysis.get_code_location_shas())
-    print("OpsSight Images: " + str(len(opssight_pod_images)))
-    print("Hub Images: "+str(len(hub_code_location_images)))
-    inter = opssight_pod_images.intersection(hub_code_location_images)
-    print("Images From Hub that OpsSight Found: "+str(len(inter)))
-    
-
-    print("")
-    print("== OpsSight vs Cluster ==")
-    opsight_repositories = set(opssight_analysis.get_pods_repositories())
-    kube_images = set([x.split(":")[0] for x in kube_client.get_images()])
-    print("Images in Cluster: "+str(len(kube_images)))
-    inter = kube_images.intersection(opsight_repositories)
-    print("Images in Cluster that OpsSight Found: "+str(len(inter)))
-    diff_images = kube_images.difference(opsight_repositories)
-    print("Images Untracked in Cluster: "+str(len(diff_images)))
-'''
 class PerceptorReport:
     def __init__(self, scrape):
         logging.debug("perceptor report, scrape: ")
@@ -31,12 +7,12 @@ class PerceptorReport:
         self.num_hubs = 0
         self.num_images = 0
         self.num_pods = 0
-        self.parse_scrape(scrape.data)
+        self.parse_scrape(scrape)
 
     def parse_scrape(self, scrape):
-        self.hubs = scrape.hubs
-        self.num_hubs = len(scrape.hubs)
-        
+        self.hubs = scrape.hub_names
+        self.num_hubs = len(scrape.hub_names)
+
     
     def json(self):
         return {
@@ -67,26 +43,66 @@ class MultipleHubReport:
 
 class KubeReport:
     def __init__(self, scrape):
-        self.images = []
-        self.num_images = 0
+        self.respositories = []
+        self.num_repositories = 0
         self.parse_scrape(scrape)
 
     def parse_scrape(self, scrape):
-        pass
+        self.respositories = scrape.data 
+        self.num_repositories = len(self.respositories)
 
 class perceptorKubeReport:
     def __init__(self, perceptor_scrape, kube_scrape):
+        self.all_kube_repositories = set()
+        self.all_perceptor_repositories = set()
+        self.only_perceptor_repositories = set()
+        self.only_kube_repositories = set()
+        self.intersection_repositories = set()
+
         self.parse_scrapes(perceptor_scrape, kube_scrape)
 
     def parse_scrapes(self, perceptor_scrape, kube_scrape):
-        pass 
+        self.all_kube_repositories = set( [x.split(":")[0] for x in kube_scrape.data] )
+        self.all_perceptor_repositories = set(perceptor_scrape.image_repositories)
+        self.only_perceptor_repositories = self.all_perceptor_repositories.difference(self.all_kube_repositories)
+        self.only_kube_repositories = self.all_kube_repositories.difference(self.all_perceptor_repositories)
+        self.intersection_repositories = self.all_kube_repositories.intersection(self.all_perceptor_repositories)
+
+    def json(self):
+        return {
+            "all_kube_repositories" : len(self.all_kube_repositories),
+            "all_perceptor_repositories" : len(self.all_perceptor_repositories),
+            "only_perceptor_repositories" :len(self.only_perceptor_repositories),
+            "only_kube_repositories" : len(self.only_kube_repositories),
+            "intersection_repositories" : len(self.intersection_repositories)
+        }
+
 
 class HubPerceptorReport:
     def __init__(self, hub_scrape, perceptor_scrape):
+        self.all_hub_shas = set()
+        self.all_perceptor_shas = set()
+        self.only_hub_shas = set()
+        self.only_perceptor_shas = set()
+        self.intersection_shas = set()
+
         self.parse_scrape(hub_scrape, perceptor_scrape)
     
     def parse_scrape(self, hub_scrape, perceptor_scrape):
-        pass
+        self.all_hub_shas = set(hub_scrape.shas)
+        self.all_perceptor_shas = set(perceptor_scrape.image_shas)
+        self.only_hub_shas = self.only_hub_shas.difference(self.only_perceptor_shas)
+        self.only_perceptor_shas = self.only_perceptor_shas.difference(self.only_hub_shas)
+        self.intersection_shas = self.only_hub_shas.intersection(self.only_perceptor_shas)
+
+    def json(self):
+        return {
+            "all_hub_shas" : len(self.all_hub_shas),
+            "all_perceptor_shas" : len(self.all_perceptor_shas),
+            "only_hub_shas" : len(self.only_hub_shas),
+            "only_perceptor_shas" : len(self.only_perceptor_shas),
+            "intersection_shas" : len(self.intersection_shas)
+        }
 
 class MultipleHubPerceptorReport:
     def __init__(self, hub_scrapes, perceptor_scrape):
