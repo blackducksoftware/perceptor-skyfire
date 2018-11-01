@@ -27,7 +27,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self._set_headers({'Content-type': 'application/json'})
         report = self.model.get_latest_report()
-        self.wfile.write(bytes(json.dumps(report, indent=2), 'utf-8'))
+        self.wfile.write(bytes(report, 'utf-8'))
 
 #    def do_HEAD(self):
 #        self._set_headers()

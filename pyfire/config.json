@@ -17,7 +17,7 @@
         "Hosts": [],
         "User": "",
         "Port": 443,
-        "PasswordEnvVar": ""
+        "PasswordEnvVar": "BD_HUB_PASSWORD"
     },
     "LogLevel": "debug"
 }
