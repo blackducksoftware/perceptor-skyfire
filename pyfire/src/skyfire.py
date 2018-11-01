@@ -2,7 +2,7 @@ import threading
 import json
 import queue
 import logging
-from reports import PerceptorReport
+from reports import PerceptorReport, KubeReport
 
 
 class Skyfire:
@@ -53,8 +53,10 @@ class Skyfire:
         self.q.put(f)
 
     def kube_dump(self, dump):
+        report = KubeReport(dump)
         def f():
             self.kube = dump
+            self.kube_report = report
         self.q.put(f)
 
     def hub_dump(self, host, dump):
