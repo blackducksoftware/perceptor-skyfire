@@ -10,10 +10,10 @@ import logging
 def get_current_datetime():
     return str(datetime.datetime.now())
 
-class kubeScrape:
-    def __init__(self):
+class KubeScrape:
+    def __init__(self, data = []):
         self.time_stamp = get_current_datetime()
-        self.data = []
+        self.data = data
     
     def __repr__(self):
         output = "== Kube Analysis ==\n"
