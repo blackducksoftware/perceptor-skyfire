@@ -84,19 +84,23 @@ class HubScrape():
         return shas 
 
 class HubClient():
-    def __init__(self, host_name, username, password):
+    def __init__(self, host_name, port, username, password, client_timeout_seconds):
         self.host_name = host_name
+        self.port = port
         self.username = username
-        self.password = password 
+        self.password = password
         self.secure_login_cookie = self.get_secure_login_cookie()
         self.max_projects = 10000000
+        # TODO do something with this
+        self.client_timeout_seconds = client_timeout_seconds
 
     def get_secure_login_cookie(self):
         # urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         security_headers = {'Content-Type':'application/x-www-form-urlencoded'}
         security_data = {'j_username': self.username,'j_password': self.password}
         # verify=False does not verify SSL connection - insecure
-        r = requests.post("https://"+self.host_name+":443/j_spring_security_check", verify=False, data=security_data, headers=security_headers)
+        url = "https://{}:{}/j_spring_security_check".format(self.host_name, self.port)
+        r = requests.post(url, verify=False, data=security_data, headers=security_headers)
         return r.cookies 
 
     def api_get(self, url):
@@ -246,8 +250,9 @@ class PerceptorScrape:
         return images
 
 class PerceptorClient():
-    def __init__(self, host_name):
+    def __init__(self, host_name, port):
         self.host_name = host_name
+        self.port = port
 
     def get_scrape(self):
         perceptor_scrape = PerceptorScrape()
@@ -257,7 +262,7 @@ class PerceptorClient():
 
     def get_dump(self):
         while True:
-            r = requests.get("http://"+self.host_name+"/model")
+            r = requests.get("http://{}:{}/model".format(self.host_name, self.port))
             if r.status_code == 200:
                 return json.loads(r.text)
 
