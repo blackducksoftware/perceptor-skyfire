@@ -1,7 +1,6 @@
 import time
 import threading
 import metrics
-import sys
 import logging 
 
 
@@ -17,14 +16,24 @@ class Scraper(object):
         self.kube_thread = threading.Thread(target=self.kube)
         self.kube_pause = kube_pause
 
-        # TODO
-        #  1. allow creation, deletion of hub clients dynamically
-        #  2. use one thread per hub client
-        self.hub_clients = dict((host, client) for (host, client) in hub_clients.items())
-        self.hub_thread = threading.Thread(target=self.hub)
+        self.hub_clients = {}
+        for (host, client) in hub_clients.items():
+            self._add_hub(host, client)
         self.hub_pause = hub_pause
 
         self.is_running = False
+    
+    def _add_hub(self, host, client):
+        def f():
+            self.hub(host)
+        thread = threading.Thread(target=f)
+        self.hub_clients[host] = [client, thread, self.is_running]
+    
+    def add_hub(self, host, client):
+        self._add_hub(host, client)
+        _, thread, _ = self.hub_clients[host]
+        if self.is_running:
+            thread.start()
     
     def start(self):
         """
@@ -33,8 +42,12 @@ class Scraper(object):
         self.is_running = True
         self.perceptor_thread.start()
         self.kube_thread.start()
-        self.hub_thread.start()
+        for (_, thread, _) in self.hub_clients.values():
+            thread.start()
     
+    def _stop_hub(self, host):
+        self.hub_clients[host][2] = False
+
     def stop(self):
         """
         TODO this can't safely be called more than once, and
@@ -43,7 +56,10 @@ class Scraper(object):
         self.is_running = False
         self.perceptor_thread.join()
         self.kube_thread.join()
-        self.hub_thread.join()
+        for host in self.hub_clients:
+            self._stop_hub(host)
+        for (_, thread, _) in self.hub_clients.values():
+            thread.join()
 
     def perceptor(self):
         while self.is_running:
@@ -61,14 +77,15 @@ class Scraper(object):
             metrics.record_event("kubeDump")
             time.sleep(self.kube_pause)
 
-    def hub(self):
+    def hub(self, host):
         while self.is_running:
-            # TODO use one thread per hub
-            for hub_host, hub_client in self.hub_clients.items():
-                scrape = hub_client.get_scrape()
-                self.delegate.hub_dump(hub_host, scrape)
-            logging.debug("got hub dump")
-            metrics.record_event("hubDump")
+            client, _, should_run = self.hub_clients[host]
+            if not should_run:
+                break
+            scrape = client.get_scrape()
+            self.delegate.hub_dump(host, scrape)
+            logging.debug("got hub dump from %s", host)
+            metrics.record_event("hubDump-{}".format(host))
             time.sleep(self.hub_pause)
 
 
@@ -117,41 +134,7 @@ def reader():
 #        f(item)
         delegate.q.task_done()
 
-def real_reader(conf):
-    """
-    Another example not to be used in PDCs!
-    """
-    from cluster_clients import PerceptorClient, KubeClientWrapper, HubClient
-
-    perceptor_client = PerceptorClient(conf['Perceptor']['Host'])
-
-    kube_client = KubeClientWrapper(conf["Skyfire"]["UseInClusterConfig"])
-
-    hub_clients = {}
-    for host in conf["Hub"]["Hosts"]:
-        hub_clients[host] = HubClient(host, conf["Hub"]["User"], conf["Hub"]["PasswordEnvVar"])
-
-    delegate = MockDelegate()
-    s = Scraper(delegate, perceptor_client, kube_client, hub_clients, perceptor_pause=15, kube_pause=15, hub_pause=30)
-    s.start()
-
-    while True:
-        item = delegate.q.get()
-        print("got next:", item)
-        if item is None:
-            break
-        delegate.q.task_done()
-
 
 if __name__ == "__main__":
-    run_demo_1 = True
-    if run_demo_1:
-        t = threading.Thread(target=reader)
-        t.start()
-    else:
-        import json
-        config_path = sys.argv[1]
-        with open(config_path) as f:
-            config_json = json.load(f)
-
-        real_reader(config_json)
+    t = threading.Thread(target=reader)
+    t.start()
