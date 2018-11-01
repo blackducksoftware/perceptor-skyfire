@@ -200,9 +200,12 @@ class HubClient():
         return scan_summaries 
 
 class PerceptorScrape:
-    def __init__(self):
+    def __init__(self, data):
         self.time_stamp = datetime.datetime.now()
-        self.data = {}
+        self.data = data
+    
+    def json(self):
+        return self.data
 
     def __repr__(self):
         output = "== OpsSight Analysis ==\n"

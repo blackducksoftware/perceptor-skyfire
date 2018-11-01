@@ -1,6 +1,9 @@
+import logging
+
 
 class PerceptorReport:
     def __init__(self, scrape):
+        logging.debug("perceptor report, scrape: ")
         self.hubs = []
         self.num_hubs = 0
         self.num_images = 0
@@ -10,6 +13,13 @@ class PerceptorReport:
     def parse_scrape(self, scrape):
         self.hubs = list(scrape["Hubs"].keys())
         self.num_hubs = len(self.hubs)
+    
+    def json(self):
+        return {
+            'num_hubs': self.num_hubs,
+            'num_images': self.num_images,
+            'num_pods': self.num_pods
+        }
 
 class HubReport:
     def __init__(self, scrape):

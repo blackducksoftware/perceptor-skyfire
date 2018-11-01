@@ -84,9 +84,17 @@ class MockDelegate:
         self.q.put(("hub", dump, host))
     
 class MockScraper:
+    filenames = {
+        'perceptor': './src/staticDumps/staticPerceptorScrape.txt'
+    }
     def __init__(self, name):
         self.name = name
     def get_scrape(self):
+        import json
+        import cluster_clients
+        if self.name in MockScraper.filenames:
+            with open(MockScraper.filenames[self.name], 'r') as f:
+                return cluster_clients.PerceptorScrape(json.load(f))
         return {'scrape_type': self.name}
 
 
