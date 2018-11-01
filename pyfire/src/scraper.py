@@ -16,13 +16,13 @@ class Scraper(object):
         self.kube_thread = threading.Thread(target=self.kube)
         self.kube_pause = kube_pause
 
+        self.is_running = False
+    
         self.hub_clients = {}
         for (host, client) in hub_clients.items():
             self._add_hub(host, client)
         self.hub_pause = hub_pause
 
-        self.is_running = False
-    
     def _add_hub(self, host, client):
         def f():
             self.hub(host)
