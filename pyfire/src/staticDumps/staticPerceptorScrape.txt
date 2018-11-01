@@ -1,0 +1,4989 @@
+{
+  "Hubs": {
+    "webserver.hub-test.svc": {
+      "HasLoadedAllCodeLocations": true,
+      "CodeLocations": {
+        "0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "2a04b187eaad83ee2059d853b191391fc5f7f59338bb04d57629d40cdad4fcd6": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "34089e1bc048d43e6bcaf597f6c68e909d7b7cd256b2b1a8c8a609ff2ac3ecde": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "384a8f6624ad47b949ac15a76118de650b9e28e33549459522764169d3129b00": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "3fc75e5245e7f92516b107a4345a8f87ef49e1d9af0b605b55f952871de61b8a": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "43fbc8a457aa0cb887da63d74a48659e13947cb74b96a53ba8f47abb6172a948": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "445483b6fad99ce3058a889c5ac46780a88843f9349d1e4e54786b9364f4b652": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "46b9b555e18e3d6e00b6eab06b3f80a48b8e510f9b0e840f476fa8f8242fdb48": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "5bce4ddb0a74e48d5a884f1812f18fe80e2bba0caefa258c49de93a5abf2409a": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "7a747ba11187823c8d4f5c10ed7fb77ccb65196e9119066d23c77bddc4935e4c": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "7b50902e49af679c5d81ad0f8d556ed83abbce41abe8ac9a458ff3d2bbea29e1": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "7b987901dbc44d17a88e7bda42dbbbb743c161e3152662959acd9f35aeefb9a3": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "7cb4af8632f9e3fd435fbf1232eada331d7acd42ed227c64febd11e02039eedb": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "89344a9512549b49637c0934eab801d4b64a0ba7eb392d486b753350648385b7": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "8e0e64477971f410ce5dad1b7b14ec2f79c491af5dfecda05f687798a06e8877": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "9bfb79c54c7b4544a5664fc8536b4ab7e488a6ed71a0212943e1cce567f5df0e": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "9ec88a8f9e9d8ca7912390bdc894a7e736bb25ec281da20c771236ce90e8d041": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "a8782e5481cca14a9d5b9bf3493456f201417b8cf5a77d3623ae31cdb858b210": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "c3f9d3c6d00f152f7d3070838cf31cc1483a88a47570be4a75d82af03dc16391": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "cbb81fca618561a607e14ca39c60755cef56e4ba74eb2282169c372745853f72": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "db4d3268743f99c2ff7a6da2b9f921453e6bf36c869b420b4ad3d42ec0231179": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "e487fec26b5b3709babba5db1e931e229f40e4e551e9e755b4d432a1b35d3de9": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "f21a591a5f0d462b045ecfcc51e5f00152ff16dc34fa4bc217ab31ed858c8487": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "f84e49aae0e1b6a74599901d336ab5b4e0ae057d59a95f8cad3989b221ac76aa": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "fce873f0d33472d019908fde6bb1e1298434ebd83f0ad374215d836552f70c8f": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        }
+      },
+      "Errors": [
+        "got a 502 response instead of a 204"
+      ],
+      "Status": "ClientStatusUp",
+      "CircuitBreaker": {
+        "State": "CircuitBreakerStateEnabled",
+        "NextCheckTime": null,
+        "MaxBackoffDuration": {
+          "Minutes": 60,
+          "Seconds": 3600,
+          "Milliseconds": 3600000
+        },
+        "ConsecutiveFailures": 0
+      },
+      "Host": "webserver.hub-test.svc"
+    }
+  },
+  "CoreModel": {
+    "Pods": {
+      "bd/blackduck-protoform-ptljl": {
+        "Name": "blackduck-protoform-ptljl",
+        "UID": "e57d34ea-d6f4-11e8-b402-005056b953a6",
+        "Namespace": "bd",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "gcr.io/saas-hub-stg/blackducksoftware/protoform-installer",
+              "Tag": "master",
+              "Sha": "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42",
+              "Priority": 1
+            },
+            "Name": "blackduck-protoform"
+          }
+        ]
+      },
+      "bd/federator-4tmbq": {
+        "Name": "federator-4tmbq",
+        "UID": "f3a4fea5-d6f4-11e8-b402-005056b953a6",
+        "Namespace": "bd",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "gcr.io/saas-hub-stg/blackducksoftware/federator",
+              "Tag": "master",
+              "Sha": "9bfb79c54c7b4544a5664fc8536b4ab7e488a6ed71a0212943e1cce567f5df0e",
+              "Priority": 1
+            },
+            "Name": "federator"
+          }
+        ]
+      },
+      "bd/prometheus-746db5486d-5j9kx": {
+        "Name": "prometheus-746db5486d-5j9kx",
+        "UID": "e4ee6b97-d6f4-11e8-b402-005056b953a6",
+        "Namespace": "bd",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/prom/prometheus",
+              "Tag": "v2.1.0",
+              "Sha": "7b987901dbc44d17a88e7bda42dbbbb743c161e3152662959acd9f35aeefb9a3",
+              "Priority": 1
+            },
+            "Name": "prometheus"
+          }
+        ]
+      },
+      "default/docker-registry-1-pdnvt": {
+        "Name": "docker-registry-1-pdnvt",
+        "UID": "abb75f76-cbd3-11e8-9d45-005056b953a6",
+        "Namespace": "default",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-docker-registry",
+              "Tag": "v3.10",
+              "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+              "Priority": 1
+            },
+            "Name": "registry"
+          }
+        ]
+      },
+      "default/registry-console-1-wpn6l": {
+        "Name": "registry-console-1-wpn6l",
+        "UID": "be495273-cbd3-11e8-9d45-005056b953a6",
+        "Namespace": "default",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/cockpit/kubernetes",
+              "Tag": "latest",
+              "Sha": "34089e1bc048d43e6bcaf597f6c68e909d7b7cd256b2b1a8c8a609ff2ac3ecde",
+              "Priority": 1
+            },
+            "Name": "registry-console"
+          }
+        ]
+      },
+      "default/router-1-r5xjj": {
+        "Name": "router-1-r5xjj",
+        "UID": "890386f8-cbd3-11e8-9d45-005056b953a6",
+        "Namespace": "default",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-haproxy-router",
+              "Tag": "v3.10",
+              "Sha": "46b9b555e18e3d6e00b6eab06b3f80a48b8e510f9b0e840f476fa8f8242fdb48",
+              "Priority": 1
+            },
+            "Name": "router"
+          }
+        ]
+      },
+      "hub-test/cfssl-t57jd": {
+        "Name": "cfssl-t57jd",
+        "UID": "77c3534e-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "hub-test",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/blackducksoftware/hub-cfssl",
+              "Tag": "5.0.0",
+              "Sha": "c3f9d3c6d00f152f7d3070838cf31cc1483a88a47570be4a75d82af03dc16391",
+              "Priority": 1
+            },
+            "Name": "cfssl"
+          }
+        ]
+      },
+      "hub-test/documentation-jzhgt": {
+        "Name": "documentation-jzhgt",
+        "UID": "77b8bfe8-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "hub-test",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/blackducksoftware/hub-documentation",
+              "Tag": "5.0.0",
+              "Sha": "384a8f6624ad47b949ac15a76118de650b9e28e33549459522764169d3129b00",
+              "Priority": 1
+            },
+            "Name": "documentation"
+          }
+        ]
+      },
+      "hub-test/hub-authentication-trv25": {
+        "Name": "hub-authentication-trv25",
+        "UID": "77c81a35-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "hub-test",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/blackducksoftware/hub-authentication",
+              "Tag": "5.0.0",
+              "Sha": "a8782e5481cca14a9d5b9bf3493456f201417b8cf5a77d3623ae31cdb858b210",
+              "Priority": 1
+            },
+            "Name": "hub-authentication"
+          }
+        ]
+      },
+      "hub-test/hub-scan-x8blt": {
+        "Name": "hub-scan-x8blt",
+        "UID": "62d596de-d6fa-11e8-b402-005056b953a6",
+        "Namespace": "hub-test",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/blackducksoftware/hub-scan",
+              "Tag": "5.0.0",
+              "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+              "Priority": 1
+            },
+            "Name": "hub-scan"
+          }
+        ]
+      },
+      "hub-test/jobrunner-c2bs7": {
+        "Name": "jobrunner-c2bs7",
+        "UID": "77bb55f0-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "hub-test",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/blackducksoftware/hub-jobrunner",
+              "Tag": "5.0.0",
+              "Sha": "445483b6fad99ce3058a889c5ac46780a88843f9349d1e4e54786b9364f4b652",
+              "Priority": 1
+            },
+            "Name": "jobrunner"
+          }
+        ]
+      },
+      "hub-test/postgres-rcqr2": {
+        "Name": "postgres-rcqr2",
+        "UID": "711667c5-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "hub-test",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "registry.access.redhat.com/rhscl/postgresql-96-rhel7",
+              "Tag": "1",
+              "Sha": "0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10",
+              "Priority": 1
+            },
+            "Name": "postgres"
+          }
+        ]
+      },
+      "hub-test/registration-fqgj5": {
+        "Name": "registration-fqgj5",
+        "UID": "77bb2aa9-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "hub-test",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/blackducksoftware/hub-registration",
+              "Tag": "5.0.0",
+              "Sha": "7a747ba11187823c8d4f5c10ed7fb77ccb65196e9119066d23c77bddc4935e4c",
+              "Priority": 1
+            },
+            "Name": "registration"
+          }
+        ]
+      },
+      "hub-test/solr-wqdpt": {
+        "Name": "solr-wqdpt",
+        "UID": "77b89e71-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "hub-test",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/blackducksoftware/hub-solr",
+              "Tag": "5.0.0",
+              "Sha": "3fc75e5245e7f92516b107a4345a8f87ef49e1d9af0b605b55f952871de61b8a",
+              "Priority": 1
+            },
+            "Name": "solr"
+          }
+        ]
+      },
+      "hub-test/webapp-logstash-mg7g6": {
+        "Name": "webapp-logstash-mg7g6",
+        "UID": "77c1fa73-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "hub-test",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/blackducksoftware/hub-logstash",
+              "Tag": "5.0.0",
+              "Sha": "7cb4af8632f9e3fd435fbf1232eada331d7acd42ed227c64febd11e02039eedb",
+              "Priority": 1
+            },
+            "Name": "logstash"
+          },
+          {
+            "Image": {
+              "Repository": "docker.io/blackducksoftware/hub-webapp",
+              "Tag": "5.0.0",
+              "Sha": "2a04b187eaad83ee2059d853b191391fc5f7f59338bb04d57629d40cdad4fcd6",
+              "Priority": 1
+            },
+            "Name": "webapp"
+          }
+        ]
+      },
+      "hub-test/webserver-jbmrp": {
+        "Name": "webserver-jbmrp",
+        "UID": "77b8655b-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "hub-test",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/blackducksoftware/hub-nginx",
+              "Tag": "5.0.0",
+              "Sha": "5bce4ddb0a74e48d5a884f1812f18fe80e2bba0caefa258c49de93a5abf2409a",
+              "Priority": 1
+            },
+            "Name": "webserver"
+          }
+        ]
+      },
+      "hub-test/zookeeper-rk5gg": {
+        "Name": "zookeeper-rk5gg",
+        "UID": "77c472f9-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "hub-test",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/blackducksoftware/hub-zookeeper",
+              "Tag": "5.0.0",
+              "Sha": "8e0e64477971f410ce5dad1b7b14ec2f79c491af5dfecda05f687798a06e8877",
+              "Priority": 1
+            },
+            "Name": "zookeeper"
+          }
+        ]
+      },
+      "kube-service-catalog/apiserver-r6nnh": {
+        "Name": "apiserver-r6nnh",
+        "UID": "2881b618-cbd4-11e8-9d45-005056b953a6",
+        "Namespace": "kube-service-catalog",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-service-catalog",
+              "Tag": "v3.10",
+              "Sha": "f84e49aae0e1b6a74599901d336ab5b4e0ae057d59a95f8cad3989b221ac76aa",
+              "Priority": 1
+            },
+            "Name": "apiserver"
+          }
+        ]
+      },
+      "kube-service-catalog/controller-manager-sznqb": {
+        "Name": "controller-manager-sznqb",
+        "UID": "327b7fc2-cbd4-11e8-9d45-005056b953a6",
+        "Namespace": "kube-service-catalog",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-service-catalog",
+              "Tag": "v3.10",
+              "Sha": "f84e49aae0e1b6a74599901d336ab5b4e0ae057d59a95f8cad3989b221ac76aa",
+              "Priority": 1
+            },
+            "Name": "controller-manager"
+          }
+        ]
+      },
+      "kube-system/master-api-master0-dev-kipp-sass-on-prem-origin-3-10": {
+        "Name": "master-api-master0-dev-kipp-sass-on-prem-origin-3-10",
+        "UID": "4405ed18-cbd2-11e8-9d45-005056b953a6",
+        "Namespace": "kube-system",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-control-plane",
+              "Tag": "v3.10",
+              "Sha": "7b50902e49af679c5d81ad0f8d556ed83abbce41abe8ac9a458ff3d2bbea29e1",
+              "Priority": 1
+            },
+            "Name": "api"
+          }
+        ]
+      },
+      "kube-system/master-controllers-master0-dev-kipp-sass-on-prem-origin-3-10": {
+        "Name": "master-controllers-master0-dev-kipp-sass-on-prem-origin-3-10",
+        "UID": "4376a7f5-cbd2-11e8-9d45-005056b953a6",
+        "Namespace": "kube-system",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-control-plane",
+              "Tag": "v3.10",
+              "Sha": "7b50902e49af679c5d81ad0f8d556ed83abbce41abe8ac9a458ff3d2bbea29e1",
+              "Priority": 1
+            },
+            "Name": "controllers"
+          }
+        ]
+      },
+      "kube-system/master-etcd-master0-dev-kipp-sass-on-prem-origin-3-10": {
+        "Name": "master-etcd-master0-dev-kipp-sass-on-prem-origin-3-10",
+        "UID": "496300df-cbd2-11e8-9d45-005056b953a6",
+        "Namespace": "kube-system",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "quay.io/coreos/etcd",
+              "Tag": "v3.2.22",
+              "Sha": "43fbc8a457aa0cb887da63d74a48659e13947cb74b96a53ba8f47abb6172a948",
+              "Priority": 1
+            },
+            "Name": "etcd"
+          }
+        ]
+      },
+      "openshift-ansible-service-broker/asb-1-nfhvk": {
+        "Name": "asb-1-nfhvk",
+        "UID": "66164694-cbd4-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-ansible-service-broker",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/ansibleplaybookbundle/origin-ansible-service-broker",
+              "Tag": "latest",
+              "Sha": "db4d3268743f99c2ff7a6da2b9f921453e6bf36c869b420b4ad3d42ec0231179",
+              "Priority": 1
+            },
+            "Name": "asb"
+          }
+        ]
+      },
+      "openshift-node/sync-4wmwd": {
+        "Name": "sync-4wmwd",
+        "UID": "2956e555-cbd3-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-node",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-node",
+              "Tag": "v3.10",
+              "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+              "Priority": 1
+            },
+            "Name": "sync"
+          }
+        ]
+      },
+      "openshift-node/sync-c7227": {
+        "Name": "sync-c7227",
+        "UID": "2a0f7e54-cbd3-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-node",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-node",
+              "Tag": "v3.10",
+              "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+              "Priority": 1
+            },
+            "Name": "sync"
+          }
+        ]
+      },
+      "openshift-node/sync-p29kv": {
+        "Name": "sync-p29kv",
+        "UID": "29bbd950-cbd3-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-node",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-node",
+              "Tag": "v3.10",
+              "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+              "Priority": 1
+            },
+            "Name": "sync"
+          }
+        ]
+      },
+      "openshift-node/sync-tcgbg": {
+        "Name": "sync-tcgbg",
+        "UID": "d5311361-cbd2-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-node",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-node",
+              "Tag": "v3.10",
+              "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+              "Priority": 1
+            },
+            "Name": "sync"
+          }
+        ]
+      },
+      "openshift-sdn/ovs-8fjpw": {
+        "Name": "ovs-8fjpw",
+        "UID": "29b45a21-cbd3-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-sdn",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-node",
+              "Tag": "v3.10",
+              "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+              "Priority": 1
+            },
+            "Name": "openvswitch"
+          }
+        ]
+      },
+      "openshift-sdn/ovs-lztm9": {
+        "Name": "ovs-lztm9",
+        "UID": "294c737b-cbd3-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-sdn",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-node",
+              "Tag": "v3.10",
+              "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+              "Priority": 1
+            },
+            "Name": "openvswitch"
+          }
+        ]
+      },
+      "openshift-sdn/ovs-sl95f": {
+        "Name": "ovs-sl95f",
+        "UID": "2a266f95-cbd3-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-sdn",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-node",
+              "Tag": "v3.10",
+              "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+              "Priority": 1
+            },
+            "Name": "openvswitch"
+          }
+        ]
+      },
+      "openshift-sdn/ovs-w82p6": {
+        "Name": "ovs-w82p6",
+        "UID": "efaab4fa-cbd2-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-sdn",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-node",
+              "Tag": "v3.10",
+              "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+              "Priority": 1
+            },
+            "Name": "openvswitch"
+          }
+        ]
+      },
+      "openshift-sdn/sdn-6v6lm": {
+        "Name": "sdn-6v6lm",
+        "UID": "294c6d7b-cbd3-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-sdn",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-node",
+              "Tag": "v3.10",
+              "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+              "Priority": 1
+            },
+            "Name": "sdn"
+          }
+        ]
+      },
+      "openshift-sdn/sdn-78bx2": {
+        "Name": "sdn-78bx2",
+        "UID": "29b5e965-cbd3-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-sdn",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-node",
+              "Tag": "v3.10",
+              "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+              "Priority": 1
+            },
+            "Name": "sdn"
+          }
+        ]
+      },
+      "openshift-sdn/sdn-8vb8d": {
+        "Name": "sdn-8vb8d",
+        "UID": "ef3186c4-cbd2-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-sdn",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-node",
+              "Tag": "v3.10",
+              "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+              "Priority": 1
+            },
+            "Name": "sdn"
+          }
+        ]
+      },
+      "openshift-sdn/sdn-9tv75": {
+        "Name": "sdn-9tv75",
+        "UID": "2a1396b5-cbd3-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-sdn",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-node",
+              "Tag": "v3.10",
+              "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+              "Priority": 1
+            },
+            "Name": "sdn"
+          }
+        ]
+      },
+      "openshift-template-service-broker/apiserver-96jxv": {
+        "Name": "apiserver-96jxv",
+        "UID": "7379c8ab-cbd4-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-template-service-broker",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-template-service-broker",
+              "Tag": "v3.10",
+              "Sha": "9ec88a8f9e9d8ca7912390bdc894a7e736bb25ec281da20c771236ce90e8d041",
+              "Priority": 1
+            },
+            "Name": "c"
+          }
+        ]
+      },
+      "openshift-web-console/webconsole-57d88df7d9-8bpgq": {
+        "Name": "webconsole-57d88df7d9-8bpgq",
+        "UID": "cbe31aa3-cbd3-11e8-9d45-005056b953a6",
+        "Namespace": "openshift-web-console",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/openshift/origin-web-console",
+              "Tag": "v3.10",
+              "Sha": "f21a591a5f0d462b045ecfcc51e5f00152ff16dc34fa4bc217ab31ed858c8487",
+              "Priority": 1
+            },
+            "Name": "webconsole"
+          }
+        ]
+      },
+      "ops/perceptor-scanner-xkjp9": {
+        "Name": "perceptor-scanner-xkjp9",
+        "UID": "0aad582c-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "ops",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "gcr.io/saas-hub-stg/blackducksoftware/perceptor-imagefacade",
+              "Tag": "master",
+              "Sha": "cbb81fca618561a607e14ca39c60755cef56e4ba74eb2282169c372745853f72",
+              "Priority": 1
+            },
+            "Name": "perceptor-imagefacade"
+          },
+          {
+            "Image": {
+              "Repository": "gcr.io/saas-hub-stg/blackducksoftware/perceptor-scanner",
+              "Tag": "master",
+              "Sha": "fce873f0d33472d019908fde6bb1e1298434ebd83f0ad374215d836552f70c8f",
+              "Priority": 1
+            },
+            "Name": "perceptor-scanner"
+          }
+        ]
+      },
+      "ops/perceptor-w4nfg": {
+        "Name": "perceptor-w4nfg",
+        "UID": "0aac3377-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "ops",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "gcr.io/saas-hub-stg/blackducksoftware/perceptor",
+              "Tag": "master",
+              "Sha": "89344a9512549b49637c0934eab801d4b64a0ba7eb392d486b753350648385b7",
+              "Priority": 1
+            },
+            "Name": "perceptor"
+          }
+        ]
+      },
+      "ops/pod-perceiver-s9qq6": {
+        "Name": "pod-perceiver-s9qq6",
+        "UID": "0aba6bec-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "ops",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "gcr.io/saas-hub-stg/blackducksoftware/pod-perceiver",
+              "Tag": "master",
+              "Sha": "e487fec26b5b3709babba5db1e931e229f40e4e551e9e755b4d432a1b35d3de9",
+              "Priority": 1
+            },
+            "Name": "pod-perceiver"
+          }
+        ]
+      },
+      "ops/prometheus-dc9854f47-9djnh": {
+        "Name": "prometheus-dc9854f47-9djnh",
+        "UID": "0ac01140-d6f5-11e8-b402-005056b953a6",
+        "Namespace": "ops",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "docker.io/prom/prometheus",
+              "Tag": "v2.1.0",
+              "Sha": "7b987901dbc44d17a88e7bda42dbbbb743c161e3152662959acd9f35aeefb9a3",
+              "Priority": 1
+            },
+            "Name": "prometheus"
+          }
+        ]
+      }
+    },
+    "Images": {
+      "0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 20:04:36.345351127 +0000 UTC m=+4215.637761444",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 29,
+                  "LOW": 15,
+                  "MEDIUM": 5,
+                  "OK": 128,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 67,
+                  "LOW": 0,
+                  "MEDIUM": 57,
+                  "OK": 53,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 92,
+                  "LOW": 23,
+                  "MEDIUM": 33,
+                  "OK": 29,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 80,
+                  "LOW": 27,
+                  "MEDIUM": 37,
+                  "OK": 33,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 18,
+                  "LOW": 4,
+                  "MEDIUM": 17,
+                  "OK": 138,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T20:04:22.817Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T20:02:33.228Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 177
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T19:55:06.184Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T20:04:22.903Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/7c6ad770-8909-4d82-a5c9-91e833e19bc9/versions/eae1100b-5f02-4824-8234-665ba8726679/components",
+          "CodeLocationCreatedAt": "2018-10-23T19:55:08.350Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/f513628a-c929-44e3-aad3-9590ee834115",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/7c6ad770-8909-4d82-a5c9-91e833e19bc9/versions/eae1100b-5f02-4824-8234-665ba8726679",
+          "CodeLocationName": "0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:1db486ac-c96c-377a-9b64-b1d77a709c39",
+          "CodeLocationUpdatedAt": "2018-10-23T20:04:22.907Z"
+        },
+        "ImageSha": "0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10",
+        "RepoTags": [
+          {
+            "Repository": "registry.access.redhat.com/rhscl/postgresql-96-rhel7",
+            "Tag": "1"
+          }
+        ],
+        "Priority": -1
+      },
+      "2a04b187eaad83ee2059d853b191391fc5f7f59338bb04d57629d40cdad4fcd6": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 20:52:36.069815277 +0000 UTC m=+7095.362225345",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 56,
+                  "LOW": 34,
+                  "MEDIUM": 2,
+                  "OK": 208,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 27,
+                  "LOW": 0,
+                  "MEDIUM": 39,
+                  "OK": 234,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 114,
+                  "LOW": 90,
+                  "MEDIUM": 46,
+                  "OK": 50,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 80,
+                  "LOW": 98,
+                  "MEDIUM": 57,
+                  "OK": 65,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 6,
+                  "LOW": 16,
+                  "MEDIUM": 24,
+                  "OK": 254,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T20:52:05.239Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T20:50:34.945Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 300
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T20:07:37.264Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T20:52:05.311Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/8c72bb25-4189-42ac-b787-4701918c8efa/versions/cce61a2a-e719-4762-8164-b2f3750f2278/components",
+          "CodeLocationCreatedAt": "2018-10-23T20:07:39.104Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/f6ac145c-7810-453c-b5bb-949c747d0822",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/8c72bb25-4189-42ac-b787-4701918c8efa/versions/cce61a2a-e719-4762-8164-b2f3750f2278",
+          "CodeLocationName": "2a04b187eaad83ee2059d853b191391fc5f7f59338bb04d57629d40cdad4fcd6",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:b0237e23-e30e-38bd-affc-9f8d81d48df7",
+          "CodeLocationUpdatedAt": "2018-10-23T20:52:05.314Z"
+        },
+        "ImageSha": "2a04b187eaad83ee2059d853b191391fc5f7f59338bb04d57629d40cdad4fcd6",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/blackducksoftware/hub-webapp",
+            "Tag": "5.0.0"
+          }
+        ],
+        "Priority": -1
+      },
+      "34089e1bc048d43e6bcaf597f6c68e909d7b7cd256b2b1a8c8a609ff2ac3ecde": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 23:44:35.96738901 +0000 UTC m=+17415.259800273",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 25,
+                  "LOW": 16,
+                  "MEDIUM": 3,
+                  "OK": 170,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 74,
+                  "LOW": 0,
+                  "MEDIUM": 69,
+                  "OK": 71,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 28,
+                  "LOW": 71,
+                  "MEDIUM": 5,
+                  "OK": 110,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 5,
+                  "LOW": 74,
+                  "MEDIUM": 6,
+                  "OK": 129,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 3,
+                  "LOW": 9,
+                  "MEDIUM": 9,
+                  "OK": 193,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T23:43:46.645Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T23:42:42.025Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 214
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T23:35:15.084Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T23:43:46.702Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/fc89312f-5c5e-4591-a3ff-0e984380e4c3/versions/dcd64968-008f-49a9-89ac-012c093878ef/components",
+          "CodeLocationCreatedAt": "2018-10-23T23:35:25.976Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/b109ca48-f6c9-4cbd-b7a6-e2899e63750d",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/fc89312f-5c5e-4591-a3ff-0e984380e4c3/versions/dcd64968-008f-49a9-89ac-012c093878ef",
+          "CodeLocationName": "34089e1bc048d43e6bcaf597f6c68e909d7b7cd256b2b1a8c8a609ff2ac3ecde",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:df1c09c5-7ff4-3d19-96bc-0f990434c860",
+          "CodeLocationUpdatedAt": "2018-10-23T23:43:46.708Z"
+        },
+        "ImageSha": "34089e1bc048d43e6bcaf597f6c68e909d7b7cd256b2b1a8c8a609ff2ac3ecde",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/cockpit/kubernetes",
+            "Tag": "latest"
+          }
+        ],
+        "Priority": -1
+      },
+      "384a8f6624ad47b949ac15a76118de650b9e28e33549459522764169d3129b00": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 22:56:35.986362937 +0000 UTC m=+14535.278773099",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 37,
+                  "LOW": 16,
+                  "MEDIUM": 1,
+                  "OK": 132,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 8,
+                  "LOW": 0,
+                  "MEDIUM": 33,
+                  "OK": 145,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 74,
+                  "LOW": 58,
+                  "MEDIUM": 28,
+                  "OK": 26,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 52,
+                  "LOW": 65,
+                  "MEDIUM": 34,
+                  "OK": 35,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 1,
+                  "LOW": 11,
+                  "MEDIUM": 13,
+                  "OK": 161,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T22:56:20.804Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T22:55:47.795Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 186
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T20:57:33.199Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T22:56:20.842Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/996111c1-e55b-4dda-ba22-996b35373fff/versions/b32272b5-0d74-4eca-a575-9c53d890662d/components",
+          "CodeLocationCreatedAt": "2018-10-23T20:57:38.495Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/ae41d3c2-1da1-4ff5-bc34-87469ca44f3f",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/996111c1-e55b-4dda-ba22-996b35373fff/versions/b32272b5-0d74-4eca-a575-9c53d890662d",
+          "CodeLocationName": "384a8f6624ad47b949ac15a76118de650b9e28e33549459522764169d3129b00",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:9a4c603c-3735-38b3-8228-1dec8b7211f6",
+          "CodeLocationUpdatedAt": "2018-10-23T22:56:20.848Z"
+        },
+        "ImageSha": "384a8f6624ad47b949ac15a76118de650b9e28e33549459522764169d3129b00",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/blackducksoftware/hub-documentation",
+            "Tag": "5.0.0"
+          }
+        ],
+        "Priority": -1
+      },
+      "3fc75e5245e7f92516b107a4345a8f87ef49e1d9af0b605b55f952871de61b8a": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 23:55:36.386801944 +0000 UTC m=+18075.679211923",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 33,
+                  "LOW": 27,
+                  "MEDIUM": 4,
+                  "OK": 167,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 29,
+                  "LOW": 0,
+                  "MEDIUM": 20,
+                  "OK": 182,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 65,
+                  "LOW": 96,
+                  "MEDIUM": 34,
+                  "OK": 36,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 48,
+                  "LOW": 103,
+                  "MEDIUM": 38,
+                  "OK": 42,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 5,
+                  "LOW": 17,
+                  "MEDIUM": 19,
+                  "OK": 190,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T23:55:24.444Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T23:54:30.083Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 231
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T23:45:06.647Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T23:55:24.501Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/1eba55a7-80a8-4b3c-ad38-115651b74132/versions/7f0ed7db-90bd-4035-856f-381be3099b6a/components",
+          "CodeLocationCreatedAt": "2018-10-23T23:45:19.657Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/35ed27d4-8b98-4cc6-82a4-21365cd2d633",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/1eba55a7-80a8-4b3c-ad38-115651b74132/versions/7f0ed7db-90bd-4035-856f-381be3099b6a",
+          "CodeLocationName": "3fc75e5245e7f92516b107a4345a8f87ef49e1d9af0b605b55f952871de61b8a",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:2b2c2e47-137a-37a9-8227-e54583465415",
+          "CodeLocationUpdatedAt": "2018-10-23T23:55:24.506Z"
+        },
+        "ImageSha": "3fc75e5245e7f92516b107a4345a8f87ef49e1d9af0b605b55f952871de61b8a",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/blackducksoftware/hub-solr",
+            "Tag": "5.0.0"
+          }
+        ],
+        "Priority": -1
+      },
+      "43fbc8a457aa0cb887da63d74a48659e13947cb74b96a53ba8f47abb6172a948": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-24 00:25:36.036534593 +0000 UTC m=+19875.328944642",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 1,
+                  "LOW": 3,
+                  "MEDIUM": 0,
+                  "OK": 6,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 4,
+                  "LOW": 0,
+                  "MEDIUM": 0,
+                  "OK": 6,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 1,
+                  "LOW": 8,
+                  "MEDIUM": 0,
+                  "OK": 1,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 0,
+                  "LOW": 9,
+                  "MEDIUM": 0,
+                  "OK": 1,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 0,
+                  "LOW": 2,
+                  "MEDIUM": 2,
+                  "OK": 6,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-24T00:25:32.922Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-24T00:25:31.103Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 10
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-24T00:24:57.319Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-24T00:25:29.943Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/eefaf050-d8b7-4c8d-90c9-cd7b9b605ee2/versions/b37f84d2-e4f7-40b2-9633-4f78139971d6/components",
+          "CodeLocationCreatedAt": "2018-10-24T00:25:17.203Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/a99190e6-760d-40be-9cb0-f3d024aa9f15",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/eefaf050-d8b7-4c8d-90c9-cd7b9b605ee2/versions/b37f84d2-e4f7-40b2-9633-4f78139971d6",
+          "CodeLocationName": "43fbc8a457aa0cb887da63d74a48659e13947cb74b96a53ba8f47abb6172a948",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:48ce4a30-9171-323e-bdf1-b8e663f77533",
+          "CodeLocationUpdatedAt": "2018-10-24T00:25:32.969Z"
+        },
+        "ImageSha": "43fbc8a457aa0cb887da63d74a48659e13947cb74b96a53ba8f47abb6172a948",
+        "RepoTags": [
+          {
+            "Repository": "quay.io/coreos/etcd",
+            "Tag": "v3.2.22"
+          }
+        ],
+        "Priority": -1
+      },
+      "445483b6fad99ce3058a889c5ac46780a88843f9349d1e4e54786b9364f4b652": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-24 00:35:36.02094525 +0000 UTC m=+20475.313355314",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 47,
+                  "LOW": 26,
+                  "MEDIUM": 2,
+                  "OK": 158,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 22,
+                  "LOW": 0,
+                  "MEDIUM": 22,
+                  "OK": 189,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 86,
+                  "LOW": 72,
+                  "MEDIUM": 33,
+                  "OK": 42,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 57,
+                  "LOW": 78,
+                  "MEDIUM": 42,
+                  "OK": 56,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 1,
+                  "LOW": 15,
+                  "MEDIUM": 17,
+                  "OK": 200,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-24T00:35:03.519Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-24T00:34:12.469Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 233
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-24T00:14:10.108Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-24T00:35:03.574Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/960b5c8b-2e8c-4789-979e-e7b4d3b88661/versions/3bc78c41-4760-4476-ae27-39c41d7679de/components",
+          "CodeLocationCreatedAt": "2018-10-24T00:14:18.831Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/e340abec-fe08-4042-a6d4-7048ccd668c2",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/960b5c8b-2e8c-4789-979e-e7b4d3b88661/versions/3bc78c41-4760-4476-ae27-39c41d7679de",
+          "CodeLocationName": "445483b6fad99ce3058a889c5ac46780a88843f9349d1e4e54786b9364f4b652",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:b6647aa6-2341-306c-b872-5dcb4c246234",
+          "CodeLocationUpdatedAt": "2018-10-24T00:35:03.578Z"
+        },
+        "ImageSha": "445483b6fad99ce3058a889c5ac46780a88843f9349d1e4e54786b9364f4b652",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/blackducksoftware/hub-jobrunner",
+            "Tag": "5.0.0"
+          }
+        ],
+        "Priority": -1
+      },
+      "46b9b555e18e3d6e00b6eab06b3f80a48b8e510f9b0e840f476fa8f8242fdb48": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-24 00:13:36.046108769 +0000 UTC m=+19155.338518816",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 35,
+                  "LOW": 21,
+                  "MEDIUM": 4,
+                  "OK": 156,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 90,
+                  "LOW": 0,
+                  "MEDIUM": 62,
+                  "OK": 64,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 109,
+                  "LOW": 35,
+                  "MEDIUM": 37,
+                  "OK": 35,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 92,
+                  "LOW": 40,
+                  "MEDIUM": 45,
+                  "OK": 39,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 22,
+                  "LOW": 5,
+                  "MEDIUM": 20,
+                  "OK": 169,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-24T00:13:14.354Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-24T00:11:22.002Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 216
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-24T00:03:17.347Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-24T00:13:14.444Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/b0852fd3-9a61-43a1-a69a-495b4f7fdf90/versions/e705afac-d99f-4163-9c96-b9973348061f/components",
+          "CodeLocationCreatedAt": "2018-10-24T00:03:25.981Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/5c901dbe-8cd1-46c7-8b05-8131c0ed3e8c",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/b0852fd3-9a61-43a1-a69a-495b4f7fdf90/versions/e705afac-d99f-4163-9c96-b9973348061f",
+          "CodeLocationName": "46b9b555e18e3d6e00b6eab06b3f80a48b8e510f9b0e840f476fa8f8242fdb48",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:9aa30398-2880-3bdc-8607-25e66817729c",
+          "CodeLocationUpdatedAt": "2018-10-24T00:13:14.450Z"
+        },
+        "ImageSha": "46b9b555e18e3d6e00b6eab06b3f80a48b8e510f9b0e840f476fa8f8242fdb48",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/openshift/origin-haproxy-router",
+            "Tag": "v3.10"
+          }
+        ],
+        "Priority": -1
+      },
+      "5bce4ddb0a74e48d5a884f1812f18fe80e2bba0caefa258c49de93a5abf2409a": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 23:57:36.090841901 +0000 UTC m=+18195.383252038",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 0,
+                  "LOW": 6,
+                  "MEDIUM": 0,
+                  "OK": 14,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 6,
+                  "LOW": 0,
+                  "MEDIUM": 4,
+                  "OK": 10,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 1,
+                  "LOW": 13,
+                  "MEDIUM": 5,
+                  "OK": 1,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 1,
+                  "LOW": 13,
+                  "MEDIUM": 5,
+                  "OK": 1,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 4,
+                  "LOW": 1,
+                  "MEDIUM": 3,
+                  "OK": 12,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T23:56:36.338Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T23:56:29.298Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 20
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T23:55:52.498Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T23:56:36.372Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/be6e641c-0859-4d9f-ae1a-5214ecd9e164/versions/be184ca1-e8a8-4976-b5cd-d1215fc0fcf2/components",
+          "CodeLocationCreatedAt": "2018-10-23T23:56:02.989Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/880e98d8-9aca-407d-b23c-2fbbb132292a",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/be6e641c-0859-4d9f-ae1a-5214ecd9e164/versions/be184ca1-e8a8-4976-b5cd-d1215fc0fcf2",
+          "CodeLocationName": "5bce4ddb0a74e48d5a884f1812f18fe80e2bba0caefa258c49de93a5abf2409a",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:673c086d-9a6e-3292-a57b-a2d13fc2ccb9",
+          "CodeLocationUpdatedAt": "2018-10-23T23:56:36.380Z"
+        },
+        "ImageSha": "5bce4ddb0a74e48d5a884f1812f18fe80e2bba0caefa258c49de93a5abf2409a",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/blackducksoftware/hub-nginx",
+            "Tag": "5.0.0"
+          }
+        ],
+        "Priority": -1
+      },
+      "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 19:43:36.076875077 +0000 UTC m=+2955.369285100",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 26,
+                  "LOW": 17,
+                  "MEDIUM": 4,
+                  "OK": 108,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 64,
+                  "LOW": 0,
+                  "MEDIUM": 45,
+                  "OK": 46,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 80,
+                  "LOW": 20,
+                  "MEDIUM": 29,
+                  "OK": 26,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 68,
+                  "LOW": 24,
+                  "MEDIUM": 35,
+                  "OK": 28,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 21,
+                  "LOW": 4,
+                  "MEDIUM": 19,
+                  "OK": 111,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T19:42:39.685Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T19:40:04.679Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 155
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T19:33:19.994Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T19:42:39.971Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/c82f0c9a-85a2-493f-977d-4182e4896773/versions/6723556a-fb48-462c-a49e-11defed614ec/components",
+          "CodeLocationCreatedAt": "2018-10-23T19:33:41.145Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/39fdaae7-bbc6-4995-a721-6bdc27ac5f0d",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/c82f0c9a-85a2-493f-977d-4182e4896773/versions/6723556a-fb48-462c-a49e-11defed614ec",
+          "CodeLocationName": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:21e0a45c-bd96-3b9d-b155-99064aad11c5",
+          "CodeLocationUpdatedAt": "2018-10-23T19:42:39.980Z"
+        },
+        "ImageSha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/openshift/origin-docker-registry",
+            "Tag": "v3.10"
+          }
+        ],
+        "Priority": -1
+      },
+      "7a747ba11187823c8d4f5c10ed7fb77ccb65196e9119066d23c77bddc4935e4c": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 23:34:36.15599213 +0000 UTC m=+16815.448402239",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 17,
+                  "LOW": 14,
+                  "MEDIUM": 1,
+                  "OK": 80,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 20,
+                  "LOW": 0,
+                  "MEDIUM": 15,
+                  "OK": 77,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 42,
+                  "LOW": 39,
+                  "MEDIUM": 9,
+                  "OK": 22,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 33,
+                  "LOW": 43,
+                  "MEDIUM": 10,
+                  "OK": 26,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 1,
+                  "LOW": 17,
+                  "MEDIUM": 7,
+                  "OK": 87,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T23:34:31.573Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T23:34:00.976Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 112
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T22:57:08.254Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T23:34:31.612Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/6140617b-8aff-46b9-9440-545b75ef94a3/versions/b3955d34-baea-48c2-9038-a83b14c82ecb/components",
+          "CodeLocationCreatedAt": "2018-10-23T22:57:18.320Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/d25da754-29fa-493f-90ec-8d464d3ee4af",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/6140617b-8aff-46b9-9440-545b75ef94a3/versions/b3955d34-baea-48c2-9038-a83b14c82ecb",
+          "CodeLocationName": "7a747ba11187823c8d4f5c10ed7fb77ccb65196e9119066d23c77bddc4935e4c",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:0a787dbf-718a-366a-b8ec-2f1dbe4059b2",
+          "CodeLocationUpdatedAt": "2018-10-23T23:34:31.618Z"
+        },
+        "ImageSha": "7a747ba11187823c8d4f5c10ed7fb77ccb65196e9119066d23c77bddc4935e4c",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/blackducksoftware/hub-registration",
+            "Tag": "5.0.0"
+          }
+        ],
+        "Priority": -1
+      },
+      "7b50902e49af679c5d81ad0f8d556ed83abbce41abe8ac9a458ff3d2bbea29e1": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 20:04:37.112445747 +0000 UTC m=+4216.404856007",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 35,
+                  "LOW": 21,
+                  "MEDIUM": 4,
+                  "OK": 155,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 89,
+                  "LOW": 0,
+                  "MEDIUM": 62,
+                  "OK": 64,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 109,
+                  "LOW": 35,
+                  "MEDIUM": 37,
+                  "OK": 34,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 92,
+                  "LOW": 40,
+                  "MEDIUM": 45,
+                  "OK": 38,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 22,
+                  "LOW": 5,
+                  "MEDIUM": 20,
+                  "OK": 168,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T20:03:50.919Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T19:59:21.752Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 215
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T19:51:21.608Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T20:03:51.014Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/e52703fa-f439-4ed5-aefc-09e80add00fa/versions/02355888-0d1c-4479-958b-ed48b93c0e59/components",
+          "CodeLocationCreatedAt": "2018-10-23T19:51:22.900Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/0da87acc-c8d6-41c8-ab2b-b68a2a14d6ad",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/e52703fa-f439-4ed5-aefc-09e80add00fa/versions/02355888-0d1c-4479-958b-ed48b93c0e59",
+          "CodeLocationName": "7b50902e49af679c5d81ad0f8d556ed83abbce41abe8ac9a458ff3d2bbea29e1",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:0b4964e2-0b40-382f-ae7a-1191aea5cc00",
+          "CodeLocationUpdatedAt": "2018-10-23T20:03:51.024Z"
+        },
+        "ImageSha": "7b50902e49af679c5d81ad0f8d556ed83abbce41abe8ac9a458ff3d2bbea29e1",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/openshift/origin-control-plane",
+            "Tag": "v3.10"
+          }
+        ],
+        "Priority": -1
+      },
+      "7b987901dbc44d17a88e7bda42dbbbb743c161e3152662959acd9f35aeefb9a3": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-24 00:35:36.195459993 +0000 UTC m=+20475.487870118",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 0,
+                  "LOW": 0,
+                  "MEDIUM": 0,
+                  "OK": 4,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 1,
+                  "LOW": 0,
+                  "MEDIUM": 0,
+                  "OK": 3,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 0,
+                  "LOW": 4,
+                  "MEDIUM": 0,
+                  "OK": 0,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 0,
+                  "LOW": 4,
+                  "MEDIUM": 0,
+                  "OK": 0,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 0,
+                  "LOW": 0,
+                  "MEDIUM": 0,
+                  "OK": 4,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-24T00:34:56.847Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-24T00:34:53.373Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 4
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-24T00:34:02.086Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-24T00:34:56.898Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/3f563a61-efc7-4f2b-8860-84d8e75e5c21/versions/2c2a33c1-33a1-4db4-b91b-685553325a01/components",
+          "CodeLocationCreatedAt": "2018-10-24T00:34:15.500Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/3f14668a-5223-4d2b-a926-c07fc998980e",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/3f563a61-efc7-4f2b-8860-84d8e75e5c21/versions/2c2a33c1-33a1-4db4-b91b-685553325a01",
+          "CodeLocationName": "7b987901dbc44d17a88e7bda42dbbbb743c161e3152662959acd9f35aeefb9a3",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:691d161f-1498-3818-8207-7e2989ee49a8",
+          "CodeLocationUpdatedAt": "2018-10-24T00:34:56.908Z"
+        },
+        "ImageSha": "7b987901dbc44d17a88e7bda42dbbbb743c161e3152662959acd9f35aeefb9a3",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/prom/prometheus",
+            "Tag": "v2.1.0"
+          }
+        ],
+        "Priority": -1
+      },
+      "7cb4af8632f9e3fd435fbf1232eada331d7acd42ed227c64febd11e02039eedb": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 22:10:36.020637033 +0000 UTC m=+11775.313047252",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 57,
+                  "LOW": 36,
+                  "MEDIUM": 4,
+                  "OK": 268,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 77,
+                  "LOW": 0,
+                  "MEDIUM": 55,
+                  "OK": 233,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 127,
+                  "LOW": 79,
+                  "MEDIUM": 88,
+                  "OK": 71,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 94,
+                  "LOW": 85,
+                  "MEDIUM": 101,
+                  "OK": 85,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 25,
+                  "LOW": 10,
+                  "MEDIUM": 36,
+                  "OK": 294,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T22:10:29.266Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T22:07:30.113Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 365
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T21:51:51.012Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T22:10:29.362Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/50232094-315d-44d1-bd3e-92c4b9b05421/versions/c7dfc037-03ba-4406-abf6-adbcbc385e3b/components",
+          "CodeLocationCreatedAt": "2018-10-23T21:51:58.394Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/67420100-1fb9-42fb-91b4-adcd020de981",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/50232094-315d-44d1-bd3e-92c4b9b05421/versions/c7dfc037-03ba-4406-abf6-adbcbc385e3b",
+          "CodeLocationName": "7cb4af8632f9e3fd435fbf1232eada331d7acd42ed227c64febd11e02039eedb",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:c6d550e4-f26a-3e72-9bcc-7b76214774be",
+          "CodeLocationUpdatedAt": "2018-10-23T22:10:29.368Z"
+        },
+        "ImageSha": "7cb4af8632f9e3fd435fbf1232eada331d7acd42ed227c64febd11e02039eedb",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/blackducksoftware/hub-logstash",
+            "Tag": "5.0.0"
+          }
+        ],
+        "Priority": -1
+      },
+      "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-24 00:23:35.993278495 +0000 UTC m=+19755.285688804",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 49,
+                  "LOW": 24,
+                  "MEDIUM": 4,
+                  "OK": 199,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 118,
+                  "LOW": 0,
+                  "MEDIUM": 76,
+                  "OK": 82,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 132,
+                  "LOW": 50,
+                  "MEDIUM": 45,
+                  "OK": 49,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 107,
+                  "LOW": 56,
+                  "MEDIUM": 59,
+                  "OK": 54,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 25,
+                  "LOW": 8,
+                  "MEDIUM": 30,
+                  "OK": 213,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-24T00:22:58.631Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-24T00:19:49.058Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 276
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-24T00:05:33.630Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-24T00:22:58.702Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/ddd081c0-6e60-4e9b-964c-052c14216954/versions/ebc2ca3d-3479-410a-b459-0c23bcb60afb/components",
+          "CodeLocationCreatedAt": "2018-10-24T00:05:44.530Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/a2be27e4-732a-4658-99a6-85f707826810",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/ddd081c0-6e60-4e9b-964c-052c14216954/versions/ebc2ca3d-3479-410a-b459-0c23bcb60afb",
+          "CodeLocationName": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:0ed3f9fb-ce52-3436-a976-93d93893191b",
+          "CodeLocationUpdatedAt": "2018-10-24T00:22:58.708Z"
+        },
+        "ImageSha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/openshift/origin-node",
+            "Tag": "v3.10"
+          }
+        ],
+        "Priority": -1
+      },
+      "89344a9512549b49637c0934eab801d4b64a0ba7eb392d486b753350648385b7": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-24 00:04:36.001907272 +0000 UTC m=+18615.294317397",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 25,
+                  "LOW": 16,
+                  "MEDIUM": 4,
+                  "OK": 100,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 60,
+                  "LOW": 0,
+                  "MEDIUM": 43,
+                  "OK": 42,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 75,
+                  "LOW": 20,
+                  "MEDIUM": 27,
+                  "OK": 23,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 63,
+                  "LOW": 24,
+                  "MEDIUM": 33,
+                  "OK": 25,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 18,
+                  "LOW": 4,
+                  "MEDIUM": 18,
+                  "OK": 105,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-24T00:04:05.496Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-24T00:03:13.532Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 145
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T23:58:06.780Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-24T00:04:05.562Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/2a0953f0-1dd3-4a44-9551-17e7a8856def/versions/cbb8151f-e973-4934-820a-18cf060051c5/components",
+          "CodeLocationCreatedAt": "2018-10-23T23:58:16.236Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/6b937cc2-ac0d-4d33-8937-1295a749ba73",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/2a0953f0-1dd3-4a44-9551-17e7a8856def/versions/cbb8151f-e973-4934-820a-18cf060051c5",
+          "CodeLocationName": "89344a9512549b49637c0934eab801d4b64a0ba7eb392d486b753350648385b7",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:f6654920-1aa7-3289-a0ac-f82c2b60a4e6",
+          "CodeLocationUpdatedAt": "2018-10-24T00:04:05.565Z"
+        },
+        "ImageSha": "89344a9512549b49637c0934eab801d4b64a0ba7eb392d486b753350648385b7",
+        "RepoTags": [
+          {
+            "Repository": "gcr.io/saas-hub-stg/blackducksoftware/perceptor",
+            "Tag": "master"
+          }
+        ],
+        "Priority": -1
+      },
+      "8e0e64477971f410ce5dad1b7b14ec2f79c491af5dfecda05f687798a06e8877": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 20:11:35.98568104 +0000 UTC m=+4635.278091208",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 15,
+                  "LOW": 19,
+                  "MEDIUM": 1,
+                  "OK": 96,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 19,
+                  "LOW": 0,
+                  "MEDIUM": 23,
+                  "OK": 89,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 73,
+                  "LOW": 29,
+                  "MEDIUM": 9,
+                  "OK": 20,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 65,
+                  "LOW": 33,
+                  "MEDIUM": 10,
+                  "OK": 23,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 1,
+                  "LOW": 9,
+                  "MEDIUM": 9,
+                  "OK": 112,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T20:10:58.668Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T20:10:28.667Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 131
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T20:05:09.851Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T20:10:58.711Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/5e51a460-9eed-4d2a-ab7c-fe229133e830/versions/26394621-db15-4bc9-8eb5-193727526967/components",
+          "CodeLocationCreatedAt": "2018-10-23T20:05:11.693Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/3ff2da2d-a235-4421-b51c-c516f02d9c79",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/5e51a460-9eed-4d2a-ab7c-fe229133e830/versions/26394621-db15-4bc9-8eb5-193727526967",
+          "CodeLocationName": "8e0e64477971f410ce5dad1b7b14ec2f79c491af5dfecda05f687798a06e8877",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:5ccaafdc-6fbe-3be7-b8d3-caffb285a155",
+          "CodeLocationUpdatedAt": "2018-10-23T20:10:58.716Z"
+        },
+        "ImageSha": "8e0e64477971f410ce5dad1b7b14ec2f79c491af5dfecda05f687798a06e8877",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/blackducksoftware/hub-zookeeper",
+            "Tag": "5.0.0"
+          }
+        ],
+        "Priority": -1
+      },
+      "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 21:42:36.175034221 +0000 UTC m=+10095.467444235",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 128,
+                  "LOW": 34,
+                  "MEDIUM": 2,
+                  "OK": 736,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 107,
+                  "LOW": 0,
+                  "MEDIUM": 39,
+                  "OK": 754,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 213,
+                  "LOW": 218,
+                  "MEDIUM": 101,
+                  "OK": 368,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 122,
+                  "LOW": 243,
+                  "MEDIUM": 123,
+                  "OK": 412,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 27,
+                  "LOW": 14,
+                  "MEDIUM": 42,
+                  "OK": 817,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T21:42:10.423Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T21:27:20.568Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 900
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T20:53:55.982Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T21:42:10.599Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/afb39c42-e75f-4e50-b0d9-6790ca2b8e48/versions/67aedd15-557d-43b2-8f2c-dbe007d94a13/components",
+          "CodeLocationCreatedAt": "2018-10-23T20:54:00.212Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/a180cd7b-c617-4841-8a40-a2d8f5ce9755",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/afb39c42-e75f-4e50-b0d9-6790ca2b8e48/versions/67aedd15-557d-43b2-8f2c-dbe007d94a13",
+          "CodeLocationName": "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:9bd9db4b-9f97-3a4a-bdea-b81705848210",
+          "CodeLocationUpdatedAt": "2018-10-23T21:42:10.604Z"
+        },
+        "ImageSha": "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42",
+        "RepoTags": [
+          {
+            "Repository": "gcr.io/saas-hub-stg/blackducksoftware/protoform-installer",
+            "Tag": "master"
+          }
+        ],
+        "Priority": -1
+      },
+      "9bfb79c54c7b4544a5664fc8536b4ab7e488a6ed71a0212943e1cce567f5df0e": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 20:38:36.00809949 +0000 UTC m=+6255.300509681",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 25,
+                  "LOW": 16,
+                  "MEDIUM": 4,
+                  "OK": 100,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 60,
+                  "LOW": 0,
+                  "MEDIUM": 43,
+                  "OK": 42,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 75,
+                  "LOW": 20,
+                  "MEDIUM": 27,
+                  "OK": 23,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 63,
+                  "LOW": 24,
+                  "MEDIUM": 33,
+                  "OK": 25,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 18,
+                  "LOW": 4,
+                  "MEDIUM": 18,
+                  "OK": 105,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T20:38:21.429Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T20:36:27.800Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 145
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T20:31:08.721Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T20:38:21.492Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/8321bf91-7c4e-4c7d-ab3b-373c4590f55d/versions/78288d81-3352-46a1-8e4e-0205e51d56f3/components",
+          "CodeLocationCreatedAt": "2018-10-23T20:31:14.215Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/d9c5c7a6-2974-49d6-adaf-bdca001f659e",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/8321bf91-7c4e-4c7d-ab3b-373c4590f55d/versions/78288d81-3352-46a1-8e4e-0205e51d56f3",
+          "CodeLocationName": "9bfb79c54c7b4544a5664fc8536b4ab7e488a6ed71a0212943e1cce567f5df0e",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:b107feec-27b9-372f-afdc-bf6981d796e2",
+          "CodeLocationUpdatedAt": "2018-10-23T20:38:21.498Z"
+        },
+        "ImageSha": "9bfb79c54c7b4544a5664fc8536b4ab7e488a6ed71a0212943e1cce567f5df0e",
+        "RepoTags": [
+          {
+            "Repository": "gcr.io/saas-hub-stg/blackducksoftware/federator",
+            "Tag": "master"
+          }
+        ],
+        "Priority": -1
+      },
+      "9ec88a8f9e9d8ca7912390bdc894a7e736bb25ec281da20c771236ce90e8d041": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 20:30:36.100344746 +0000 UTC m=+5775.392755012",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 25,
+                  "LOW": 16,
+                  "MEDIUM": 4,
+                  "OK": 100,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 60,
+                  "LOW": 0,
+                  "MEDIUM": 43,
+                  "OK": 42,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 75,
+                  "LOW": 20,
+                  "MEDIUM": 27,
+                  "OK": 23,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 63,
+                  "LOW": 24,
+                  "MEDIUM": 33,
+                  "OK": 25,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 18,
+                  "LOW": 4,
+                  "MEDIUM": 19,
+                  "OK": 104,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T20:30:06.818Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T20:28:48.026Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 145
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T20:24:02.244Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T20:30:06.923Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/dd457e42-7ffd-4d7c-8bf8-e68de0737224/versions/1c2be47d-675f-4aa0-a60a-b26202df3ac0/components",
+          "CodeLocationCreatedAt": "2018-10-23T20:24:07.304Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/73b0eced-5165-4c38-b236-e4a963ea72ea",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/dd457e42-7ffd-4d7c-8bf8-e68de0737224/versions/1c2be47d-675f-4aa0-a60a-b26202df3ac0",
+          "CodeLocationName": "9ec88a8f9e9d8ca7912390bdc894a7e736bb25ec281da20c771236ce90e8d041",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:3ae51ec4-f7d7-3443-85c1-575cf7c237cf",
+          "CodeLocationUpdatedAt": "2018-10-23T20:30:06.933Z"
+        },
+        "ImageSha": "9ec88a8f9e9d8ca7912390bdc894a7e736bb25ec281da20c771236ce90e8d041",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/openshift/origin-template-service-broker",
+            "Tag": "v3.10"
+          }
+        ],
+        "Priority": -1
+      },
+      "a8782e5481cca14a9d5b9bf3493456f201417b8cf5a77d3623ae31cdb858b210": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-24 00:02:35.976246474 +0000 UTC m=+18495.268656696",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 40,
+                  "LOW": 23,
+                  "MEDIUM": 1,
+                  "OK": 151,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 20,
+                  "LOW": 0,
+                  "MEDIUM": 23,
+                  "OK": 172,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 72,
+                  "LOW": 76,
+                  "MEDIUM": 27,
+                  "OK": 40,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 48,
+                  "LOW": 80,
+                  "MEDIUM": 35,
+                  "OK": 52,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 1,
+                  "LOW": 14,
+                  "MEDIUM": 15,
+                  "OK": 185,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-24T00:02:05.274Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-24T00:01:11.318Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 215
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T22:11:07.032Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-24T00:02:05.313Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/65583916-ad85-4d7d-83b0-ce3f42fec072/versions/d962db87-a677-4d76-a8ee-5ea13ec417a8/components",
+          "CodeLocationCreatedAt": "2018-10-23T22:11:14.889Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/66791e10-b650-4c4c-975e-f442d12b432e",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/65583916-ad85-4d7d-83b0-ce3f42fec072/versions/d962db87-a677-4d76-a8ee-5ea13ec417a8",
+          "CodeLocationName": "a8782e5481cca14a9d5b9bf3493456f201417b8cf5a77d3623ae31cdb858b210",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:73937c4a-3965-3954-9848-e99a749f926e",
+          "CodeLocationUpdatedAt": "2018-10-24T00:02:05.318Z"
+        },
+        "ImageSha": "a8782e5481cca14a9d5b9bf3493456f201417b8cf5a77d3623ae31cdb858b210",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/blackducksoftware/hub-authentication",
+            "Tag": "5.0.0"
+          }
+        ],
+        "Priority": -1
+      },
+      "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 19:50:36.178138554 +0000 UTC m=+3375.470548702",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 48,
+                  "LOW": 26,
+                  "MEDIUM": 2,
+                  "OK": 167,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 22,
+                  "LOW": 0,
+                  "MEDIUM": 25,
+                  "OK": 196,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 89,
+                  "LOW": 76,
+                  "MEDIUM": 35,
+                  "OK": 43,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 59,
+                  "LOW": 84,
+                  "MEDIUM": 44,
+                  "OK": 56,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 1,
+                  "LOW": 16,
+                  "MEDIUM": 19,
+                  "OK": 207,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T19:50:04.906Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T19:49:01.798Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 243
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T19:34:51.790Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T19:50:04.968Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/db0aee53-b8b6-4ea1-a9b1-1b88cfeb741d/versions/84f8b086-93de-4ff2-834d-12b79400c76f/components",
+          "CodeLocationCreatedAt": "2018-10-23T19:34:52.271Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/c4dffaf1-a16e-452b-9dfe-27faa2ebd641",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/db0aee53-b8b6-4ea1-a9b1-1b88cfeb741d/versions/84f8b086-93de-4ff2-834d-12b79400c76f",
+          "CodeLocationName": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:baa2e57b-adeb-3b73-86a5-21d713596c00",
+          "CodeLocationUpdatedAt": "2018-10-23T19:50:04.978Z"
+        },
+        "ImageSha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/blackducksoftware/hub-scan",
+            "Tag": "5.0.0"
+          }
+        ],
+        "Priority": -1
+      },
+      "c3f9d3c6d00f152f7d3070838cf31cc1483a88a47570be4a75d82af03dc16391": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-24 00:24:36.027283908 +0000 UTC m=+19815.319694092",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 0,
+                  "LOW": 2,
+                  "MEDIUM": 0,
+                  "OK": 9,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 4,
+                  "LOW": 0,
+                  "MEDIUM": 1,
+                  "OK": 6,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 0,
+                  "LOW": 5,
+                  "MEDIUM": 1,
+                  "OK": 5,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 0,
+                  "LOW": 5,
+                  "MEDIUM": 1,
+                  "OK": 5,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 0,
+                  "LOW": 1,
+                  "MEDIUM": 2,
+                  "OK": 8,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-24T00:24:34.607Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-24T00:24:31.419Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 11
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-24T00:23:53.395Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-24T00:24:26.088Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/685f97b2-6f6a-473c-af2c-18e32494e41b/versions/c9d049c7-ae86-4bdd-9aae-10d58f702ff0/components",
+          "CodeLocationCreatedAt": "2018-10-24T00:24:05.432Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/dfb48b18-6c0d-46c2-969f-b924c85a49c6",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/685f97b2-6f6a-473c-af2c-18e32494e41b/versions/c9d049c7-ae86-4bdd-9aae-10d58f702ff0",
+          "CodeLocationName": "c3f9d3c6d00f152f7d3070838cf31cc1483a88a47570be4a75d82af03dc16391",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:1ce9c38d-d9ad-3f9f-a3be-342eeef4972f",
+          "CodeLocationUpdatedAt": "2018-10-24T00:24:34.669Z"
+        },
+        "ImageSha": "c3f9d3c6d00f152f7d3070838cf31cc1483a88a47570be4a75d82af03dc16391",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/blackducksoftware/hub-cfssl",
+            "Tag": "5.0.0"
+          }
+        ],
+        "Priority": -1
+      },
+      "cbb81fca618561a607e14ca39c60755cef56e4ba74eb2282169c372745853f72": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 21:50:35.982389897 +0000 UTC m=+10575.274799942",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 25,
+                  "LOW": 16,
+                  "MEDIUM": 4,
+                  "OK": 100,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 60,
+                  "LOW": 0,
+                  "MEDIUM": 43,
+                  "OK": 42,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 75,
+                  "LOW": 20,
+                  "MEDIUM": 27,
+                  "OK": 23,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 63,
+                  "LOW": 24,
+                  "MEDIUM": 33,
+                  "OK": 25,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 18,
+                  "LOW": 4,
+                  "MEDIUM": 18,
+                  "OK": 105,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T21:49:48.441Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T21:48:29.399Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 145
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T21:43:07.283Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T21:49:48.502Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/0a676a91-62ac-4bf5-a637-4013fbd8e3a1/versions/e6e3a285-a176-46b3-8c97-b1b9f27fd526/components",
+          "CodeLocationCreatedAt": "2018-10-23T21:43:14.852Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/bcd54e59-2195-4f75-86b2-3cb3e293a1da",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/0a676a91-62ac-4bf5-a637-4013fbd8e3a1/versions/e6e3a285-a176-46b3-8c97-b1b9f27fd526",
+          "CodeLocationName": "cbb81fca618561a607e14ca39c60755cef56e4ba74eb2282169c372745853f72",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:79e38835-01ab-376d-81a8-7d739501d6e4",
+          "CodeLocationUpdatedAt": "2018-10-23T21:49:48.510Z"
+        },
+        "ImageSha": "cbb81fca618561a607e14ca39c60755cef56e4ba74eb2282169c372745853f72",
+        "RepoTags": [
+          {
+            "Repository": "gcr.io/saas-hub-stg/blackducksoftware/perceptor-imagefacade",
+            "Tag": "master"
+          }
+        ],
+        "Priority": -1
+      },
+      "db4d3268743f99c2ff7a6da2b9f921453e6bf36c869b420b4ad3d42ec0231179": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 19:54:36.300315155 +0000 UTC m=+3615.592725338",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 27,
+                  "LOW": 16,
+                  "MEDIUM": 4,
+                  "OK": 113,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 69,
+                  "LOW": 0,
+                  "MEDIUM": 46,
+                  "OK": 45,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 77,
+                  "LOW": 23,
+                  "MEDIUM": 32,
+                  "OK": 28,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 64,
+                  "LOW": 27,
+                  "MEDIUM": 38,
+                  "OK": 31,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 18,
+                  "LOW": 7,
+                  "MEDIUM": 18,
+                  "OK": 117,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T19:53:38.612Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T19:52:37.791Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 160
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T19:44:10.562Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T19:53:38.682Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/0f98173e-ff1e-432d-9ac3-4f7e33c46b1b/versions/6da07c49-b439-4910-9288-0899a5068cfc/components",
+          "CodeLocationCreatedAt": "2018-10-23T19:44:12.162Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/64c7f919-933a-4860-9413-d02f0955b5f5",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/0f98173e-ff1e-432d-9ac3-4f7e33c46b1b/versions/6da07c49-b439-4910-9288-0899a5068cfc",
+          "CodeLocationName": "db4d3268743f99c2ff7a6da2b9f921453e6bf36c869b420b4ad3d42ec0231179",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:17e94ba3-4726-3918-b4d7-4bebd4e44945",
+          "CodeLocationUpdatedAt": "2018-10-23T19:53:38.689Z"
+        },
+        "ImageSha": "db4d3268743f99c2ff7a6da2b9f921453e6bf36c869b420b4ad3d42ec0231179",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/ansibleplaybookbundle/origin-ansible-service-broker",
+            "Tag": "latest"
+          }
+        ],
+        "Priority": -1
+      },
+      "e487fec26b5b3709babba5db1e931e229f40e4e551e9e755b4d432a1b35d3de9": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 20:48:36.116718457 +0000 UTC m=+6855.409128529",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 25,
+                  "LOW": 16,
+                  "MEDIUM": 4,
+                  "OK": 100,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 60,
+                  "LOW": 0,
+                  "MEDIUM": 43,
+                  "OK": 42,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 75,
+                  "LOW": 20,
+                  "MEDIUM": 27,
+                  "OK": 23,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 63,
+                  "LOW": 24,
+                  "MEDIUM": 33,
+                  "OK": 25,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 18,
+                  "LOW": 4,
+                  "MEDIUM": 18,
+                  "OK": 105,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T20:47:48.087Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T20:44:20.689Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 145
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T20:39:08.669Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T20:47:48.188Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/ca3bab73-a6f3-4414-800b-3fcb2fdd835f/versions/5eeba06e-2157-472f-afaa-c8e3569dde92/components",
+          "CodeLocationCreatedAt": "2018-10-23T20:39:12.948Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/a0b9bc7f-9483-410c-afa1-63667c8d1e23",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/ca3bab73-a6f3-4414-800b-3fcb2fdd835f/versions/5eeba06e-2157-472f-afaa-c8e3569dde92",
+          "CodeLocationName": "e487fec26b5b3709babba5db1e931e229f40e4e551e9e755b4d432a1b35d3de9",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:eaaf278b-1423-395a-a6c1-1ce8638c6b34",
+          "CodeLocationUpdatedAt": "2018-10-23T20:47:48.191Z"
+        },
+        "ImageSha": "e487fec26b5b3709babba5db1e931e229f40e4e551e9e755b4d432a1b35d3de9",
+        "RepoTags": [
+          {
+            "Repository": "gcr.io/saas-hub-stg/blackducksoftware/pod-perceiver",
+            "Tag": "master"
+          }
+        ],
+        "Priority": -1
+      },
+      "f21a591a5f0d462b045ecfcc51e5f00152ff16dc34fa4bc217ab31ed858c8487": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 20:23:36.013897045 +0000 UTC m=+5355.306307317",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 26,
+                  "LOW": 17,
+                  "MEDIUM": 4,
+                  "OK": 108,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 64,
+                  "LOW": 0,
+                  "MEDIUM": 45,
+                  "OK": 46,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 80,
+                  "LOW": 20,
+                  "MEDIUM": 29,
+                  "OK": 26,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 68,
+                  "LOW": 24,
+                  "MEDIUM": 35,
+                  "OK": 28,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 21,
+                  "LOW": 4,
+                  "MEDIUM": 19,
+                  "OK": 111,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T20:22:47.808Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T20:21:46.519Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 155
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T20:17:55.769Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T20:22:47.886Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/3782e9c1-1870-46f4-bc37-63338a640637/versions/19239fd2-15ac-419d-b4cf-857eb853b4ac/components",
+          "CodeLocationCreatedAt": "2018-10-23T20:17:59.721Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/b49ecb94-9788-423a-97ec-79aa0146ff0f",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/3782e9c1-1870-46f4-bc37-63338a640637/versions/19239fd2-15ac-419d-b4cf-857eb853b4ac",
+          "CodeLocationName": "f21a591a5f0d462b045ecfcc51e5f00152ff16dc34fa4bc217ab31ed858c8487",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:5db1582d-e36a-319a-a684-5d65b4ee9ce0",
+          "CodeLocationUpdatedAt": "2018-10-23T20:22:47.893Z"
+        },
+        "ImageSha": "f21a591a5f0d462b045ecfcc51e5f00152ff16dc34fa4bc217ab31ed858c8487",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/openshift/origin-web-console",
+            "Tag": "v3.10"
+          }
+        ],
+        "Priority": -1
+      },
+      "f84e49aae0e1b6a74599901d336ab5b4e0ae057d59a95f8cad3989b221ac76aa": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 20:54:35.958572439 +0000 UTC m=+7215.250982441",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 25,
+                  "LOW": 16,
+                  "MEDIUM": 4,
+                  "OK": 100,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 60,
+                  "LOW": 0,
+                  "MEDIUM": 43,
+                  "OK": 42,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 75,
+                  "LOW": 20,
+                  "MEDIUM": 27,
+                  "OK": 23,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 63,
+                  "LOW": 24,
+                  "MEDIUM": 33,
+                  "OK": 25,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 18,
+                  "LOW": 4,
+                  "MEDIUM": 19,
+                  "OK": 104,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T20:54:26.414Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T20:53:10.654Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 145
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T20:49:02.351Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T20:54:26.463Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/1b989bd8-e6d5-4c3a-99de-a37b93247174/versions/7a069739-8024-4798-8e0b-83e369ac4ea7/components",
+          "CodeLocationCreatedAt": "2018-10-23T20:49:07.304Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/8af4829b-98fe-4cd9-a215-ca192d5de128",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/1b989bd8-e6d5-4c3a-99de-a37b93247174/versions/7a069739-8024-4798-8e0b-83e369ac4ea7",
+          "CodeLocationName": "f84e49aae0e1b6a74599901d336ab5b4e0ae057d59a95f8cad3989b221ac76aa",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:6b65abf5-1d18-37f6-a6fb-bdb034f61477",
+          "CodeLocationUpdatedAt": "2018-10-23T20:54:26.469Z"
+        },
+        "ImageSha": "f84e49aae0e1b6a74599901d336ab5b4e0ae057d59a95f8cad3989b221ac76aa",
+        "RepoTags": [
+          {
+            "Repository": "docker.io/openshift/origin-service-catalog",
+            "Tag": "v3.10"
+          }
+        ],
+        "Priority": -1
+      },
+      "fce873f0d33472d019908fde6bb1e1298434ebd83f0ad374215d836552f70c8f": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-24 00:33:38.870128496 +0000 UTC m=+20358.162538487",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 25,
+                  "LOW": 16,
+                  "MEDIUM": 4,
+                  "OK": 100,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 60,
+                  "LOW": 0,
+                  "MEDIUM": 43,
+                  "OK": 42,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 75,
+                  "LOW": 20,
+                  "MEDIUM": 27,
+                  "OK": 23,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 63,
+                  "LOW": 24,
+                  "MEDIUM": 33,
+                  "OK": 25,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 18,
+                  "LOW": 4,
+                  "MEDIUM": 18,
+                  "OK": 105,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-24T00:33:18.447Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-24T00:31:49.207Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 145
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-24T00:26:06.167Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-24T00:33:18.526Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/b6bd0e11-b1da-4c37-98dc-d54ba25ea38f/versions/479e2b41-5e09-4576-bf12-948027eaa708/components",
+          "CodeLocationCreatedAt": "2018-10-24T00:26:19.774Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/a7eb532e-1522-4c09-988c-8e9b146497bc",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/b6bd0e11-b1da-4c37-98dc-d54ba25ea38f/versions/479e2b41-5e09-4576-bf12-948027eaa708",
+          "CodeLocationName": "fce873f0d33472d019908fde6bb1e1298434ebd83f0ad374215d836552f70c8f",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:36a27aff-b4cc-3580-af21-9866639ced7d",
+          "CodeLocationUpdatedAt": "2018-10-24T00:33:18.534Z"
+        },
+        "ImageSha": "fce873f0d33472d019908fde6bb1e1298434ebd83f0ad374215d836552f70c8f",
+        "RepoTags": [
+          {
+            "Repository": "gcr.io/saas-hub-stg/blackducksoftware/perceptor-scanner",
+            "Tag": "master"
+          }
+        ],
+        "Priority": -1
+      }
+    },
+    "ImageScanQueue": [],
+    "ImageTransitions": [
+      {
+        "Sha": "cbb81fca618561a607e14ca39c60755cef56e4ba74eb2282169c372745853f72",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.725626101 +0000 UTC m=+15.018036140"
+      },
+      {
+        "Sha": "46b9b555e18e3d6e00b6eab06b3f80a48b8e510f9b0e840f476fa8f8242fdb48",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.725712562 +0000 UTC m=+15.018122609"
+      },
+      {
+        "Sha": "34089e1bc048d43e6bcaf597f6c68e909d7b7cd256b2b1a8c8a609ff2ac3ecde",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.725762901 +0000 UTC m=+15.018172991"
+      },
+      {
+        "Sha": "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.725822808 +0000 UTC m=+15.018232875"
+      },
+      {
+        "Sha": "9ec88a8f9e9d8ca7912390bdc894a7e736bb25ec281da20c771236ce90e8d041",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.725871828 +0000 UTC m=+15.018281893"
+      },
+      {
+        "Sha": "0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.725918457 +0000 UTC m=+15.018328484"
+      },
+      {
+        "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.725982613 +0000 UTC m=+15.018392707"
+      },
+      {
+        "Sha": "f84e49aae0e1b6a74599901d336ab5b4e0ae057d59a95f8cad3989b221ac76aa",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.726046832 +0000 UTC m=+15.018457034"
+      },
+      {
+        "Sha": "e487fec26b5b3709babba5db1e931e229f40e4e551e9e755b4d432a1b35d3de9",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.726109176 +0000 UTC m=+15.018519323"
+      },
+      {
+        "Sha": "f21a591a5f0d462b045ecfcc51e5f00152ff16dc34fa4bc217ab31ed858c8487",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.726164315 +0000 UTC m=+15.018574362"
+      },
+      {
+        "Sha": "7b987901dbc44d17a88e7bda42dbbbb743c161e3152662959acd9f35aeefb9a3",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.726217716 +0000 UTC m=+15.018627752"
+      },
+      {
+        "Sha": "7b50902e49af679c5d81ad0f8d556ed83abbce41abe8ac9a458ff3d2bbea29e1",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.726281194 +0000 UTC m=+15.018691304"
+      },
+      {
+        "Sha": "db4d3268743f99c2ff7a6da2b9f921453e6bf36c869b420b4ad3d42ec0231179",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.726332585 +0000 UTC m=+15.018742648"
+      },
+      {
+        "Sha": "fce873f0d33472d019908fde6bb1e1298434ebd83f0ad374215d836552f70c8f",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.726391768 +0000 UTC m=+15.018801824"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.726438396 +0000 UTC m=+15.018848508"
+      },
+      {
+        "Sha": "89344a9512549b49637c0934eab801d4b64a0ba7eb392d486b753350648385b7",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.726496112 +0000 UTC m=+15.018906169"
+      },
+      {
+        "Sha": "43fbc8a457aa0cb887da63d74a48659e13947cb74b96a53ba8f47abb6172a948",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.726577517 +0000 UTC m=+15.018987597"
+      },
+      {
+        "Sha": "9bfb79c54c7b4544a5664fc8536b4ab7e488a6ed71a0212943e1cce567f5df0e",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.726640542 +0000 UTC m=+15.019050611"
+      },
+      {
+        "Sha": "5bce4ddb0a74e48d5a884f1812f18fe80e2bba0caefa258c49de93a5abf2409a",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:50.725331496 +0000 UTC m=+30.017741476"
+      },
+      {
+        "Sha": "3fc75e5245e7f92516b107a4345a8f87ef49e1d9af0b605b55f952871de61b8a",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:50.725371867 +0000 UTC m=+30.017781852"
+      },
+      {
+        "Sha": "c3f9d3c6d00f152f7d3070838cf31cc1483a88a47570be4a75d82af03dc16391",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:50.725415548 +0000 UTC m=+30.017825537"
+      },
+      {
+        "Sha": "2a04b187eaad83ee2059d853b191391fc5f7f59338bb04d57629d40cdad4fcd6",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:50.725454364 +0000 UTC m=+30.017864342"
+      },
+      {
+        "Sha": "8e0e64477971f410ce5dad1b7b14ec2f79c491af5dfecda05f687798a06e8877",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:50.725495208 +0000 UTC m=+30.017905187"
+      },
+      {
+        "Sha": "7a747ba11187823c8d4f5c10ed7fb77ccb65196e9119066d23c77bddc4935e4c",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:50.725533259 +0000 UTC m=+30.017943239"
+      },
+      {
+        "Sha": "445483b6fad99ce3058a889c5ac46780a88843f9349d1e4e54786b9364f4b652",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:50.725593807 +0000 UTC m=+30.018003784"
+      },
+      {
+        "Sha": "a8782e5481cca14a9d5b9bf3493456f201417b8cf5a77d3623ae31cdb858b210",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:50.725628761 +0000 UTC m=+30.018038752"
+      },
+      {
+        "Sha": "7cb4af8632f9e3fd435fbf1232eada331d7acd42ed227c64febd11e02039eedb",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:50.725673025 +0000 UTC m=+30.018083006"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:50.725709465 +0000 UTC m=+30.018119449"
+      },
+      {
+        "Sha": "384a8f6624ad47b949ac15a76118de650b9e28e33549459522764169d3129b00",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:50.725746709 +0000 UTC m=+30.018156685"
+      },
+      {
+        "Sha": "cbb81fca618561a607e14ca39c60755cef56e4ba74eb2282169c372745853f72",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 18:59:40.957654212 +0000 UTC m=+320.250064187"
+      },
+      {
+        "Sha": "cbb81fca618561a607e14ca39c60755cef56e4ba74eb2282169c372745853f72",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:00:07.044858179 +0000 UTC m=+346.337268281"
+      },
+      {
+        "Sha": "384a8f6624ad47b949ac15a76118de650b9e28e33549459522764169d3129b00",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:00:27.049959144 +0000 UTC m=+366.342369124"
+      },
+      {
+        "Sha": "384a8f6624ad47b949ac15a76118de650b9e28e33549459522764169d3129b00",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:00:56.225237858 +0000 UTC m=+395.517648111"
+      },
+      {
+        "Sha": "46b9b555e18e3d6e00b6eab06b3f80a48b8e510f9b0e840f476fa8f8242fdb48",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:01:16.22785781 +0000 UTC m=+415.520267789"
+      },
+      {
+        "Sha": "46b9b555e18e3d6e00b6eab06b3f80a48b8e510f9b0e840f476fa8f8242fdb48",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:01:54.490678673 +0000 UTC m=+453.783088657"
+      },
+      {
+        "Sha": "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:02:14.4926726 +0000 UTC m=+473.785082582"
+      },
+      {
+        "Sha": "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:03:53.050958205 +0000 UTC m=+572.343368184"
+      },
+      {
+        "Sha": "f84e49aae0e1b6a74599901d336ab5b4e0ae057d59a95f8cad3989b221ac76aa",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:04:13.053189295 +0000 UTC m=+592.345599281"
+      },
+      {
+        "Sha": "f84e49aae0e1b6a74599901d336ab5b4e0ae057d59a95f8cad3989b221ac76aa",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:04:31.4866143 +0000 UTC m=+610.779024286"
+      },
+      {
+        "Sha": "89344a9512549b49637c0934eab801d4b64a0ba7eb392d486b753350648385b7",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:04:51.48903556 +0000 UTC m=+630.781445545"
+      },
+      {
+        "Sha": "89344a9512549b49637c0934eab801d4b64a0ba7eb392d486b753350648385b7",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:05:09.915271796 +0000 UTC m=+649.207681869"
+      },
+      {
+        "Sha": "43fbc8a457aa0cb887da63d74a48659e13947cb74b96a53ba8f47abb6172a948",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:05:29.917724982 +0000 UTC m=+669.210135106"
+      },
+      {
+        "Sha": "43fbc8a457aa0cb887da63d74a48659e13947cb74b96a53ba8f47abb6172a948",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:05:38.037749591 +0000 UTC m=+677.330159574"
+      },
+      {
+        "Sha": "e487fec26b5b3709babba5db1e931e229f40e4e551e9e755b4d432a1b35d3de9",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:05:58.039931888 +0000 UTC m=+697.332341866"
+      },
+      {
+        "Sha": "e487fec26b5b3709babba5db1e931e229f40e4e551e9e755b4d432a1b35d3de9",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:06:16.015217883 +0000 UTC m=+715.307627863"
+      },
+      {
+        "Sha": "9bfb79c54c7b4544a5664fc8536b4ab7e488a6ed71a0212943e1cce567f5df0e",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:06:36.017578956 +0000 UTC m=+735.309988938"
+      },
+      {
+        "Sha": "9bfb79c54c7b4544a5664fc8536b4ab7e488a6ed71a0212943e1cce567f5df0e",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:06:54.374203899 +0000 UTC m=+753.666613881"
+      },
+      {
+        "Sha": "5bce4ddb0a74e48d5a884f1812f18fe80e2bba0caefa258c49de93a5abf2409a",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:07:14.376796485 +0000 UTC m=+773.669206576"
+      },
+      {
+        "Sha": "5bce4ddb0a74e48d5a884f1812f18fe80e2bba0caefa258c49de93a5abf2409a",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:07:22.805048762 +0000 UTC m=+782.097458881"
+      },
+      {
+        "Sha": "9ec88a8f9e9d8ca7912390bdc894a7e736bb25ec281da20c771236ce90e8d041",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:07:42.806871566 +0000 UTC m=+802.099281548"
+      },
+      {
+        "Sha": "9ec88a8f9e9d8ca7912390bdc894a7e736bb25ec281da20c771236ce90e8d041",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:08:06.330937099 +0000 UTC m=+825.623347230"
+      },
+      {
+        "Sha": "f21a591a5f0d462b045ecfcc51e5f00152ff16dc34fa4bc217ab31ed858c8487",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:08:26.333330329 +0000 UTC m=+845.625740471"
+      },
+      {
+        "Sha": "f21a591a5f0d462b045ecfcc51e5f00152ff16dc34fa4bc217ab31ed858c8487",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:08:44.628048996 +0000 UTC m=+863.920458976"
+      },
+      {
+        "Sha": "3fc75e5245e7f92516b107a4345a8f87ef49e1d9af0b605b55f952871de61b8a",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:09:04.63168564 +0000 UTC m=+883.924095691"
+      },
+      {
+        "Sha": "3fc75e5245e7f92516b107a4345a8f87ef49e1d9af0b605b55f952871de61b8a",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:09:23.026797873 +0000 UTC m=+902.319207892"
+      },
+      {
+        "Sha": "c3f9d3c6d00f152f7d3070838cf31cc1483a88a47570be4a75d82af03dc16391",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:09:43.029084126 +0000 UTC m=+922.321494115"
+      },
+      {
+        "Sha": "c3f9d3c6d00f152f7d3070838cf31cc1483a88a47570be4a75d82af03dc16391",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:09:51.33918159 +0000 UTC m=+930.631591642"
+      },
+      {
+        "Sha": "7b987901dbc44d17a88e7bda42dbbbb743c161e3152662959acd9f35aeefb9a3",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:10:11.341257709 +0000 UTC m=+950.633667881"
+      },
+      {
+        "Sha": "7b987901dbc44d17a88e7bda42dbbbb743c161e3152662959acd9f35aeefb9a3",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:10:24.611949908 +0000 UTC m=+963.904359889"
+      },
+      {
+        "Sha": "2a04b187eaad83ee2059d853b191391fc5f7f59338bb04d57629d40cdad4fcd6",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:10:44.614225465 +0000 UTC m=+983.906635529"
+      },
+      {
+        "Sha": "2a04b187eaad83ee2059d853b191391fc5f7f59338bb04d57629d40cdad4fcd6",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:11:08.08624586 +0000 UTC m=+1007.378655864"
+      },
+      {
+        "Sha": "8e0e64477971f410ce5dad1b7b14ec2f79c491af5dfecda05f687798a06e8877",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:11:28.088562034 +0000 UTC m=+1027.380972053"
+      },
+      {
+        "Sha": "8e0e64477971f410ce5dad1b7b14ec2f79c491af5dfecda05f687798a06e8877",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:11:46.360513008 +0000 UTC m=+1045.652922993"
+      },
+      {
+        "Sha": "34089e1bc048d43e6bcaf597f6c68e909d7b7cd256b2b1a8c8a609ff2ac3ecde",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:12:06.363130978 +0000 UTC m=+1065.655541039"
+      },
+      {
+        "Sha": "34089e1bc048d43e6bcaf597f6c68e909d7b7cd256b2b1a8c8a609ff2ac3ecde",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:12:29.86938007 +0000 UTC m=+1089.161790050"
+      },
+      {
+        "Sha": "0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:12:49.872028527 +0000 UTC m=+1109.164438519"
+      },
+      {
+        "Sha": "0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:13:18.213183637 +0000 UTC m=+1137.505593617"
+      },
+      {
+        "Sha": "7b50902e49af679c5d81ad0f8d556ed83abbce41abe8ac9a458ff3d2bbea29e1",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:13:38.216478122 +0000 UTC m=+1157.508888178"
+      },
+      {
+        "Sha": "7b50902e49af679c5d81ad0f8d556ed83abbce41abe8ac9a458ff3d2bbea29e1",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:14:11.859899597 +0000 UTC m=+1191.152309578"
+      },
+      {
+        "Sha": "7a747ba11187823c8d4f5c10ed7fb77ccb65196e9119066d23c77bddc4935e4c",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:14:31.863735352 +0000 UTC m=+1211.156145333"
+      },
+      {
+        "Sha": "7a747ba11187823c8d4f5c10ed7fb77ccb65196e9119066d23c77bddc4935e4c",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:14:50.638329586 +0000 UTC m=+1229.930739623"
+      },
+      {
+        "Sha": "445483b6fad99ce3058a889c5ac46780a88843f9349d1e4e54786b9364f4b652",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:15:10.641219469 +0000 UTC m=+1249.933629557"
+      },
+      {
+        "Sha": "445483b6fad99ce3058a889c5ac46780a88843f9349d1e4e54786b9364f4b652",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:15:34.65687361 +0000 UTC m=+1273.949283591"
+      },
+      {
+        "Sha": "db4d3268743f99c2ff7a6da2b9f921453e6bf36c869b420b4ad3d42ec0231179",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:15:54.659424783 +0000 UTC m=+1293.951834775"
+      },
+      {
+        "Sha": "db4d3268743f99c2ff7a6da2b9f921453e6bf36c869b420b4ad3d42ec0231179",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:16:27.984147987 +0000 UTC m=+1327.276557972"
+      },
+      {
+        "Sha": "a8782e5481cca14a9d5b9bf3493456f201417b8cf5a77d3623ae31cdb858b210",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:16:47.985965629 +0000 UTC m=+1347.278375609"
+      },
+      {
+        "Sha": "a8782e5481cca14a9d5b9bf3493456f201417b8cf5a77d3623ae31cdb858b210",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:17:01.284907209 +0000 UTC m=+1360.577317473"
+      },
+      {
+        "Sha": "7cb4af8632f9e3fd435fbf1232eada331d7acd42ed227c64febd11e02039eedb",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:17:21.287214173 +0000 UTC m=+1380.579624154"
+      },
+      {
+        "Sha": "7cb4af8632f9e3fd435fbf1232eada331d7acd42ed227c64febd11e02039eedb",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:18:24.732451262 +0000 UTC m=+1444.024861240"
+      },
+      {
+        "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:18:44.734275345 +0000 UTC m=+1464.026685396"
+      },
+      {
+        "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:19:28.094009315 +0000 UTC m=+1507.386419298"
+      },
+      {
+        "Sha": "fce873f0d33472d019908fde6bb1e1298434ebd83f0ad374215d836552f70c8f",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:19:48.096386356 +0000 UTC m=+1527.388796444"
+      },
+      {
+        "Sha": "fce873f0d33472d019908fde6bb1e1298434ebd83f0ad374215d836552f70c8f",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:20:06.773454304 +0000 UTC m=+1546.065864435"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:20:26.776342352 +0000 UTC m=+1566.068752331"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:20:45.460179855 +0000 UTC m=+1584.752589834"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:21:05.463109334 +0000 UTC m=+1604.755519316"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:21:29.0452262 +0000 UTC m=+1628.337636182"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:21:49.048351759 +0000 UTC m=+1648.340761937"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:22:07.739769259 +0000 UTC m=+1667.032179300"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:22:27.742298889 +0000 UTC m=+1687.034708868"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:22:45.904895786 +0000 UTC m=+1705.197305906"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:23:05.907020612 +0000 UTC m=+1725.199430715"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:23:24.225852026 +0000 UTC m=+1743.518262086"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:23:44.228261785 +0000 UTC m=+1763.520671765"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:24:02.809440788 +0000 UTC m=+1782.101850842"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:24:22.811668797 +0000 UTC m=+1802.104078778"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:24:40.904010499 +0000 UTC m=+1820.196420483"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:25:00.906287304 +0000 UTC m=+1840.198697333"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:25:19.508840976 +0000 UTC m=+1858.801251088"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:25:39.51109371 +0000 UTC m=+1878.803503708"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:25:57.57589424 +0000 UTC m=+1896.868304288"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:26:17.578377396 +0000 UTC m=+1916.870787509"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:26:35.76825265 +0000 UTC m=+1935.060662787"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:26:55.770266264 +0000 UTC m=+1955.062676244"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:27:13.901180385 +0000 UTC m=+1973.193590365"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:27:33.903377321 +0000 UTC m=+1993.195787298"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:27:51.994631567 +0000 UTC m=+2011.287041544"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:28:11.997098387 +0000 UTC m=+2031.289508870"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:28:30.078272508 +0000 UTC m=+2049.370682488"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:28:50.080367401 +0000 UTC m=+2069.372777477"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:29:08.770070791 +0000 UTC m=+2088.062480850"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:29:28.772254081 +0000 UTC m=+2108.064664059"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:29:47.289749238 +0000 UTC m=+2126.582159215"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:30:07.292535873 +0000 UTC m=+2146.584945992"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:30:31.688200518 +0000 UTC m=+2170.980610500"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:30:51.691420837 +0000 UTC m=+2190.983830887"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:31:15.386096841 +0000 UTC m=+2214.678506852"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:31:35.388918251 +0000 UTC m=+2234.681328229"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:31:58.741579621 +0000 UTC m=+2258.033989684"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:32:18.744128986 +0000 UTC m=+2278.036539107"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 19:32:37.351040378 +0000 UTC m=+2296.643450358"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:32:57.353996282 +0000 UTC m=+2316.646406265"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 19:34:14.224007772 +0000 UTC m=+2393.516417755"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:34:34.226375418 +0000 UTC m=+2413.518785540"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 19:38:02.821135733 +0000 UTC m=+2622.113545850"
+      },
+      {
+        "Sha": "6733ede3656cbe1a47d263936252f9d1e690ed806a49a21edd5a71b9db216de7",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 19:43:36.076875937 +0000 UTC m=+2955.369285913"
+      },
+      {
+        "Sha": "db4d3268743f99c2ff7a6da2b9f921453e6bf36c869b420b4ad3d42ec0231179",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:43:42.865517961 +0000 UTC m=+2962.157927940"
+      },
+      {
+        "Sha": "db4d3268743f99c2ff7a6da2b9f921453e6bf36c869b420b4ad3d42ec0231179",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 19:45:08.952619989 +0000 UTC m=+3048.245030093"
+      },
+      {
+        "Sha": "c25ae64682f718ecf3ee3ada9e318fda710c986826950718ff318f3610217b26",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 19:50:36.178139972 +0000 UTC m=+3375.470550091"
+      },
+      {
+        "Sha": "7b50902e49af679c5d81ad0f8d556ed83abbce41abe8ac9a458ff3d2bbea29e1",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:50:49.00770193 +0000 UTC m=+3388.300111945"
+      },
+      {
+        "Sha": "7b50902e49af679c5d81ad0f8d556ed83abbce41abe8ac9a458ff3d2bbea29e1",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 19:52:38.324950975 +0000 UTC m=+3497.617361100"
+      },
+      {
+        "Sha": "db4d3268743f99c2ff7a6da2b9f921453e6bf36c869b420b4ad3d42ec0231179",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 19:54:36.300418214 +0000 UTC m=+3615.592828932"
+      },
+      {
+        "Sha": "0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 19:54:38.340649042 +0000 UTC m=+3617.633059020"
+      },
+      {
+        "Sha": "0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 19:55:51.636723103 +0000 UTC m=+3690.929133080"
+      },
+      {
+        "Sha": "0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 20:04:36.345352459 +0000 UTC m=+4215.637762560"
+      },
+      {
+        "Sha": "7b50902e49af679c5d81ad0f8d556ed83abbce41abe8ac9a458ff3d2bbea29e1",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 20:04:37.11244736 +0000 UTC m=+4216.404857477"
+      },
+      {
+        "Sha": "8e0e64477971f410ce5dad1b7b14ec2f79c491af5dfecda05f687798a06e8877",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 20:04:51.71638597 +0000 UTC m=+4231.008796064"
+      },
+      {
+        "Sha": "8e0e64477971f410ce5dad1b7b14ec2f79c491af5dfecda05f687798a06e8877",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 20:06:49.716240848 +0000 UTC m=+4349.008650826"
+      },
+      {
+        "Sha": "2a04b187eaad83ee2059d853b191391fc5f7f59338bb04d57629d40cdad4fcd6",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 20:07:09.718630699 +0000 UTC m=+4369.011040819"
+      },
+      {
+        "Sha": "8e0e64477971f410ce5dad1b7b14ec2f79c491af5dfecda05f687798a06e8877",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 20:11:35.985682288 +0000 UTC m=+4635.278092403"
+      },
+      {
+        "Sha": "2a04b187eaad83ee2059d853b191391fc5f7f59338bb04d57629d40cdad4fcd6",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 20:17:13.240799895 +0000 UTC m=+4972.533209885"
+      },
+      {
+        "Sha": "f21a591a5f0d462b045ecfcc51e5f00152ff16dc34fa4bc217ab31ed858c8487",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 20:17:33.242828022 +0000 UTC m=+4992.535238006"
+      },
+      {
+        "Sha": "f21a591a5f0d462b045ecfcc51e5f00152ff16dc34fa4bc217ab31ed858c8487",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 20:18:39.376422538 +0000 UTC m=+5058.668832523"
+      },
+      {
+        "Sha": "f21a591a5f0d462b045ecfcc51e5f00152ff16dc34fa4bc217ab31ed858c8487",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 20:23:36.013898381 +0000 UTC m=+5355.306308492"
+      },
+      {
+        "Sha": "9ec88a8f9e9d8ca7912390bdc894a7e736bb25ec281da20c771236ce90e8d041",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 20:23:39.422429027 +0000 UTC m=+5358.714839143"
+      },
+      {
+        "Sha": "9ec88a8f9e9d8ca7912390bdc894a7e736bb25ec281da20c771236ce90e8d041",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 20:24:45.244217729 +0000 UTC m=+5424.536627724"
+      },
+      {
+        "Sha": "9ec88a8f9e9d8ca7912390bdc894a7e736bb25ec281da20c771236ce90e8d041",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 20:30:36.100346121 +0000 UTC m=+5775.392756197"
+      },
+      {
+        "Sha": "9bfb79c54c7b4544a5664fc8536b4ab7e488a6ed71a0212943e1cce567f5df0e",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 20:30:45.300576581 +0000 UTC m=+5784.592986689"
+      },
+      {
+        "Sha": "9bfb79c54c7b4544a5664fc8536b4ab7e488a6ed71a0212943e1cce567f5df0e",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 20:31:45.702794765 +0000 UTC m=+5844.995204784"
+      },
+      {
+        "Sha": "9bfb79c54c7b4544a5664fc8536b4ab7e488a6ed71a0212943e1cce567f5df0e",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 20:38:36.008101146 +0000 UTC m=+6255.300511259"
+      },
+      {
+        "Sha": "e487fec26b5b3709babba5db1e931e229f40e4e551e9e755b4d432a1b35d3de9",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 20:38:45.764889891 +0000 UTC m=+6265.057299877"
+      },
+      {
+        "Sha": "e487fec26b5b3709babba5db1e931e229f40e4e551e9e755b4d432a1b35d3de9",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 20:39:44.34227154 +0000 UTC m=+6323.634681518"
+      },
+      {
+        "Sha": "e487fec26b5b3709babba5db1e931e229f40e4e551e9e755b4d432a1b35d3de9",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 20:48:36.116719408 +0000 UTC m=+6855.409129398"
+      },
+      {
+        "Sha": "f84e49aae0e1b6a74599901d336ab5b4e0ae057d59a95f8cad3989b221ac76aa",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 20:48:44.425919844 +0000 UTC m=+6863.718329958"
+      },
+      {
+        "Sha": "f84e49aae0e1b6a74599901d336ab5b4e0ae057d59a95f8cad3989b221ac76aa",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 20:49:38.126612693 +0000 UTC m=+6917.419022675"
+      },
+      {
+        "Sha": "2a04b187eaad83ee2059d853b191391fc5f7f59338bb04d57629d40cdad4fcd6",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 20:52:36.069816209 +0000 UTC m=+7095.362226190"
+      },
+      {
+        "Sha": "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 20:52:38.153292403 +0000 UTC m=+7097.445702519"
+      },
+      {
+        "Sha": "f84e49aae0e1b6a74599901d336ab5b4e0ae057d59a95f8cad3989b221ac76aa",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 20:54:35.95857327 +0000 UTC m=+7215.250983250"
+      },
+      {
+        "Sha": "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 20:56:50.642256786 +0000 UTC m=+7349.934666769"
+      },
+      {
+        "Sha": "384a8f6624ad47b949ac15a76118de650b9e28e33549459522764169d3129b00",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 20:57:10.644567416 +0000 UTC m=+7369.936977396"
+      },
+      {
+        "Sha": "384a8f6624ad47b949ac15a76118de650b9e28e33549459522764169d3129b00",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 21:03:28.742268723 +0000 UTC m=+7748.034678708"
+      },
+      {
+        "Sha": "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 21:42:36.175035077 +0000 UTC m=+10095.467445060"
+      },
+      {
+        "Sha": "cbb81fca618561a607e14ca39c60755cef56e4ba74eb2282169c372745853f72",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 21:42:49.091326163 +0000 UTC m=+10108.383736153"
+      },
+      {
+        "Sha": "cbb81fca618561a607e14ca39c60755cef56e4ba74eb2282169c372745853f72",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 21:43:43.088134523 +0000 UTC m=+10162.380544651"
+      },
+      {
+        "Sha": "cbb81fca618561a607e14ca39c60755cef56e4ba74eb2282169c372745853f72",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 21:50:35.982390838 +0000 UTC m=+10575.274800830"
+      },
+      {
+        "Sha": "7cb4af8632f9e3fd435fbf1232eada331d7acd42ed227c64febd11e02039eedb",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 21:50:43.15175551 +0000 UTC m=+10582.444165657"
+      },
+      {
+        "Sha": "7cb4af8632f9e3fd435fbf1232eada331d7acd42ed227c64febd11e02039eedb",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 21:56:34.121786859 +0000 UTC m=+10933.414196954"
+      },
+      {
+        "Sha": "7cb4af8632f9e3fd435fbf1232eada331d7acd42ed227c64febd11e02039eedb",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 22:10:36.020638432 +0000 UTC m=+11775.313048524"
+      },
+      {
+        "Sha": "a8782e5481cca14a9d5b9bf3493456f201417b8cf5a77d3623ae31cdb858b210",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 22:10:54.254373721 +0000 UTC m=+11793.546797173"
+      },
+      {
+        "Sha": "a8782e5481cca14a9d5b9bf3493456f201417b8cf5a77d3623ae31cdb858b210",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 22:16:10.054723167 +0000 UTC m=+12109.347133146"
+      },
+      {
+        "Sha": "384a8f6624ad47b949ac15a76118de650b9e28e33549459522764169d3129b00",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 22:56:35.986364137 +0000 UTC m=+14535.278774245"
+      },
+      {
+        "Sha": "7a747ba11187823c8d4f5c10ed7fb77ccb65196e9119066d23c77bddc4935e4c",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 22:56:50.417188431 +0000 UTC m=+14549.709598412"
+      },
+      {
+        "Sha": "7a747ba11187823c8d4f5c10ed7fb77ccb65196e9119066d23c77bddc4935e4c",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 22:58:46.849371014 +0000 UTC m=+14666.141781105"
+      },
+      {
+        "Sha": "7a747ba11187823c8d4f5c10ed7fb77ccb65196e9119066d23c77bddc4935e4c",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 23:34:36.155993185 +0000 UTC m=+16815.448403256"
+      },
+      {
+        "Sha": "34089e1bc048d43e6bcaf597f6c68e909d7b7cd256b2b1a8c8a609ff2ac3ecde",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 23:34:47.18780423 +0000 UTC m=+16826.480214209"
+      },
+      {
+        "Sha": "34089e1bc048d43e6bcaf597f6c68e909d7b7cd256b2b1a8c8a609ff2ac3ecde",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 23:36:08.192944567 +0000 UTC m=+16907.485354628"
+      },
+      {
+        "Sha": "34089e1bc048d43e6bcaf597f6c68e909d7b7cd256b2b1a8c8a609ff2ac3ecde",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 23:44:35.967391423 +0000 UTC m=+17415.259801429"
+      },
+      {
+        "Sha": "3fc75e5245e7f92516b107a4345a8f87ef49e1d9af0b605b55f952871de61b8a",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 23:44:48.263880053 +0000 UTC m=+17427.556290034"
+      },
+      {
+        "Sha": "3fc75e5245e7f92516b107a4345a8f87ef49e1d9af0b605b55f952871de61b8a",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 23:48:04.766785056 +0000 UTC m=+17624.059195081"
+      },
+      {
+        "Sha": "3fc75e5245e7f92516b107a4345a8f87ef49e1d9af0b605b55f952871de61b8a",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 23:55:36.386803128 +0000 UTC m=+18075.679213114"
+      },
+      {
+        "Sha": "5bce4ddb0a74e48d5a884f1812f18fe80e2bba0caefa258c49de93a5abf2409a",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 23:55:44.836458986 +0000 UTC m=+18084.128868972"
+      },
+      {
+        "Sha": "5bce4ddb0a74e48d5a884f1812f18fe80e2bba0caefa258c49de93a5abf2409a",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 23:56:08.955993284 +0000 UTC m=+18108.248403268"
+      },
+      {
+        "Sha": "5bce4ddb0a74e48d5a884f1812f18fe80e2bba0caefa258c49de93a5abf2409a",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-23 23:57:36.090842977 +0000 UTC m=+18195.383253016"
+      },
+      {
+        "Sha": "89344a9512549b49637c0934eab801d4b64a0ba7eb392d486b753350648385b7",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-23 23:57:48.969144516 +0000 UTC m=+18208.261555107"
+      },
+      {
+        "Sha": "89344a9512549b49637c0934eab801d4b64a0ba7eb392d486b753350648385b7",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-23 23:58:44.261642944 +0000 UTC m=+18263.554052929"
+      },
+      {
+        "Sha": "a8782e5481cca14a9d5b9bf3493456f201417b8cf5a77d3623ae31cdb858b210",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-24 00:02:35.976247766 +0000 UTC m=+18495.268657865"
+      },
+      {
+        "Sha": "46b9b555e18e3d6e00b6eab06b3f80a48b8e510f9b0e840f476fa8f8242fdb48",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-24 00:02:44.297583299 +0000 UTC m=+18503.589993284"
+      },
+      {
+        "Sha": "46b9b555e18e3d6e00b6eab06b3f80a48b8e510f9b0e840f476fa8f8242fdb48",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-24 00:04:30.950123115 +0000 UTC m=+18610.242533097"
+      },
+      {
+        "Sha": "89344a9512549b49637c0934eab801d4b64a0ba7eb392d486b753350648385b7",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-24 00:04:36.001908546 +0000 UTC m=+18615.294318678"
+      },
+      {
+        "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-24 00:04:50.952173401 +0000 UTC m=+18630.244583377"
+      },
+      {
+        "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-24 00:07:32.196370867 +0000 UTC m=+18791.488780934"
+      },
+      {
+        "Sha": "46b9b555e18e3d6e00b6eab06b3f80a48b8e510f9b0e840f476fa8f8242fdb48",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-24 00:13:36.046109731 +0000 UTC m=+19155.338519715"
+      },
+      {
+        "Sha": "445483b6fad99ce3058a889c5ac46780a88843f9349d1e4e54786b9364f4b652",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-24 00:13:52.24711305 +0000 UTC m=+19171.539523026"
+      },
+      {
+        "Sha": "445483b6fad99ce3058a889c5ac46780a88843f9349d1e4e54786b9364f4b652",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-24 00:19:05.425902192 +0000 UTC m=+19484.718312170"
+      },
+      {
+        "Sha": "7f33ff4b111b1ad17dc408c9929057fce6b65da88c598cebe4e286ad8561b17a",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-24 00:23:35.993279801 +0000 UTC m=+19755.285689892"
+      },
+      {
+        "Sha": "c3f9d3c6d00f152f7d3070838cf31cc1483a88a47570be4a75d82af03dc16391",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-24 00:23:45.468071855 +0000 UTC m=+19764.760481834"
+      },
+      {
+        "Sha": "c3f9d3c6d00f152f7d3070838cf31cc1483a88a47570be4a75d82af03dc16391",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-24 00:24:09.256848234 +0000 UTC m=+19788.549258215"
+      },
+      {
+        "Sha": "c3f9d3c6d00f152f7d3070838cf31cc1483a88a47570be4a75d82af03dc16391",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-24 00:24:36.027285208 +0000 UTC m=+19815.319695322"
+      },
+      {
+        "Sha": "43fbc8a457aa0cb887da63d74a48659e13947cb74b96a53ba8f47abb6172a948",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-24 00:24:49.263473393 +0000 UTC m=+19828.555883378"
+      },
+      {
+        "Sha": "43fbc8a457aa0cb887da63d74a48659e13947cb74b96a53ba8f47abb6172a948",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-24 00:25:17.990744226 +0000 UTC m=+19857.283154368"
+      },
+      {
+        "Sha": "43fbc8a457aa0cb887da63d74a48659e13947cb74b96a53ba8f47abb6172a948",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-24 00:25:36.036535531 +0000 UTC m=+19875.328945508"
+      },
+      {
+        "Sha": "fce873f0d33472d019908fde6bb1e1298434ebd83f0ad374215d836552f70c8f",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-24 00:25:37.993665726 +0000 UTC m=+19877.286075782"
+      },
+      {
+        "Sha": "fce873f0d33472d019908fde6bb1e1298434ebd83f0ad374215d836552f70c8f",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-24 00:26:48.962726546 +0000 UTC m=+19948.255136526"
+      },
+      {
+        "Sha": "fce873f0d33472d019908fde6bb1e1298434ebd83f0ad374215d836552f70c8f",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-24 00:33:38.870129315 +0000 UTC m=+20358.162539295"
+      },
+      {
+        "Sha": "7b987901dbc44d17a88e7bda42dbbbb743c161e3152662959acd9f35aeefb9a3",
+        "From": "ScanStatusInQueue",
+        "To": "ScanStatusRunningScanClient",
+        "Err": "",
+        "Time": "2018-10-24 00:33:49.034609364 +0000 UTC m=+20368.327019458"
+      },
+      {
+        "Sha": "7b987901dbc44d17a88e7bda42dbbbb743c161e3152662959acd9f35aeefb9a3",
+        "From": "ScanStatusRunningScanClient",
+        "To": "ScanStatusRunningHubScan",
+        "Err": "",
+        "Time": "2018-10-24 00:34:24.219083927 +0000 UTC m=+20403.511493910"
+      },
+      {
+        "Sha": "445483b6fad99ce3058a889c5ac46780a88843f9349d1e4e54786b9364f4b652",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-24 00:35:36.02094621 +0000 UTC m=+20475.313356192"
+      },
+      {
+        "Sha": "7b987901dbc44d17a88e7bda42dbbbb743c161e3152662959acd9f35aeefb9a3",
+        "From": "ScanStatusRunningHubScan",
+        "To": "ScanStatusComplete",
+        "Err": "",
+        "Time": "2018-10-24 00:35:36.19546102 +0000 UTC m=+20475.487871038"
+      }
+    ]
+  },
+  "Config": {
+    "Timings": {
+      "CheckForStalledScansPause": {
+        "Minutes": 59999940,
+        "Seconds": 3599996400,
+        "Milliseconds": 3599996400000
+      },
+      "StalledScanClientTimeout": {
+        "Minutes": 59999940,
+        "Seconds": 3599996400,
+        "Milliseconds": 3599996400000
+      },
+      "ModelMetricsPause": {
+        "Minutes": 0.25,
+        "Seconds": 15,
+        "Milliseconds": 15000
+      },
+      "UnknownImagePause": {
+        "Minutes": 0.25,
+        "Seconds": 15,
+        "Milliseconds": 15000
+      }
+    },
+    "Hub": {
+      "User": "sysadmin",
+      "PasswordEnvVar": "PCP_HUBUSERPASSWORD",
+      "ClientTimeout": {
+        "Minutes": 1.6666666666666667,
+        "Seconds": 100,
+        "Milliseconds": 100000
+      },
+      "Port": 443,
+      "ConcurrentScanLimit": 2,
+      "TotalScanLimit": 1000
+    },
+    "Port": 3001,
+    "LogLevel": "debug"
+  },
+  "Scheduler": {
+    "ConcurrentScanLimit": 2,
+    "TotalScanLimit": 1000
+  }
+}
