@@ -6,6 +6,7 @@ import time
 from kubernetes import client, config
 import logging 
 
+
 def get_current_datetime():
     return str(datetime.datetime.now())
 
@@ -97,7 +98,6 @@ class HubClient():
         self.client_timeout_seconds = client_timeout_seconds
 
     def get_secure_login_cookie(self):
-        # urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         security_headers = {'Content-Type':'application/x-www-form-urlencoded'}
         security_data = {'j_username': self.username,'j_password': self.password}
         # verify=False does not verify SSL connection - insecure

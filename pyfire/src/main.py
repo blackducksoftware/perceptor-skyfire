@@ -7,6 +7,13 @@ import metrics
 import logging
 from cluster_clients import PerceptorClient, KubeClientWrapper, HubClient
 import os
+import urllib3
+import kubernetes.client
+
+
+# TODO is this the right way to turn off annoying logging?
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+kubernetes.client.rest.logger.setLevel("INFO")
 
 
 class Config:
