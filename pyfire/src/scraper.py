@@ -19,12 +19,9 @@ class Scraper(object):
 
         # TODO
         #  1. allow creation, deletion of hub clients dynamically
-        #  2. use one thread per hub client
-        self.hub_clients = {}
         self.hub_threads = {}
-        for url in my_config["Hub"]["Hosts"]:
-            self.hub_clients[url] = HubClient(url, my_config["Hub"]["User"], my_config["Hub"]["PasswordEnvVar"], my_config["Skyfire"]["UseInClusterConfig"])
-            self.hub_threads[url] = threading.Thread(target=self.hub(url))
+        for hub in hub_clients:
+            self.hub_threads[hub] = threading.Thread(target=self.hub(hub))
         self.hub_pause = hub_pause
 
         self.is_running = False
@@ -47,7 +44,8 @@ class Scraper(object):
         self.is_running = False
         self.perceptor_thread.join()
         self.kube_thread.join()
-        self.hub_thread.join()
+        for hub_ID, hub_thread in self.hub_threads.items():
+            hub_thread.join()
 
     def perceptor(self):
         while self.is_running:
@@ -65,15 +63,15 @@ class Scraper(object):
             metrics.record_event("kubeDump")
             time.sleep(self.kube_pause)
 
-    def hub(self, hub_host):
+    def hub(self, hub):
         def hub_thread():
             while self.is_running:
-                scrape = self.hub_clients[hub_host].get_scrape()
-                self.delegate.hub_dump(hub_host, scrape)
+                scrape = hub.get_scrape()
+                self.delegate.hub_dump(hub.host_name,scrape)
                 logging.debug("got hub dump")
-                metrics.record_event("hubDump"+hub_host)
+                metrics.record_event("hubDump "+hub.host_name)
                 time.sleep(self.hub_pause)
-        return hub_instance
+        return hub_thread
 
 class MockDelegate:
     def __init__(self):

@@ -65,7 +65,7 @@ class KubeClientWrapper:
 class HubScrape():
     def __init__(self, data={}):
         self.time_stamp = datetime.datetime.now()
-        self.hub = ""
+        self.host_name = ""
         self.data = data
 
     def pretty_print(self):
@@ -116,7 +116,7 @@ class HubClient():
 
     def get_scrape(self):
         hub_scrape = HubScrape()
-        hub_scrape.hub = self.host_name
+        hub_scrape.host_name = self.host_name
         hub_scrape.data = self.crawl_hub()
         return hub_scrape 
 
