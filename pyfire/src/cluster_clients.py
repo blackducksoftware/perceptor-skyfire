@@ -250,12 +250,14 @@ class PerceptorScrape:
         self.data = data
 
         self.hub_names = []
+        self.hub_shas = []
         self.hub_to_shas = {}
 
         self.pod_names = []
         self.pod_shas = []
         self.container_names = []
         self.repositories = []
+        self.pod_namespaces = []
 
         self.image_shas = []
         self.image_repositories = []
@@ -284,9 +286,11 @@ class PerceptorScrape:
             self.hub_names.append(hub_name)
             shas = list(hub_data["CodeLocations"].keys())
             self.hub_to_shas[hub_name] = shas 
+            self.hub_shas.extend(shas)
 
         for pod_name, pod_data in data["CoreModel"]["Pods"].items():
             self.pod_names.append(pod_name)
+            self.pod_namespaces.append(pod_data["Namespace"])
             for container in pod_data["Containers"]:
                 self.repositories.append(container["Image"]["Repository"])
                 self.pod_shas.append(container["Image"]["Sha"])
@@ -304,35 +308,6 @@ class PerceptorScrape:
 
         for image_sha in data["CoreModel"]["ImageScanQueue"]:
             pass 
-
-    def get_hubs_IDs(self):
-        return self.data["Hubs"].keys()
-
-    def get_pods_IDs(self):
-        return self.data["CoreModel"]["Pods"].keys()
-
-    def get_pods_images(self):
-        images = []
-        for pod_ID, pod_data in self.data["CoreModel"]["Pods"].items():
-            for container in pod_data["Containers"]:
-                images.append(container['Image']['Sha'])
-        return images
-
-    def get_pods_repositories(self):
-        repositories = []
-        for pod_ID, pod_data in self.data["CoreModel"]["Pods"].items():
-            for container in pod_data["Containers"]:
-                repositories.append(container['Image']['Repository'])
-        return repositories
-        
-    def get_images_IDs(self):
-        return self.data["CoreModel"]["Images"].keys()
-
-    def get_scan_queue_images(self):
-        images = []
-        for elem in self.data["CoreModel"]["ImageScanQueue"]:
-            images.append(elem['Key'])
-        return images
 
 class PerceptorClient():
     def __init__(self, host_name, port):
