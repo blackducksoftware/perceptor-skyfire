@@ -27,6 +27,18 @@ class Config:
         self.hub_password_env_var = hub['PasswordEnvVar']
         self.log_level = blob['LogLevel']
 
+def instantiate_mock_clients():
+    from scraper import MockScraper
+    perceptor_client = MockScraper("perceptor")
+    kube_client = MockScraper("kube")
+    hub_clients = {
+        'abc': MockScraper("hubabc"),
+        'def': MockScraper("hubdef")
+    }
+    return perceptor_client, kube_client, hub_clients
+
+def instantiate_clients():
+    pass
 
 def main():
     if len(sys.argv) < 2:
@@ -46,18 +58,10 @@ def main():
     skyfire = Skyfire()
 
     # TODO switch to using real clients
-    from scraper import MockScraper
-    perceptor_client = MockScraper("perceptor")
-    kube_client = MockScraper("kube")
-    hub_clients = {
-        'abc': MockScraper("hubabc"),
-        'def': MockScraper("hubdef")
-    }
-    # end TODO
+    perceptor_client, kube_client, hub_clients = instantiate_mock_clients()
     scraper = Scraper(skyfire, perceptor_client, kube_client, hub_clients)
 
-    skyfire.start()
-    scraper.start()
+    logging.info("instantiated scraper: %s", str(scraper))
 
     prometheus_port = config.prometheus_port
     print("starting prometheus server on port", prometheus_port)

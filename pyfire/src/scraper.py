@@ -8,58 +8,48 @@ class Scraper(object):
     def __init__(self, delegate, perceptor_client, kube_client, hub_clients, perceptor_pause=30, kube_pause=30, hub_pause=60):
         self.delegate = delegate
 
+        self.is_running = True
+    
         self.perceptor_client = perceptor_client
-        self.perceptor_thread = threading.Thread(target=self.perceptor)
         self.perceptor_pause = perceptor_pause
+        self.perceptor_thread = threading.Thread(target=self.perceptor)
+        self.perceptor_thread.daemon = True
+        self.perceptor_thread.start()
 
         self.kube_client = kube_client
-        self.kube_thread = threading.Thread(target=self.kube)
         self.kube_pause = kube_pause
+        self.kube_thread = threading.Thread(target=self.kube)
+        self.kube_thread.daemon = True
+        self.kube_thread.start()
 
-        self.is_running = False
-    
         self.hub_clients = {}
-        for (host, client) in hub_clients.items():
-            self._add_hub(host, client)
         self.hub_pause = hub_pause
+        for (host, client) in hub_clients.items():
+            self.add_hub(host, client)
 
-    def _add_hub(self, host, client):
+    def add_hub(self, host, client):
+        logging.info("adding hub %s", host)
         def f():
             self.hub(host)
         thread = threading.Thread(target=f)
-        self.hub_clients[host] = [client, thread, self.is_running]
-    
-    def add_hub(self, host, client):
-        self._add_hub(host, client)
-        _, thread, _ = self.hub_clients[host]
-        if self.is_running:
-            thread.start()
-    
-    def start(self):
-        """
-        TODO this can't safely be called more than once
-        """
-        self.is_running = True
-        self.perceptor_thread.start()
-        self.kube_thread.start()
-        for (_, thread, _) in self.hub_clients.values():
-            thread.start()
-    
-    def _stop_hub(self, host):
+        thread.daemon = True
+        self.hub_clients[host] = [client, thread, True]
+        thread.start()
+
+    def remove_hub(self, host):
         self.hub_clients[host][2] = False
+        self.hub_clients[host][1].join()
+        del self.hub_clients[host]
 
     def stop(self):
         """
-        TODO this can't safely be called more than once, and
-        assumes `start` has already been called
+        TODO this can't safely be called more than once
         """
         self.is_running = False
         self.perceptor_thread.join()
         self.kube_thread.join()
         for host in self.hub_clients:
-            self._stop_hub(host)
-        for (_, thread, _) in self.hub_clients.values():
-            thread.join()
+            self.remove_hub(host)
 
     def perceptor(self):
         while self.is_running:
@@ -129,10 +119,10 @@ def reader():
         MockScraper("perceptor"),
         MockScraper("kube"), 
         hub_clients, 
-        perceptor_pause=2, 
-        kube_pause=3, 
+        perceptor_pause=2,
+        kube_pause=3,
         hub_pause=4)
-    s.start()
+    logging.debug("instantiated scraper: %s", str(s))
 
     while True:
         item = delegate.q.get()
