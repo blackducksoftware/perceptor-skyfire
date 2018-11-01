@@ -6,18 +6,20 @@ import time
 from kubernetes import client, config
 import logging 
 
+def get_current_datetime():
+    return str(datetime.datetime.now())
 
 class kubeScrape:
     def __init__(self):
-        self.time_stamp = datetime.datetime.now()
+        self.time_stamp = get_current_datetime()
         self.data = []
     
     def __repr__(self):
         output = "== Kube Analysis ==\n"
         num_images = len(self.data)
         output += "Num Images: "+str(num_images)+"\n"
-        return output         
-
+        return output
+    
 class KubeClientWrapper:
     def __init__(self, in_cluster):
         if in_cluster:
@@ -61,7 +63,7 @@ class KubeClientWrapper:
 
 class HubScrape():
     def __init__(self):
-        self.time_stamp = datetime.datetime.now()
+        self.time_stamp = get_current_datetime()
         self.data = {}
 
     def __repr__(self):
@@ -205,7 +207,7 @@ class HubClient():
 
 class PerceptorScrape:
     def __init__(self, data):
-        self.time_stamp = datetime.datetime.now()
+        self.time_stamp = get_current_datetime()
         self.data = data
     
     def json(self):
@@ -255,10 +257,8 @@ class PerceptorClient():
         self.port = port
 
     def get_scrape(self):
-        perceptor_scrape = PerceptorScrape()
         dump = self.get_dump()
-        perceptor_scrape.data = dump 
-        return perceptor_scrape
+        return PerceptorScrape(dump)
 
     def get_dump(self):
         while True:
