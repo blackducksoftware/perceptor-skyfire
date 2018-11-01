@@ -9,16 +9,19 @@ class Skyfire:
     def __init__(self):
         self.q = queue.Queue()
         self.event_thread = threading.Thread(target=self.read_events)
-        self.is_running = False
+        self.event_thread.daemon = True
+        self.is_running = True
+        logging.info("starting skyfire event thread")
+        self.event_thread.start()
+
         self.opssight = None
         self.opssight_report = None
-        self.kube = None
-        self.hubs = {}
 
-    def start(self):
-        logging.info("starting skyfire event thread")
-        self.is_running = True
-        self.event_thread.start()
+        self.kube = None
+        self.kube_report = None
+        self.kube_opssight_report = None
+
+        self.hubs = {}
     
     def stop(self):
         logging.info("stopping skyfire event thread")
@@ -41,9 +44,10 @@ class Skyfire:
     ### Scraper Delegate interface
 
     def perceptor_dump(self, dump):
+        report = PerceptorReport(dump)
         def f():
             self.opssight = dump
-            self.opssight_report = PerceptorReport(dump)
+            self.opssight_report = report
         self.q.put(f)
 
     def kube_dump(self, dump):
@@ -65,9 +69,10 @@ class Skyfire:
         wrapper = {}
         def f():
             wrapper['json'] = {
-                'opssight': self.opssight.json(),
-                'opssight-report': self.opssight_report.json(),
-                'kube': self.kube,
+                'opssight': None if self.opssight is None else self.opssight.json(),
+                'opssight-report': None if self.opssight_report is None else self.opssight_report.json(),
+                'kube': None if self.kube is None else self.kube,
+                'kube-report': None if self.kube_report is None else self.kube_report.json(),
                 'hub': dict((host, dump) for (host, dump) in self.hubs.items())
             }
             logging.debug("waiting inside f")

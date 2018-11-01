@@ -5,6 +5,8 @@ from scraper import Scraper
 from skyfire import Skyfire
 import metrics
 import logging
+from cluster_clients import PerceptorClient, KubeClientWrapper, HubClient
+import os
 
 
 class Config:
@@ -26,7 +28,26 @@ class Config:
         self.hub_port = hub['Port']
         self.hub_password_env_var = hub['PasswordEnvVar']
         self.log_level = blob['LogLevel']
+        self.use_mock_mode = skyfire.get("UseMockMode", False)
 
+def instantiate_mock_clients():
+    from scraper import MockScraper
+    perceptor_client = MockScraper("perceptor")
+    kube_client = MockScraper("kube")
+    hub_clients = {
+        'abc': MockScraper("hubabc"),
+        'def': MockScraper("hubdef")
+    }
+    return perceptor_client, kube_client, hub_clients
+
+def instantiate_clients(config):
+    prc = PerceptorClient(config.perceptor_host, config.perceptor_port)
+    kube = KubeClientWrapper(config.use_in_cluster_config)
+    hubs = {}
+    hub_password = os.getenv(config.hub_password_env_var)
+    for host in config.hub_hosts:
+        hubs[host] = HubClient(host, config.hub_port, config.hub_user, hub_password, config.hub_client_timeout_seconds)
+    return prc, kube, hubs
 
 def main():
     if len(sys.argv) < 2:
@@ -45,19 +66,13 @@ def main():
 
     skyfire = Skyfire()
 
-    # TODO switch to using real clients
-    from scraper import MockScraper
-    perceptor_client = MockScraper("perceptor")
-    kube_client = MockScraper("kube")
-    hub_clients = {
-        'abc': MockScraper("hubabc"),
-        'def': MockScraper("hubdef")
-    }
-    # end TODO
+    if config.use_mock_mode:
+        perceptor_client, kube_client, hub_clients = instantiate_mock_clients()
+    else:
+        perceptor_client, kube_client, hub_clients = instantiate_clients(config)
     scraper = Scraper(skyfire, perceptor_client, kube_client, hub_clients)
 
-    skyfire.start()
-    scraper.start()
+    logging.info("instantiated scraper: %s", str(scraper))
 
     prometheus_port = config.prometheus_port
     print("starting prometheus server on port", prometheus_port)
