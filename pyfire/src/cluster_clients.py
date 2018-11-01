@@ -10,6 +10,10 @@ import logging
 def get_current_datetime():
     return str(datetime.datetime.now())
 
+'''
+Data Scrape Classes
+'''
+
 class KubeScrape:
     def __init__(self, data = []):
         self.time_stamp = get_current_datetime()
@@ -20,47 +24,6 @@ class KubeScrape:
         num_images = len(self.data)
         output += "Num Images: "+str(num_images)+"\n"
         return output
-    
-class KubeClientWrapper:
-    def __init__(self, in_cluster):
-        if in_cluster:
-            config.load_incluster_config()
-        else:
-            config.load_kube_config()
-        self.v1 = client.CoreV1Api()
-
-    def get_scrape(self):
-        kube_scrape = KubeScrape()
-        kube_scrape.data = self.get_images()
-        return kube_scrape 
-
-    def get_namespaces(self):
-        return [ns.metadata.name for ns in self.v1.list_namespace()]
-
-    def get_pods(self, namespace="all-namespaces"):
-        if namespace == "all-namespaces":
-            return self.v1.list_pod_for_all_namespaces(watch=False)
-        else:
-            return self.v1.list_namespaced_pod(namespace)
-
-    def get_containers(self):
-        containers = []
-        for pod in self.v1.list_pod_for_all_namespaces().items:
-            containers.extend(pod.spec.containers)
-        return containers
-
-    def get_images(self):
-        images = []
-        for pod in self.v1.list_pod_for_all_namespaces().items:
-            for container in pod.spec.containers:
-                images.append(container.image)
-        return images
-
-    def get_annotations(self):
-        return [pod.metadata.annotations for pod in self.v1.list_pod_for_all_namespaces()]
-
-    def get_labels(self):
-        return [pod.metadata.labels for pod in self.v1.list_pod_for_all_namespaces()]
 
 class HubScrape():
     def __init__(self, data={}):
@@ -85,6 +48,9 @@ class HubScrape():
         self.sha_to_scans = {}
 
         self.load_data(data)
+
+    def json(self):
+        return self.data
 
     def __repr__(self):
         output = "== Hub Analysis ==\n"
@@ -123,6 +89,91 @@ class HubScrape():
                 for code_location_ID, code_location_data in version_data['codelocations'].items():
                     shas.append(code_location_data['sha'])
         return shas 
+
+class PerceptorScrape:
+    def __init__(self, data={}):
+        self.time_stamp = get_current_datetime()
+        self.data = data
+
+        self.hub_names = []
+        self.hub_shas = []
+        self.hub_to_shas = {}
+
+        self.pod_names = []
+        self.pod_shas = []
+        self.container_names = []
+        self.repositories = []
+        self.pod_namespaces = []
+
+        self.image_shas = []
+        self.image_repositories = []
+        self.image_sha_to_risk_profile = {}
+        self.image_sha_to_policy_status = {}
+        self.image_sha_to_scans = {}
+        self.image_sha_to_respositories = {}
+
+        self.load_data(data)
+
+
+    def json(self):
+        return self.data
+
+    def __repr__(self):
+        output = "== OpsSight Analysis ==\n"
+        output += "Hub Count: "+str(len(self.get_hubs_IDs()))+"\n"
+        output += "Total Pod Count: "+str(len(self.get_pods_IDs()))+"\n"
+        output += "Total Image Count: "+str(len(self.get_images_IDs()))+"\n"
+        output += " - Images Scanned: "+str(len(self.get_images_IDs()) - len(self.get_scan_queue_images()))+"\n"
+        output += " - Images Queued: "+str(len(self.get_scan_queue_images()))+"\n"
+        return output 
+
+    def load_data(self, data):
+        for hub_name, hub_data in data["Hubs"].items():
+            self.hub_names.append(hub_name)
+            shas = list(hub_data["CodeLocations"].keys())
+            self.hub_to_shas[hub_name] = shas 
+            self.hub_shas.extend(shas)
+
+        for pod_name, pod_data in data["CoreModel"]["Pods"].items():
+            self.pod_names.append(pod_name)
+            self.pod_namespaces.append(pod_data["Namespace"])
+            for container in pod_data["Containers"]:
+                self.repositories.append(container["Image"]["Repository"])
+                self.pod_shas.append(container["Image"]["Sha"])
+                self.container_names.append(container["Name"])
+
+        for image_sha, image_data in data["CoreModel"]["Images"].items():
+            self.image_shas.append(image_sha)
+            self.image_sha_to_risk_profile[image_sha] = image_data["ScanResults"]["RiskProfile"]
+            self.image_sha_to_policy_status[image_sha] = image_data["ScanResults"]["PolicyStatus"]
+            self.image_sha_to_scans[image_sha] = image_data["ScanResults"]["ScanSummaries"]
+            self.image_sha_to_respositories[image_sha] = []
+            for repo in image_data["RepoTags"]:
+                self.image_sha_to_respositories[image_sha].append(repo["Repository"]) 
+                self.image_repositories.append(repo["Repository"])
+
+        for image_sha in data["CoreModel"]["ImageScanQueue"]:
+            pass 
+
+
+'''
+Client Classes
+'''
+
+class PerceptorClient():
+    def __init__(self, host_name, port):
+        self.host_name = host_name
+        self.port = port
+
+    def get_scrape(self):
+        dump = self.get_dump()
+        return PerceptorScrape(dump)
+
+    def get_dump(self):
+        while True:
+            r = requests.get("http://{}:{}/model".format(self.host_name, self.port))
+            if r.status_code == 200:
+                return json.loads(r.text)
 
 class HubClient():
     def __init__(self, host_name, port, username, password, client_timeout_seconds):
@@ -243,111 +294,47 @@ class HubClient():
             }
         return scan_summaries 
 
-
-class PerceptorScrape:
-    def __init__(self, data={}):
-        self.time_stamp = get_current_datetime()
-        self.data = data
-
-        self.hub_names = []
-        self.hub_to_shas = {}
-
-        self.pod_names = []
-        self.pod_shas = []
-        self.container_names = []
-        self.repositories = []
-
-        self.image_shas = []
-        self.image_repositories = []
-        self.image_sha_to_risk_profile = {}
-        self.image_sha_to_policy_status = {}
-        self.image_sha_to_scans = {}
-        self.image_sha_to_respositories = {}
-
-        self.load_data(data)
-
-    
-    def json(self):
-        return self.data
-
-    def __repr__(self):
-        output = "== OpsSight Analysis ==\n"
-        output += "Hub Count: "+str(len(self.get_hubs_IDs()))+"\n"
-        output += "Total Pod Count: "+str(len(self.get_pods_IDs()))+"\n"
-        output += "Total Image Count: "+str(len(self.get_images_IDs()))+"\n"
-        output += " - Images Scanned: "+str(len(self.get_images_IDs()) - len(self.get_scan_queue_images()))+"\n"
-        output += " - Images Queued: "+str(len(self.get_scan_queue_images()))+"\n"
-        return output 
-
-    def load_data(self, data):
-        for hub_name, hub_data in data["Hubs"].items():
-            self.hub_names.append(hub_name)
-            shas = list(hub_data["CodeLocations"].keys())
-            self.hub_to_shas[hub_name] = shas 
-
-        for pod_name, pod_data in data["CoreModel"]["Pods"].items():
-            self.pod_names.append(pod_name)
-            for container in pod_data["Containers"]:
-                self.repositories.append(container["Image"]["Repository"])
-                self.pod_shas.append(container["Image"]["Sha"])
-                self.container_names.append(container["Name"])
-
-        for image_sha, image_data in data["CoreModel"]["Images"].items():
-            self.image_shas.append(image_sha)
-            self.image_sha_to_risk_profile[image_sha] = image_data["ScanResults"]["RiskProfile"]
-            self.image_sha_to_policy_status[image_sha] = image_data["ScanResults"]["PolicyStatus"]
-            self.image_sha_to_scans[image_sha] = image_data["ScanResults"]["ScanSummaries"]
-            self.image_sha_to_respositories[image_sha] = []
-            for repo in image_data["RepoTags"]:
-                self.image_sha_to_respositories[image_sha].append(repo["Repository"]) 
-                self.image_repositories.append(repo["Repository"])
-
-        for image_sha in data["CoreModel"]["ImageScanQueue"]:
-            pass 
-
-    def get_hubs_IDs(self):
-        return self.data["Hubs"].keys()
-
-    def get_pods_IDs(self):
-        return self.data["CoreModel"]["Pods"].keys()
-
-    def get_pods_images(self):
-        images = []
-        for pod_ID, pod_data in self.data["CoreModel"]["Pods"].items():
-            for container in pod_data["Containers"]:
-                images.append(container['Image']['Sha'])
-        return images
-
-    def get_pods_repositories(self):
-        repositories = []
-        for pod_ID, pod_data in self.data["CoreModel"]["Pods"].items():
-            for container in pod_data["Containers"]:
-                repositories.append(container['Image']['Repository'])
-        return repositories
-        
-    def get_images_IDs(self):
-        return self.data["CoreModel"]["Images"].keys()
-
-    def get_scan_queue_images(self):
-        images = []
-        for elem in self.data["CoreModel"]["ImageScanQueue"]:
-            images.append(elem['Key'])
-        return images
-
-class PerceptorClient():
-    def __init__(self, host_name, port):
-        self.host_name = host_name
-        self.port = port
+class KubeClientWrapper:
+    def __init__(self, in_cluster):
+        if in_cluster:
+            config.load_incluster_config()
+        else:
+            config.load_kube_config()
+        self.v1 = client.CoreV1Api()
 
     def get_scrape(self):
-        dump = self.get_dump()
-        return PerceptorScrape(dump)
+        kube_scrape = KubeScrape()
+        kube_scrape.data = self.get_images()
+        return kube_scrape 
 
-    def get_dump(self):
-        while True:
-            r = requests.get("http://{}:{}/model".format(self.host_name, self.port))
-            if r.status_code == 200:
-                return json.loads(r.text)
+    def get_namespaces(self):
+        return [ns.metadata.name for ns in self.v1.list_namespace()]
+
+    def get_pods(self, namespace="all-namespaces"):
+        if namespace == "all-namespaces":
+            return self.v1.list_pod_for_all_namespaces(watch=False)
+        else:
+            return self.v1.list_namespaced_pod(namespace)
+
+    def get_containers(self):
+        containers = []
+        for pod in self.v1.list_pod_for_all_namespaces().items:
+            containers.extend(pod.spec.containers)
+        return containers
+
+    def get_images(self):
+        images = []
+        for pod in self.v1.list_pod_for_all_namespaces().items:
+            for container in pod.spec.containers:
+                images.append(container.image)
+        return images
+
+    def get_annotations(self):
+        return [pod.metadata.annotations for pod in self.v1.list_pod_for_all_namespaces()]
+
+    def get_labels(self):
+        return [pod.metadata.labels for pod in self.v1.list_pod_for_all_namespaces()]
+
 
 
 

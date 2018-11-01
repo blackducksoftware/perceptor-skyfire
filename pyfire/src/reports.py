@@ -1,24 +1,50 @@
 import logging
 
+def find_duplicated_items(item_list):
+    duplicates = []
+    found_items = {}
+    for item in item_list:
+        if item in found_items:
+            duplicates.append(item)
+        else:
+            found_items[item] = True
+    return duplicates
+
 class PerceptorReport:
     def __init__(self, scrape):
         logging.debug("perceptor report, scrape: ")
+
         self.hubs = []
         self.num_hubs = 0
         self.num_images = 0
         self.num_pods = 0
+        self.num_containers = 0
+        self.num_images_in_multiple_containers = 0
+        self.num_shas_in_hubs = 0
+        self.num_pod_namespaces = 0
+
         self.parse_scrape(scrape)
 
     def parse_scrape(self, scrape):
         self.hubs = scrape.hub_names
         self.num_hubs = len(scrape.hub_names)
-
+        self.num_pods = len(scrape.pod_names)
+        self.num_containers = len(scrape.container_names)
+        self.num_images = len(scrape.image_shas)
+        duplicate_shas = find_duplicated_items(scrape.pod_shas)
+        self.num_images_in_multiple_containers = len(duplicate_shas)
+        self.num_shas_in_hubs = len(scrape.hub_shas)
+        self.num_pod_namespaces = len(set(scrape.pod_namespaces))
     
     def json(self):
         return {
             'num_hubs': self.num_hubs,
+            'num_shas_in_hubs' : self.num_shas_in_hubs,
+            'num_containers' : self.num_containers,
             'num_images': self.num_images,
-            'num_pods': self.num_pods
+            'num_pods': self.num_pods,
+            'num_images_in_multiple_containers': self.num_images_in_multiple_containers,
+            'num_pod_namespaces' : self.num_pod_namespaces
         }
 
 class HubReport:
@@ -31,6 +57,9 @@ class HubReport:
 
     def parse_scrape(self, scrape):
         pass
+
+    def json(self):
+        pass 
 
 class MultipleHubReport:
     def __init__(self, scrapes):
@@ -50,6 +79,9 @@ class KubeReport:
     def parse_scrape(self, scrape):
         self.respositories = scrape.data 
         self.num_repositories = len(self.respositories)
+
+    def json(self):
+        pass
 
 class perceptorKubeReport:
     def __init__(self, perceptor_scrape, kube_scrape):
