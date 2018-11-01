@@ -2,6 +2,7 @@ import threading
 import json
 import queue
 import logging
+from reports import PerceptorReport
 
 
 class Skyfire:
@@ -10,6 +11,7 @@ class Skyfire:
         self.event_thread = threading.Thread(target=self.read_events)
         self.is_running = False
         self.opssight = None
+        self.opssight_report = None
         self.kube = None
         self.hubs = {}
 
@@ -41,6 +43,7 @@ class Skyfire:
     def perceptor_dump(self, dump):
         def f():
             self.opssight = dump
+            self.opssight_report = PerceptorReport(dump)
         self.q.put(f)
 
     def kube_dump(self, dump):
@@ -62,7 +65,8 @@ class Skyfire:
         wrapper = {}
         def f():
             wrapper['json'] = {
-                'opssight': self.opssight,
+                'opssight': self.opssight.json(),
+                'opssight-report': self.opssight_report.json(),
                 'kube': self.kube,
                 'hub': dict((host, dump) for (host, dump) in self.hubs.items())
             }
