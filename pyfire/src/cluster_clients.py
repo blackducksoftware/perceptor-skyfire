@@ -7,10 +7,10 @@ from kubernetes import client, config
 import logging 
 
 
-class kubeScrape:
-    def __init__(self):
+class KubeScrape:
+    def __init__(self,data=[]):
         self.time_stamp = datetime.datetime.now()
-        self.data = []
+        self.data = data
     
     def __repr__(self):
         output = "== Kube Analysis ==\n"
@@ -27,7 +27,7 @@ class KubeClientWrapper:
         self.v1 = client.CoreV1Api()
 
     def get_scrape(self):
-        kube_scrape = kubeScrape()
+        kube_scrape = KubeScrape()
         kube_scrape.data = self.get_images()
         return kube_scrape 
 
@@ -60,9 +60,28 @@ class KubeClientWrapper:
         return [pod.metadata.labels for pod in self.v1.list_pod_for_all_namespaces()]
 
 class HubScrape():
-    def __init__(self):
+    def __init__(self, data={}):
         self.time_stamp = datetime.datetime.now()
-        self.data = {}
+        self.data = data
+
+        self.project_urls = []
+        self.version_urls = []
+        self.code_location_urls = []
+        self.shas = []
+
+        self.project_to_versions = {}
+
+        self.version_to_risk_profile = {}
+        self.version_to_policy_status = {}
+
+        self.code_location_to_scans = {}
+
+        self.sha_to_code_location_url = {}
+        self.sha_to_version_url = {}
+        self.sha_to_project_url = {}
+        self.sha_to_scans = {}
+
+        self.load_data(data)
 
     def __repr__(self):
         output = "== Hub Analysis ==\n"
@@ -74,6 +93,25 @@ class HubScrape():
         output += "Num Projects: "+str(num_projects)+"\n"
         output += "Total Code Locations: "+str(num_code_locations)+"\n"
         return output 
+
+    def load_data(self, data):
+        for project_url, project_data in data.items():
+            self.project_urls.append(project_url)
+            self.project_to_versions[project_url] = []
+            for version_url, version_data in project_data['versions'].items():
+                self.version_urls.append(version_url)
+                self.project_to_versions[project_url].append(version_url)
+                self.version_to_risk_profile[version_url] = version_data['riskProfile']
+                self.version_to_policy_status[version_url] = version_data['policy-status']
+                for code_loc_url, code_loc_data in version_data['codelocations'].items():
+                    self.code_location_urls.append(code_loc_url)
+                    self.code_location_to_scans[code_loc_url] = code_loc_data['scans']
+                    sha = code_loc_data['sha']
+                    self.shas.append(sha)
+                    self.sha_to_code_location_url[sha] = code_loc_url 
+                    self.sha_to_version_url[sha] = version_url 
+                    self.sha_to_project_url[sha] = project_url
+                    self.sha_to_scans[sha] = code_loc_data['scans']
 
     def get_code_location_shas(self):
         shas = []
@@ -199,10 +237,28 @@ class HubClient():
             }
         return scan_summaries 
 
+
 class PerceptorScrape:
-    def __init__(self, data):
+    def __init__(self, data={}):
         self.time_stamp = datetime.datetime.now()
         self.data = data
+
+        self.hub_names = []
+        self.hub_to_shas = {}
+
+        self.pod_names = []
+        self.pod_shas = []
+        self.container_names = []
+        self.repositories = []
+
+        self.image_shas = []
+        self.image_sha_to_risk_profile = {}
+        self.image_sha_to_policy_status = {}
+        self.image_sha_to_scans = {}
+        self.image_sha_to_respositories = {}
+
+        self.load_data(data)
+        
     
     def json(self):
         return self.data
@@ -215,6 +271,31 @@ class PerceptorScrape:
         output += " - Images Scanned: "+str(len(self.get_images_IDs()) - len(self.get_scan_queue_images()))+"\n"
         output += " - Images Queued: "+str(len(self.get_scan_queue_images()))+"\n"
         return output 
+
+    def load_data(self, data):
+        for hub_name, hub_data in data["Hubs"].items():
+            self.hub_names.append(hub_name)
+            shas = list(hub_data["CodeLocations"].keys())
+            self.hub_to_shas[hub_name] = shas 
+
+        for pod_name, pod_data in data["CoreModel"]["Pods"].items():
+            self.pod_names.append(pod_name)
+            for container in pod_data["Containers"]:
+                self.repositories.append(container["Image"]["Repository"])
+                self.pod_shas.append(container["Image"]["Sha"])
+                self.container_names.append(container["Name"])
+
+        for image_sha, image_data in data["CoreModel"]["Images"].items():
+            self.image_shas.append(image_sha)
+            self.image_sha_to_risk_profile[image_sha] = image_data["ScanResults"]["RiskProfile"]
+            self.image_sha_to_policy_status[image_sha] = image_data["ScanResults"]["PolicyStatus"]
+            self.image_sha_to_scans[image_sha] = image_data["ScanResults"]["ScanSummaries"]
+            self.image_sha_to_respositories[image_sha] = []
+            for repo in image_data["RepoTags"]:
+                self.image_sha_to_respositories[image_sha].append(repo["Repository"]) 
+
+        for image_sha in data["CoreModel"]["ImageScanQueue"]:
+            pass 
 
     def get_hubs_IDs(self):
         return self.data["Hubs"].keys()

@@ -1,6 +1,29 @@
 import logging
+'''
+    opssight_analysis = opssight_client.get_analysis()
+    print(opssight_analysis)
+    #print(json.dumps( opssight_analysis.data ,indent=2))
+    #print(opssight_analysis.get_pods_images())
 
+    print("== OpsSight vs Hub ==")
+    opssight_pod_images = set(opssight_analysis.get_pods_images())
+    hub_code_location_images = set(hub_analysis.get_code_location_shas())
+    print("OpsSight Images: " + str(len(opssight_pod_images)))
+    print("Hub Images: "+str(len(hub_code_location_images)))
+    inter = opssight_pod_images.intersection(hub_code_location_images)
+    print("Images From Hub that OpsSight Found: "+str(len(inter)))
+    
 
+    print("")
+    print("== OpsSight vs Cluster ==")
+    opsight_repositories = set(opssight_analysis.get_pods_repositories())
+    kube_images = set([x.split(":")[0] for x in kube_client.get_images()])
+    print("Images in Cluster: "+str(len(kube_images)))
+    inter = kube_images.intersection(opsight_repositories)
+    print("Images in Cluster that OpsSight Found: "+str(len(inter)))
+    diff_images = kube_images.difference(opsight_repositories)
+    print("Images Untracked in Cluster: "+str(len(diff_images)))
+'''
 class PerceptorReport:
     def __init__(self, scrape):
         logging.debug("perceptor report, scrape: ")
@@ -11,8 +34,9 @@ class PerceptorReport:
         self.parse_scrape(scrape.data)
 
     def parse_scrape(self, scrape):
-        self.hubs = list(scrape["Hubs"].keys())
-        self.num_hubs = len(self.hubs)
+        self.hubs = scrape.hubs
+        self.num_hubs = len(scrape.hubs)
+        
     
     def json(self):
         return {
