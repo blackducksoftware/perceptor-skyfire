@@ -3,6 +3,7 @@ import json
 import queue
 import logging
 from reports import PerceptorReport, KubeReport
+import util
 
 
 class Skyfire:
@@ -79,7 +80,7 @@ class Skyfire:
                 'kube-report': self.kube_report,
                 'hub': dict((host, dump) for (host, dump) in self.hubs.items())
             }
-            wrapper['json'] = json.dumps(dump_dict, default=lambda o: o.__dict__, indent=2)
+            wrapper['json'] = json.dumps(dump_dict, default=util.default_json_serializer, indent=2)
             self.logger.debug("waiting inside f")
             b.wait()
         self.q.put(f)
