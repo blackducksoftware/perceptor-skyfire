@@ -5,6 +5,7 @@ import time
 from kubernetes import client, config
 import logging
 import util
+import podreader
 
 
 class Container:
@@ -23,6 +24,37 @@ class Pod:
         for cont in blob.status.container_statuses:
             self.containers.append(Container(cont))
         self.uid = blob.metadata.uid
+    
+    def opssight_labels(self):
+        expected = set(podreader.get_all_labels(len(self.containers)))
+        actual = set(self.labels.keys())
+        present = expected.intersection(actual)
+        missing = expected - actual
+        return (missing, present)
+    
+    def has_all_labels(self):
+        missing, _ = self.opssight_labels()
+        return len(missing) == 0
+    
+    def is_partially_labeled(self):
+        missing, present = self.opssight_labels()
+        return len(missing) > 0 and len(present) > 0
+
+    def opssight_annotations(self):
+        expected = set(podreader.get_all_annotations(len(self.containers)))
+        actual = set(self.annotations.keys())
+        present = expected.intersection(actual)
+        missing = expected - actual
+        return (missing, present)
+    
+    def has_all_annotations(self):
+        missing, _ = self.opssight_annotations()
+        return len(missing) == 0
+    
+    def is_partially_annotated(self):
+        missing, present = self.opssight_annotations()
+        return len(missing) > 0 and len(present) > 0
+
 
 class Dump:
     def __init__(self, pod_blob):
@@ -40,9 +72,6 @@ class Client:
     def get_dump(self):
         pod_blob = self.get_pods()
         return Dump(pod_blob)
-
-    def get_namespaces(self):
-        return [ns.metadata.name for ns in self.v1.list_namespace()]
 
     def get_pods(self, namespace=None):
         if namespace is None:
@@ -70,6 +99,12 @@ def example():
     kubeClient = Client(in_cluster=False)
     dump = kubeClient.get_dump()
     print(json.dumps(dump, default=util.default_json_serializer, indent=2))
+    for pod in dump.pods:
+        print(pod.name, 
+            "\n", pod.opssight_labels(),
+            "\n\t", pod.has_all_labels(), pod.is_partially_labeled(), 
+            "\n", pod.opssight_annotations(), 
+            "\n\t", pod.has_all_annotations(), pod.is_partially_annotated(), "\n")
 
 if __name__ == "__main__":
     example()
