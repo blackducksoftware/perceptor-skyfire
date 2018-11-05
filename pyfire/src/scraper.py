@@ -62,24 +62,27 @@ class Scraper(object):
             metrics.record_event("hubScrape-{}".format(host))
             time.sleep(self.hub_pause)
 
-    def get_hub_scrape_thread(self,host):
-        def f():
+    def get_hub_scrape_thread(self, host):
+        def hub_scrape_thread_wrapper():
             self.hub_scrape_thread(host)
-        return f
+        return hub_scrape_thread_wrapper
 
     def stop(self):
         """
         TODO this can't safely be called more than once
         """
-        self.is_running = False
-        self.perceptor_thread.join()
-        self.kube_thread.join()
-        for host in self.hub_clients:
-            self.stop_hub(host)
+        if self.is_running == True:
+            self.is_running = False
+            self.perceptor_thread.join()
+            self.kube_thread.join()
+            for host in self.hub_clients:
+                self.stop_hub(host)
+        else:
+            logging.error("Scrapper thread already stopped")
 
     def stop_hub(self, host):
-        self.hub_clients[host][2] = False
-        self.hub_clients[host][1].join()
+        self.hub_clients[host]['should_run'] = False
+        self.hub_clients[host]['thread'].join()
         del self.hub_clients[host]
 
 
