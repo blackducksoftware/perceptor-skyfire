@@ -82,14 +82,6 @@ class HubScrape():
                     self.sha_to_project_url[sha] = project_url
                     self.sha_to_scans[sha] = code_loc_data['scans']
 
-    def get_code_location_shas(self):
-        shas = []
-        for project_ID, project_data in self.data.items():
-            for version_ID, version_data in project_data["versions"].items():
-                for code_location_ID, code_location_data in version_data['codelocations'].items():
-                    shas.append(code_location_data['sha'])
-        return shas 
-
 class PerceptorScrape:
     def __init__(self, data={}):
         self.time_stamp = get_current_datetime()
@@ -159,6 +151,29 @@ class PerceptorScrape:
 '''
 Client Classes
 '''
+
+class MockClient():
+    static_data_files = {
+        'perceptor': './src/staticDumps/staticPerceptorScrape.txt',
+        'kube' : './src/staticDumps/staticKubeScrape.txt',
+        'hub1' : './src/staticDumps/staticHubScrape1.txt',
+        'hub2' : './src/staticDumps/staticHubScrape2.txt'
+    }
+    def __init__(self, name):
+        self.name = name
+
+    def get_scrape(self):
+        import json
+        if self.name in MockClient.static_data_files:
+            with open(MockClient.static_data_files[self.name], 'r') as f:
+                if self.name == 'perceptor':
+                    return PerceptorScrape(json.load(f))
+                elif self.name == 'kube':
+                    return KubeScrape(json.load(f))
+                else:
+                    return HubScrape(json.load(f))
+        logging.error("Mock Client "+self.name+" does not exist")
+        return None 
 
 class PerceptorClient():
     def __init__(self, host_name, port):

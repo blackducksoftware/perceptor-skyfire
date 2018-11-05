@@ -3,6 +3,7 @@ import threading
 import json
 import time
 import queue
+from skyfire import *
 
 
 paths = set(['/latestreport'])
@@ -37,17 +38,13 @@ class Handler(BaseHTTPRequestHandler):
 #        self.wfile.write(b"{}")
 
 
-def new_handler(model):
+def get_server_handler(model):
     def handler(*args, **kwargs):
         return Handler(model, *args, **kwargs)
     return handler
 
-class MockModel:
-    def get_latest_report(self):
-        return {'abc': 123}
-
-def start_http_server(port, model):
-    server = ThreadingHTTPServer(('', port), new_handler(model))
+def start_http_server(port, skyfire):
+    server = ThreadingHTTPServer(('', port), get_server_handler(skyfire))
     print('Starting http server...')
     try:
         server.serve_forever()
@@ -58,4 +55,4 @@ def start_http_server(port, model):
 
 
 if __name__ == "__main__":
-    start_http_server(3102, MockModel())
+    start_http_server(3102, MockSkyfire())
