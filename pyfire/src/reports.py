@@ -35,17 +35,6 @@ class PerceptorReport:
         self.num_images_in_multiple_containers = len(duplicate_shas)
         self.num_shas_in_hubs = len(scrape.hub_shas)
         self.num_pod_namespaces = len(set(scrape.pod_namespaces))
-    
-    def json(self):
-        return {
-            'num_hubs': self.num_hubs,
-            'num_shas_in_hubs' : self.num_shas_in_hubs,
-            'num_containers' : self.num_containers,
-            'num_images': self.num_images,
-            'num_pods': self.num_pods,
-            'num_images_in_multiple_containers': self.num_images_in_multiple_containers,
-            'num_pod_namespaces' : self.num_pod_namespaces
-        }
 
 class HubReport:
     def __init__(self, scrape):
@@ -57,9 +46,6 @@ class HubReport:
 
     def parse_scrape(self, scrape):
         pass
-
-    def json(self):
-        pass 
 
 class MultipleHubReport:
     def __init__(self, scrapes):
@@ -80,9 +66,6 @@ class KubeReport:
         self.respositories = scrape.data 
         self.num_repositories = len(self.respositories)
 
-    def json(self):
-        pass
-
 class perceptorKubeReport:
     def __init__(self, perceptor_scrape, kube_scrape):
         self.all_kube_repositories = set()
@@ -94,21 +77,11 @@ class perceptorKubeReport:
         self.parse_scrapes(perceptor_scrape, kube_scrape)
 
     def parse_scrapes(self, perceptor_scrape, kube_scrape):
-        self.all_kube_repositories = set( [x.split(":")[0] for x in kube_scrape.data] )
+        self.all_kube_repositories = set( [x.split(":")[0] for x in kube_scrape.dump] )
         self.all_perceptor_repositories = set(perceptor_scrape.image_repositories)
         self.only_perceptor_repositories = self.all_perceptor_repositories.difference(self.all_kube_repositories)
         self.only_kube_repositories = self.all_kube_repositories.difference(self.all_perceptor_repositories)
         self.intersection_repositories = self.all_kube_repositories.intersection(self.all_perceptor_repositories)
-
-    def json(self):
-        return {
-            "all_kube_repositories" : len(self.all_kube_repositories),
-            "all_perceptor_repositories" : len(self.all_perceptor_repositories),
-            "only_perceptor_repositories" :len(self.only_perceptor_repositories),
-            "only_kube_repositories" : len(self.only_kube_repositories),
-            "intersection_repositories" : len(self.intersection_repositories)
-        }
-
 
 class HubPerceptorReport:
     def __init__(self, hub_scrape, perceptor_scrape):
@@ -126,15 +99,6 @@ class HubPerceptorReport:
         self.only_hub_shas = self.only_hub_shas.difference(self.only_perceptor_shas)
         self.only_perceptor_shas = self.only_perceptor_shas.difference(self.only_hub_shas)
         self.intersection_shas = self.only_hub_shas.intersection(self.only_perceptor_shas)
-
-    def json(self):
-        return {
-            "all_hub_shas" : len(self.all_hub_shas),
-            "all_perceptor_shas" : len(self.all_perceptor_shas),
-            "only_hub_shas" : len(self.only_hub_shas),
-            "only_perceptor_shas" : len(self.only_perceptor_shas),
-            "intersection_shas" : len(self.intersection_shas)
-        }
 
 class MultipleHubPerceptorReport:
     def __init__(self, hub_scrapes, perceptor_scrape):

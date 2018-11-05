@@ -15,20 +15,20 @@ Data Scrape Classes
 '''
 
 class KubeScrape:
-    def __init__(self, data = []):
+    def __init__(self, dump = []):
         self.time_stamp = get_current_datetime()
-        self.data = data
+        self.dump = dump
     
     def __repr__(self):
         output = "== Kube Analysis ==\n"
-        num_images = len(self.data)
+        num_images = len(self.dump)
         output += "Num Images: "+str(num_images)+"\n"
         return output
 
 class HubScrape():
-    def __init__(self, data={}):
+    def __init__(self, dump={}):
         self.time_stamp = get_current_datetime()
-        self.data = data
+        self.dump = dump
 
         self.project_urls = []
         self.version_urls = []
@@ -47,10 +47,10 @@ class HubScrape():
         self.sha_to_project_url = {}
         self.sha_to_scans = {}
 
-        self.load_data(data)
+        self.load_dump(dump)
 
     def json(self):
-        return self.data
+        return self.dump
 
     def __repr__(self):
         output = "== Hub Analysis ==\n"
@@ -63,8 +63,8 @@ class HubScrape():
         output += "Total Code Locations: "+str(num_code_locations)+"\n"
         return output 
 
-    def load_data(self, data):
-        for project_url, project_data in data.items():
+    def load_dump(self, dump):
+        for project_url, project_data in dump.items():
             self.project_urls.append(project_url)
             self.project_to_versions[project_url] = []
             for version_url, version_data in project_data['versions'].items():
@@ -83,9 +83,9 @@ class HubScrape():
                     self.sha_to_scans[sha] = code_loc_data['scans']
 
 class PerceptorScrape:
-    def __init__(self, data={}):
+    def __init__(self, dump={}):
         self.time_stamp = get_current_datetime()
-        self.data = data
+        self.dump = dump
 
         self.hub_names = []
         self.hub_shas = []
@@ -104,11 +104,11 @@ class PerceptorScrape:
         self.image_sha_to_scans = {}
         self.image_sha_to_respositories = {}
 
-        self.load_data(data)
+        self.load_dump(dump)
 
 
     def json(self):
-        return self.data
+        return self.dump
 
     def __repr__(self):
         output = "== OpsSight Analysis ==\n"
@@ -119,14 +119,14 @@ class PerceptorScrape:
         output += " - Images Queued: "+str(len(self.get_scan_queue_images()))+"\n"
         return output 
 
-    def load_data(self, data):
-        for hub_name, hub_data in data["Hubs"].items():
+    def load_dump(self, dump):
+        for hub_name, hub_data in dump["Hubs"].items():
             self.hub_names.append(hub_name)
             shas = list(hub_data["CodeLocations"].keys())
             self.hub_to_shas[hub_name] = shas 
             self.hub_shas.extend(shas)
 
-        for pod_name, pod_data in data["CoreModel"]["Pods"].items():
+        for pod_name, pod_data in dump["CoreModel"]["Pods"].items():
             self.pod_names.append(pod_name)
             self.pod_namespaces.append(pod_data["Namespace"])
             for container in pod_data["Containers"]:
@@ -134,7 +134,7 @@ class PerceptorScrape:
                 self.pod_shas.append(container["Image"]["Sha"])
                 self.container_names.append(container["Name"])
 
-        for image_sha, image_data in data["CoreModel"]["Images"].items():
+        for image_sha, image_data in dump["CoreModel"]["Images"].items():
             self.image_shas.append(image_sha)
             self.image_sha_to_risk_profile[image_sha] = image_data["ScanResults"]["RiskProfile"]
             self.image_sha_to_policy_status[image_sha] = image_data["ScanResults"]["PolicyStatus"]
@@ -144,7 +144,7 @@ class PerceptorScrape:
                 self.image_sha_to_respositories[image_sha].append(repo["Repository"]) 
                 self.image_repositories.append(repo["Repository"])
 
-        for image_sha in data["CoreModel"]["ImageScanQueue"]:
+        for image_sha in dump["CoreModel"]["ImageScanQueue"]:
             pass 
 
 
