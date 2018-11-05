@@ -18,24 +18,28 @@ kubernetes.client.rest.logger.setLevel("DEBUG")
 
 class Config:
     def __init__(self, config_dict):
-        self.log_level = config_dict['LogLevel']
         skyfire = config_dict['Skyfire']
         perceptor = config_dict['Perceptor']
         hub = config_dict['Hub']
+
+        self.log_level = config_dict['LogLevel']
         self.skyfire_port = skyfire['Port']
         self.prometheus_port = skyfire['PrometheusPort']
         self.use_in_cluster_config = skyfire['UseInClusterConfig']
+        self.use_mock_mode = skyfire.get("UseMockMode", False)
+
         self.hub_client_timeout_seconds = skyfire['HubClientTimeoutSeconds']
+        self.hub_dump_pause_seconds = skyfire['HubDumpPauseSeconds']
         self.kub_dump_interval_seconds = skyfire['KubeDumpIntervalSeconds']
         self.perceptor_dump_interval_seconds = skyfire['PerceptorDumpIntervalSeconds']
-        self.hub_dump_pause_seconds = skyfire['HubDumpPauseSeconds']
+        
         self.perceptor_host = perceptor['Host']
         self.perceptor_port = perceptor['Port']
         self.hub_hosts = hub['Hosts']
         self.hub_user = hub['User']
         self.hub_port = hub['Port']
         self.hub_password_env_var = hub['PasswordEnvVar']
-        self.use_mock_mode = skyfire.get("UseMockMode", False)
+        
 
 def instantiate_mock_clients():
     perceptor_client = MockClient("perceptor")
