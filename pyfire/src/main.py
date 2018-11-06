@@ -13,7 +13,7 @@ import kubernetes.client
 
 # TODO is this the right way to turn off annoying logging?
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-kubernetes.client.rest.logger.setLevel("DEBUG")
+kubernetes.client.rest.logger.setLevel("INFO")
 
 
 class Config:
@@ -71,6 +71,8 @@ def main():
     config = Config(config_dict)
     logging.getLogger().setLevel(config.log_level.upper())
 
+    print("Starting Skyfire!!!")
+
     # Instantiate Skyfire Objects
     skyfire = Skyfire()
 
@@ -85,9 +87,6 @@ def main():
     # Instantiate Skyfire Metrics Recording
     print("starting prometheus server on port", config.prometheus_port)
     metrics.start_http_server(config.prometheus_port)
-
-    metrics.record_error("oops")
-    metrics.record_problem('nope', 4)
 
     # Instantiate Skyfire server to access data
     print("starting http server on port", config.skyfire_port)

@@ -31,12 +31,6 @@ class KubeScrape:
         self.image_to_namespace = {}
 
         self.load_dump(dump)
-    
-    def __repr__(self):
-        output = "== Kube Analysis ==\n"
-        num_images = len(self.dump)
-        output += "Num Images: "+str(num_images)+"\n"
-        return output
 
     def load_dump(self, dump):
         for namespace_name, namespace_data in dump.items():
@@ -74,17 +68,6 @@ class HubScrape():
         self.sha_to_scans = {}
 
         self.load_dump(dump)
-
-    def __repr__(self):
-        output = "== Hub Analysis ==\n"
-        num_projects = len(self.dump.keys())
-        num_code_locations = 0
-        for project_ID, project_data in self.dump.items():
-            for version_ID, version_data in project_data["versions"].items():
-                num_code_locations += len(version_data['codelocations'].keys())
-        output += "Num Projects: "+str(num_projects)+"\n"
-        output += "Total Code Locations: "+str(num_code_locations)+"\n"
-        return output 
 
     def load_dump(self, dump):
         for project_url, project_data in dump.items():
@@ -128,15 +111,6 @@ class PerceptorScrape:
         self.image_sha_to_respositories = {}
 
         self.load_dump(dump)
-
-    def __repr__(self):
-        output = "== OpsSight Analysis ==\n"
-        output += "Hub Count: "+str(len(self.get_hubs_IDs()))+"\n"
-        output += "Total Pod Count: "+str(len(self.get_pods_IDs()))+"\n"
-        output += "Total Image Count: "+str(len(self.get_images_IDs()))+"\n"
-        output += " - Images Scanned: "+str(len(self.get_images_IDs()) - len(self.get_scan_queue_images()))+"\n"
-        output += " - Images Queued: "+str(len(self.get_scan_queue_images()))+"\n"
-        return output 
 
     def load_dump(self, dump):
         for hub_name, hub_data in dump["Hubs"].items():
@@ -203,10 +177,16 @@ class PerceptorClient():
         return PerceptorScrape(self.get_dump())
 
     def get_dump(self):
-        while True:
-            r = requests.get("http://{}:{}/model".format(self.host_name, self.port))
+        for i in range(50):
+            #url = "http://{}:{}/model".format(self.host_name, self.port)
+            url = "http://{}/model".format(self.host_name)
+            print(url)
+            r = requests.get(url)
             if r.status_code == 200:
                 return json.loads(r.text)
+            else:
+                print("ERROR: Could not connect to Perceptor")
+                return {}
 
 class HubClient():
     def __init__(self, host_name, port, username, password, client_timeout_seconds):
@@ -223,7 +203,9 @@ class HubClient():
         security_headers = {'Content-Type':'application/x-www-form-urlencoded'}
         security_data = {'j_username': self.username,'j_password': self.password}
         # verify=False does not verify SSL connection - insecure
-        url = "https://{}:{}/j_spring_security_check".format(self.host_name, self.port)
+        #url = "https://{}:{}/j_spring_security_check".format(self.host_name, self.port)
+        url = "https://{}/j_spring_security_check".format(self.host_name)
+        print(url)
         r = requests.post(url, verify=False, data=security_data, headers=security_headers)
         return r.cookies 
 
@@ -239,7 +221,10 @@ class HubClient():
         return HubScrape(self.get_dump())
 
     def get_dump(self):
-        dump = self.api_get("https://"+self.host_name+":443/api"+"/projects?limit="+str(self.max_projects)).json()
+        dump = self.api_get("https://"+self.host_name+":443/api"+"/projects?limit="+str(self.max_projects))
+        if dump == None:
+            return {}
+        dump = dump.json()
         projects = {}
         for project in dump['items']:
             project_href = project['_meta']['href'] 

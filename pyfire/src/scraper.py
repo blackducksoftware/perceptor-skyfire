@@ -37,17 +37,17 @@ class Scraper(object):
     def perceptor_scrape_thread(self):
         while self.is_running:
             scrape = self.perceptor_client.get_scrape()
+            metrics.record_scrape("perceptor_scrape")
             self.skyfire_delegate.enqueue_perceptor_scrape(scrape)
             logging.debug("got perceptor scrape")
-            metrics.record_event("perceptorScrape")
             time.sleep(self.perceptor_pause)
     
     def kube_scrape_thread(self):
         while self.is_running:
             scrape = self.kube_client.get_scrape()
+            metrics.record_scrape("kube_scrape")
             self.skyfire_delegate.enqueue_kube_scrape(scrape)
             logging.debug("got kube scrape")
-            metrics.record_event("kubeScrape")
             time.sleep(self.kube_pause)
 
     def hub_scrape_thread(self, host):
@@ -57,9 +57,9 @@ class Scraper(object):
             if not should_run:
                 break
             scrape = client.get_scrape()
+            metrics.record_scrape("hub_scrape")
             self.skyfire_delegate.enqueue_hub_scrape(host, scrape)
             logging.debug("got hub scrape from %s", host)
-            metrics.record_event("hubScrape-{}".format(host))
             time.sleep(self.hub_pause)
 
     def get_hub_scrape_thread(self, host):
