@@ -5,7 +5,7 @@ from scraper import Scraper
 from skyfire import Skyfire
 import metrics
 import logging
-from cluster_clients import PerceptorClient, KubeClientWrapper, HubClient, MockClient 
+from cluster_clients import *
 import os
 import urllib3
 import kubernetes.client
@@ -52,7 +52,7 @@ def instantiate_mock_clients():
 
 def instantiate_clients(config):
     p_client = PerceptorClient(config.perceptor_host, config.perceptor_port)
-    k_client = KubeClientWrapper(config.use_in_cluster_config)
+    k_client = KubeClient(config.use_in_cluster_config)
     h_clients = {}
     hub_password = os.getenv(config.hub_password_env_var)
     for host in config.hub_hosts:
