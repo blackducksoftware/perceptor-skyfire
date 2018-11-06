@@ -15,20 +15,46 @@ Data Scrape Classes
 '''
 
 class KubeScrape:
-    def __init__(self, data = []):
+    def __init__(self, dump={}):
         self.time_stamp = get_current_datetime()
-        self.data = data
+        self.dump = dump
+
+        self.namespaces = []
+        self.pod_names = []
+        self.pod_annotations = []
+        self.pod_labels = []
+        
+
+        self.container_names = []
+        self.container_images = []
+
+        self.image_to_namespace = {}
+
+        self.load_dump(dump)
     
     def __repr__(self):
         output = "== Kube Analysis ==\n"
-        num_images = len(self.data)
+        num_images = len(self.dump)
         output += "Num Images: "+str(num_images)+"\n"
         return output
 
+    def load_dump(self, dump):
+        for namespace_name, namespace_data in dump.items():
+            self.namespaces.append(namespace_name)
+            for pod_name, pod_data in namespace_data.items():
+                self.pod_names.append(pod_name)
+                self.pod_annotations.append(pod_data['annotations'])
+                self.pod_labels.append(pod_data['labels'])
+                for container_name, container_data in pod_data['containers'].items():
+                    self.container_names.append(container_name)
+                    self.container_images.append(container_data['image'])
+                    self.image_to_namespace[container_data['image']] = namespace_name
+
+
 class HubScrape():
-    def __init__(self, data={}):
+    def __init__(self, dump={}):
         self.time_stamp = get_current_datetime()
-        self.data = data
+        self.dump = dump
 
         self.project_urls = []
         self.version_urls = []
@@ -47,24 +73,21 @@ class HubScrape():
         self.sha_to_project_url = {}
         self.sha_to_scans = {}
 
-        self.load_data(data)
-
-    def json(self):
-        return self.data
+        self.load_dump(dump)
 
     def __repr__(self):
         output = "== Hub Analysis ==\n"
-        num_projects = len(self.data.keys())
+        num_projects = len(self.dump.keys())
         num_code_locations = 0
-        for project_ID, project_data in self.data.items():
+        for project_ID, project_data in self.dump.items():
             for version_ID, version_data in project_data["versions"].items():
                 num_code_locations += len(version_data['codelocations'].keys())
         output += "Num Projects: "+str(num_projects)+"\n"
         output += "Total Code Locations: "+str(num_code_locations)+"\n"
         return output 
 
-    def load_data(self, data):
-        for project_url, project_data in data.items():
+    def load_dump(self, dump):
+        for project_url, project_data in dump.items():
             self.project_urls.append(project_url)
             self.project_to_versions[project_url] = []
             for version_url, version_data in project_data['versions'].items():
@@ -82,18 +105,10 @@ class HubScrape():
                     self.sha_to_project_url[sha] = project_url
                     self.sha_to_scans[sha] = code_loc_data['scans']
 
-    def get_code_location_shas(self):
-        shas = []
-        for project_ID, project_data in self.data.items():
-            for version_ID, version_data in project_data["versions"].items():
-                for code_location_ID, code_location_data in version_data['codelocations'].items():
-                    shas.append(code_location_data['sha'])
-        return shas 
-
 class PerceptorScrape:
-    def __init__(self, data={}):
+    def __init__(self, dump={}):
         self.time_stamp = get_current_datetime()
-        self.data = data
+        self.dump = dump
 
         self.hub_names = []
         self.hub_shas = []
@@ -112,11 +127,7 @@ class PerceptorScrape:
         self.image_sha_to_scans = {}
         self.image_sha_to_respositories = {}
 
-        self.load_data(data)
-
-
-    def json(self):
-        return self.data
+        self.load_dump(dump)
 
     def __repr__(self):
         output = "== OpsSight Analysis ==\n"
@@ -127,14 +138,14 @@ class PerceptorScrape:
         output += " - Images Queued: "+str(len(self.get_scan_queue_images()))+"\n"
         return output 
 
-    def load_data(self, data):
-        for hub_name, hub_data in data["Hubs"].items():
+    def load_dump(self, dump):
+        for hub_name, hub_data in dump["Hubs"].items():
             self.hub_names.append(hub_name)
             shas = list(hub_data["CodeLocations"].keys())
             self.hub_to_shas[hub_name] = shas 
             self.hub_shas.extend(shas)
 
-        for pod_name, pod_data in data["CoreModel"]["Pods"].items():
+        for pod_name, pod_data in dump["CoreModel"]["Pods"].items():
             self.pod_names.append(pod_name)
             self.pod_namespaces.append(pod_data["Namespace"])
             for container in pod_data["Containers"]:
@@ -142,7 +153,7 @@ class PerceptorScrape:
                 self.pod_shas.append(container["Image"]["Sha"])
                 self.container_names.append(container["Name"])
 
-        for image_sha, image_data in data["CoreModel"]["Images"].items():
+        for image_sha, image_data in dump["CoreModel"]["Images"].items():
             self.image_shas.append(image_sha)
             self.image_sha_to_risk_profile[image_sha] = image_data["ScanResults"]["RiskProfile"]
             self.image_sha_to_policy_status[image_sha] = image_data["ScanResults"]["PolicyStatus"]
@@ -152,7 +163,7 @@ class PerceptorScrape:
                 self.image_sha_to_respositories[image_sha].append(repo["Repository"]) 
                 self.image_repositories.append(repo["Repository"])
 
-        for image_sha in data["CoreModel"]["ImageScanQueue"]:
+        for image_sha in dump["CoreModel"]["ImageScanQueue"]:
             pass 
 
 
@@ -160,14 +171,36 @@ class PerceptorScrape:
 Client Classes
 '''
 
+class MockClient():
+    static_data_files = {
+        'perceptor': './src/staticDumps/staticPerceptorScrape.txt',
+        'kube' : './src/staticDumps/staticKubeScrape.txt',
+        'hub1' : './src/staticDumps/staticHubScrape1.txt',
+        'hub2' : './src/staticDumps/staticHubScrape2.txt'
+    }
+    def __init__(self, name):
+        self.name = name
+
+    def get_scrape(self):
+        import json
+        if self.name in MockClient.static_data_files:
+            with open(MockClient.static_data_files[self.name], 'r') as f:
+                if self.name == 'perceptor':
+                    return PerceptorScrape(json.load(f))
+                elif self.name == 'kube':
+                    return KubeScrape(json.load(f))
+                else:
+                    return HubScrape(json.load(f))
+        logging.error("Mock Client "+self.name+" does not exist")
+        return None 
+
 class PerceptorClient():
     def __init__(self, host_name, port):
         self.host_name = host_name
         self.port = port
 
     def get_scrape(self):
-        dump = self.get_dump()
-        return PerceptorScrape(dump)
+        return PerceptorScrape(self.get_dump())
 
     def get_dump(self):
         while True:
@@ -203,11 +236,9 @@ class HubClient():
         print("Could not contact: "+url)
 
     def get_scrape(self):
-        hub_scrape = HubScrape()
-        hub_scrape.data = self.crawl_hub()
-        return hub_scrape 
+        return HubScrape(self.get_dump())
 
-    def crawl_hub(self):
+    def get_dump(self):
         dump = self.api_get("https://"+self.host_name+":443/api"+"/projects?limit="+str(self.max_projects)).json()
         projects = {}
         for project in dump['items']:
@@ -294,7 +325,7 @@ class HubClient():
             }
         return scan_summaries 
 
-class KubeClientWrapper:
+class KubeClient:
     def __init__(self, in_cluster):
         if in_cluster:
             config.load_incluster_config()
@@ -303,9 +334,31 @@ class KubeClientWrapper:
         self.v1 = client.CoreV1Api()
 
     def get_scrape(self):
-        kube_scrape = KubeScrape()
-        kube_scrape.data = self.get_images()
-        return kube_scrape 
+        return KubeScrape(self.get_dump())
+
+    def get_dump(self):
+        dump = {}
+        cluster_namespaces = [ns.metadata.name for ns in self.v1.list_namespace().items]
+        for namespace in cluster_namespaces:
+            namespace_pods = self.v1.list_namespaced_pod(namespace).items
+            pod_dict = {}
+            for pod in namespace_pods:
+                pod_name = pod.metadata.name
+                pod_labels = pod.metadata.labels
+                pod_annotations = pod.metadata.annotations 
+                pod_containers = pod.spec.containers
+                container_dict = {}
+                for container in pod_containers:
+                    container_image = container.image 
+                    container_name = container.name
+                    container_dict[container_name] = {'image' : container_image}
+                pod_dict[pod_name] = {
+                    'labels' : pod_labels,
+                    'annotations' : pod_annotations,
+                    'containers' : container_dict
+                }
+            dump[namespace] = pod_dict
+        return dump
 
     def get_namespaces(self):
         return [ns.metadata.name for ns in self.v1.list_namespace()]

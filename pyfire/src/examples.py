@@ -1,5 +1,7 @@
 import json
-from scraper import MockDelegate, Scraper
+from scraper import Scraper
+from cluster_clients import *
+from skyfire import MockSkyfire
 import sys
 
 
@@ -9,17 +11,16 @@ def real_reader(conf):
     """
     from cluster_clients import PerceptorClient, KubeClientWrapper, HubClient
 
-    perceptor_client = PerceptorClient(conf['Perceptor']['Host'])
+    perceptor_client = PerceptorClient(conf.perceptor_host,conf.perceptor_port)
 
     kube_client = KubeClientWrapper(conf["Skyfire"]["UseInClusterConfig"])
 
     hub_clients = {}
-    for host in conf["Hub"]["Hosts"]:
-        hub_clients[host] = HubClient(host, conf["Hub"]["User"], conf["Hub"]["PasswordEnvVar"])
+    for host in conf.hub_hosts:
+        hub_clients[host] = HubClient(host, conf.hub_port, conf.hub_user, conf.hub_password_env_var, conf.hub_client_timeout_seconds)
 
-    delegate = MockDelegate()
+    delegate = MockSkyfire()
     s = Scraper(delegate, perceptor_client, kube_client, hub_clients, perceptor_pause=15, kube_pause=15, hub_pause=30)
-    s.start()
 
     while True:
         item = delegate.q.get()
