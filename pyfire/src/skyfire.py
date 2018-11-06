@@ -2,8 +2,9 @@ import threading
 import json
 import queue
 import logging
-from reports import PerceptorReport, KubeReport
+from reports import PerceptorReport, KubeReport, HubReport
 import util
+import metrics 
 
 
 class MockSkyfire():
@@ -65,20 +66,28 @@ class Skyfire:
     def enqueue_perceptor_scrape(self, scrape):
         report = PerceptorReport(scrape)
         def request():
+            metrics.record_skyfire_request("perceptor_scrape")
             self.opssight = scrape
             self.opssight_report = report
+            metrics.record_opssight_report(report)
         self.q.put(request)
 
     def enqueue_kube_scrape(self, scrape):
         report = KubeReport(scrape)
         def request():
+            metrics.record_skyfire_request("kube_scrape")
             self.kube = scrape
             self.kube_report = report
+            metrics.record_kube_report(report)
         self.q.put(request)
 
     def enqueue_hub_scrape(self, host, scrape):
+        report = HubReport(scrape)
         def request():
+            metrics.record_skyfire_request("hub_scrape")
             self.hubs[host] = scrape
+            hub_report = report
+            metrics.record_hub_report(report)
         self.q.put(request)
 
     ### Web Server interface - Put server requests onto the queue
@@ -91,6 +100,7 @@ class Skyfire:
         # this nasty `wrapper` hack is because python doesn't like capturing+mutating strings
         report_wrapper = {} # wrapper remains in this scope but can be accessed from where the function is called
         def request():
+            metrics.record_skyfire_request("get_latest_report")
             skyfire_report = {
                 'opssight': self.opssight,
                 'opssight-report': self.opssight_report,
