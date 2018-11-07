@@ -56,14 +56,18 @@ class Skyfire:
             try:
                 request()
             except Exception as e:
-                self.logger.error("unable to process event: %s", e)
-            self.logger.debug("finished processing item")
+                self.logger.error("Unable to process event: %s", e)
+            self.logger.debug("Finished processing item")
             self.q.task_done()
-        self.logger.info("exiting skyfire event thread")
+        self.logger.info("Exiting skyfire event thread")
     
     ### Scraper Delegate interface - Put scrapes requests onto the Queue
 
-    def enqueue_perceptor_scrape(self, scrape):
+    def enqueue_perceptor_scrape(self, scrape, err):
+        if err is not None:
+            logging.error(str(err))
+            metrics.record_error("PerceptorDump")
+            return
         report = PerceptorReport(scrape)
         def request():
             metrics.record_skyfire_request("perceptor_scrape")
