@@ -13,7 +13,7 @@ import kubernetes.client
 
 # TODO is this the right way to turn off annoying logging?
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-kubernetes.client.rest.logger.setLevel("DEBUG")
+kubernetes.client.rest.logger.setLevel("INFO")
 
 
 class Config:
@@ -40,7 +40,6 @@ class Config:
         self.hub_port = hub['Port']
         self.hub_password_env_var = hub['PasswordEnvVar']
         
-
 def instantiate_mock_clients():
     perceptor_client = MockClient("perceptor")
     kube_client = MockClient("kube")
@@ -76,7 +75,7 @@ def main():
     
     logging.getLogger().setLevel(config.log_level.upper())
 
-    logging.info("config: " + json.dumps(config_dict, indent=2))
+    logging.info("Config: " + json.dumps(config_dict, indent=2))
 
     # Instantiate Skyfire Objects
     logging.info("Starting Skyfire!!!")
@@ -90,13 +89,13 @@ def main():
         perceptor_client, kube_client, hub_clients = instantiate_clients(config)
 
     scraper = Scraper(skyfire, perceptor_client, kube_client, hub_clients)
-    logging.info("Instantiated scraper: %s", str(scraper))
+    logging.info("Instantiated Scraper: %s", str(scraper))
 
     metrics.start_http_server(config.prometheus_port)
-    logging.info("Started Prometheus server on port "+config.prometheus_port)
+    logging.info("Started Prometheus server on port %d", config.prometheus_port)
 
     start_http_server(config.skyfire_port, skyfire)
-    logging.info("Started Skyfire http server on port "+config.skyfire_port)
+    logging.info("Started Skyfire http server on port %d", config.skyfire_port)
 
 
 main()

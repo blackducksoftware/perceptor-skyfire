@@ -36,9 +36,9 @@ class Scraper(object):
 
     def perceptor_scrape_thread(self):
         while self.is_running:
-            scrape = self.perceptor_client.get_scrape()
+            scrape, err = self.perceptor_client.get_scrape()
             metrics.record_scrape("perceptor_scrape")
-            self.skyfire_delegate.enqueue_perceptor_scrape(scrape)
+            self.skyfire_delegate.enqueue_perceptor_scrape(scrape, err)
             logging.debug("got perceptor scrape")
             time.sleep(self.perceptor_pause)
     

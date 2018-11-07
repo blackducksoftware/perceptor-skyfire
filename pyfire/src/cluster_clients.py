@@ -174,19 +174,20 @@ class PerceptorClient():
         self.port = port
 
     def get_scrape(self):
-        return PerceptorScrape(self.get_dump())
+        d, err = self.get_dump()
+        if err is None:
+            return PerceptorScrape(d), None
+        return None, err
 
     def get_dump(self):
-        for i in range(50):
-            #url = "http://{}:{}/model".format(self.host_name, self.port)
-            url = "http://{}/model".format(self.host_name)
-            print(url)
-            r = requests.get(url)
-            if r.status_code == 200:
-                return json.loads(r.text)
-            else:
-                print("ERROR: Could not connect to Perceptor")
-                return {}
+        url = "http://{}:{}/model".format(self.host_name, self.port)
+        print(url)
+        r = requests.get(url)
+        if r.status_code == 200:
+            return json.loads(r.text), None
+        else:
+            logging.error("Could not connect to Perceptor")
+            return None, {'error' : "Perceptor Connection Fail", 'status' : r.status_code, 'url' : url} 
 
 class HubClient():
     def __init__(self, host_name, port, username, password, client_timeout_seconds):
@@ -203,19 +204,19 @@ class HubClient():
         security_headers = {'Content-Type':'application/x-www-form-urlencoded'}
         security_data = {'j_username': self.username,'j_password': self.password}
         # verify=False does not verify SSL connection - insecure
-        #url = "https://{}:{}/j_spring_security_check".format(self.host_name, self.port)
-        url = "https://{}/j_spring_security_check".format(self.host_name)
-        print(url)
+        url = "https://{}:{}/j_spring_security_check".format(self.host_name, self.port)
         r = requests.post(url, verify=False, data=security_data, headers=security_headers)
+
         return r.cookies 
 
     def api_get(self, url):
-        # Try to request data 50 times
-        for i in range(50):
-            r = requests.get(url, verify=False, cookies=self.secure_login_cookie)
-            if r.status_code == 200:
-                return r
-        print("Could not contact: "+url)
+        r = requests.get(url, verify=False, cookies=self.secure_login_cookie)
+        if r.status_code == 200:
+            return r
+        else:
+            logging.error("Could not contact: "+url)
+            logging.error(r.reason)
+            return None 
 
     def get_scrape(self):
         return HubScrape(self.get_dump())

@@ -63,7 +63,11 @@ class Skyfire:
     
     ### Scraper Delegate interface - Put scrapes requests onto the Queue
 
-    def enqueue_perceptor_scrape(self, scrape):
+    def enqueue_perceptor_scrape(self, scrape, err):
+        if err is not None:
+            logging.error(str(err))
+            metrics.record_error("PerceptorDump")
+            return
         report = PerceptorReport(scrape)
         def request():
             metrics.record_skyfire_request("perceptor_scrape")
