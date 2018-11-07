@@ -340,7 +340,14 @@ class KubeClient:
             return None, err 
         return KubeScrape(dump), None 
 
-    def get_dump(self):
+
+
+
+
+
+
+
+    '''def old_get_dump(self):
         dump = {}
         cluster_namespaces = [ns.metadata.name for ns in self.v1.list_namespace().items]
         for namespace in cluster_namespaces:
@@ -363,7 +370,7 @@ class KubeClient:
                 }
             dump[namespace] = pod_dict
         return dump, None 
-
+        '''
 
 
 
