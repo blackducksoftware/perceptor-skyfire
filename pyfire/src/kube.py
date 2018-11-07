@@ -63,7 +63,7 @@ class Dump:
     
 class Client:
     def __init__(self, in_cluster):
-        logging.debug("instantiating kube client with in_cluster %t", in_cluster)
+        logging.debug("instantiating kube client with in_cluster %s", in_cluster)
         if in_cluster:
             config.load_incluster_config()
         else:
@@ -76,6 +76,12 @@ class Client:
         pod_blob = self.get_pods()
         logging.debug("got kube dump of pods")
         return Dump(pod_blob)
+    
+    def get_scrape(self):
+        """
+        This is just a facade because scraper expects this method naming
+        """
+        return self.get_dump()
 
     def get_pods(self, namespace=None):
         if namespace is None:
