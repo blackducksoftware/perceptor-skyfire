@@ -44,9 +44,9 @@ class Scraper(object):
     
     def kube_scrape_thread(self):
         while self.is_running:
-            scrape = self.kube_client.get_scrape()
+            scrape, err = self.kube_client.get_scrape()
             metrics.record_scrape("kube_scrape")
-            self.skyfire_delegate.enqueue_kube_scrape(scrape)
+            self.skyfire_delegate.enqueue_kube_scrape(scrape, err)
             logging.debug("got kube scrape")
             time.sleep(self.kube_pause)
 
@@ -56,9 +56,9 @@ class Scraper(object):
             should_run = self.hub_clients[host]['should_run']
             if not should_run:
                 break
-            scrape = client.get_scrape()
+            scrape, err = client.get_scrape()
             metrics.record_scrape("hub_scrape")
-            self.skyfire_delegate.enqueue_hub_scrape(host, scrape)
+            self.skyfire_delegate.enqueue_hub_scrape(host, scrape, err)
             logging.debug("got hub scrape from %s", host)
             time.sleep(self.hub_pause)
 
