@@ -334,20 +334,15 @@ class KubeClient:
             config.load_kube_config()
         self.v1 = client.CoreV1Api()
 
+    # TODO - Merge together Matt's Kube Client with this one
+
     def get_scrape(self):
         dump, err = self.get_dump()
         if err is not None:
             return None, err 
-        return KubeScrape(dump), None 
+        return KubeScrape(dump), None
 
-
-
-
-
-
-
-
-    '''def old_get_dump(self):
+    def old_get_dump(self):
         dump = {}
         cluster_namespaces = [ns.metadata.name for ns in self.v1.list_namespace().items]
         for namespace in cluster_namespaces:
@@ -370,7 +365,3 @@ class KubeClient:
                 }
             dump[namespace] = pod_dict
         return dump, None 
-        '''
-
-
-
