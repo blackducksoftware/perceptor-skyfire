@@ -39,7 +39,7 @@ class Scraper(object):
             try:
                 self.logger.debug("starting perceptor scrape")
                 scrape, err = self.perceptor_client.get_scrape()
-                metrics.record_scrape("perceptor_scrape")
+                metrics.record_scrape_event("perceptor_scrape")
                 self.skyfire_delegate.enqueue_perceptor_scrape(scrape, err)
                 self.logger.debug("got perceptor scrape")
             except Exception as e:
@@ -53,7 +53,7 @@ class Scraper(object):
             try:
                 self.logger.debug("starting kube scrape")
                 scrape, err = self.kube_client.get_scrape()
-                metrics.record_scrape("kube_scrape")
+                metrics.record_scrape_event("kube_scrape")
                 self.skyfire_delegate.enqueue_kube_scrape(scrape, err)
                 self.logger.debug("got kube scrape")
             except Exception as e:
@@ -71,7 +71,7 @@ class Scraper(object):
                 break
             try:
                 scrape, err = client.get_scrape()
-                metrics.record_scrape("hub_scrape")
+                metrics.record_scrape_event("hub_scrape")
                 self.skyfire_delegate.enqueue_hub_scrape(host, scrape, err)
                 self.logger.debug("got hub scrape from %s", host)
             except Exception as e:

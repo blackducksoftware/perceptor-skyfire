@@ -29,13 +29,16 @@ Create a Counter metric for errors with labels for 'poor connection', 'function 
 Create a Coutner metric for dumps with 'kube dump', 'perceptor dump, and 'hub dump'
 '''
 
+'''
+Skyfire Metrics
+'''
 
 requests_counter = Counter(
     'SkyfireRequests',
     'Counts the requests that skyfire handles on the Queue',
     ['name'], 'perceptor', 'skyfire'
 )
-def record_skyfire_request(label):
+def record_skyfire_request_event(label):
     requests_counter.labels(name=label).inc()
 
 scrape_counter = Counter(
@@ -43,8 +46,20 @@ scrape_counter = Counter(
     'Counts the scrapes that are generated from Clients',
     ['name'], 'perceptor', 'skyfire'
 )
-def record_scrape(label):
+def record_scrape_event(label):
     scrape_counter.labels(name=label).inc()
+
+http_request_counter = Counter(
+    'SkyfireHttpRequests',
+    'Counts the http requests that Skyfire receives',
+    ['name'], 'perceptor', 'skyfire'
+)
+def record_http_request_event(label):
+    http_request_counter.labels(name=label).inc()
+
+'''
+Data Metrics
+'''
 
 opssight_report_gauge = Gauge(
     'OpsSightReportValues',

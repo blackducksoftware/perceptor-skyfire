@@ -70,11 +70,11 @@ class Skyfire:
             return
         report = PerceptorReport(scrape)
         def request():
-            metrics.record_skyfire_request("perceptor_scrape")
+            metrics.record_skyfire_request_event("perceptor_scrape")
             self.opssight = scrape
             self.opssight_report = report
             metrics.record_opssight_report(report)
-        self.q.put(request)
+        self.q.put({request})
 
     def enqueue_kube_scrape(self, scrape, err):
         if err is not None:
@@ -83,7 +83,7 @@ class Skyfire:
             return 
         report = KubeReport(scrape)
         def request():
-            metrics.record_skyfire_request("kube_scrape")
+            metrics.record_skyfire_request_event("kube_scrape")
             self.kube = scrape
             self.kube_report = report
             metrics.record_kube_report(report)
@@ -96,7 +96,7 @@ class Skyfire:
             return 
         report = HubReport(scrape)
         def request():
-            metrics.record_skyfire_request("hub_scrape")
+            metrics.record_skyfire_request_event("hub_scrape")
             self.hubs[host] = scrape
             hub_report = report
             metrics.record_hub_report(report)
@@ -112,7 +112,7 @@ class Skyfire:
         # this nasty `wrapper` hack is because python doesn't like capturing+mutating strings
         report_wrapper = {} # wrapper remains in this scope but can be accessed from where the function is called
         def request():
-            metrics.record_skyfire_request("get_latest_report")
+            metrics.record_skyfire_request_event("get_latest_report")
             skyfire_report = {
                 'opssight': self.opssight,
                 'opssight-report': self.opssight_report,

@@ -4,15 +4,17 @@ import json
 import time
 import queue
 from skyfire import *
+import metrics 
+import logging 
 
 
 paths = set(['/latestreport'])
 
 class Handler(BaseHTTPRequestHandler):
     def __init__(self, model, *args, **kwargs):
-        print("init handler: ", args, kwargs)
+        logging.info("Init Handler: %s", str(args)+" "+str(kwargs))
         self.model = model
-        print("model:", self.model)
+        logging.info("Model: %s", self.model)
         super(Handler, self).__init__(*args, **kwargs)
     
     def _set_headers(self, headers):
@@ -21,14 +23,17 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        metrics.record_http_request_event("GET")
         if self.path not in paths:
             self.send_response(404)
             self.wfile.write(b'')
+            logging.debug("GET request for invalid Path")
             return
         self.send_response(200)
         self._set_headers({'Content-type': 'application/json'})
         report = self.model.get_latest_report()
         self.wfile.write(bytes(report, 'utf-8'))
+        logging.debug("GET request successful")
 
 #    def do_HEAD(self):
 #        self._set_headers()

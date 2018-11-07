@@ -364,34 +364,6 @@ class KubeClient:
             dump[namespace] = pod_dict
         return dump, None 
 
-    def get_namespaces(self):
-        return [ns.metadata.name for ns in self.v1.list_namespace()]
-
-    def get_pods(self, namespace="all-namespaces"):
-        if namespace == "all-namespaces":
-            return self.v1.list_pod_for_all_namespaces(watch=False)
-        else:
-            return self.v1.list_namespaced_pod(namespace)
-
-    def get_containers(self):
-        containers = []
-        for pod in self.v1.list_pod_for_all_namespaces().items:
-            containers.extend(pod.spec.containers)
-        return containers
-
-    def get_images(self):
-        images = []
-        for pod in self.v1.list_pod_for_all_namespaces().items:
-            for container in pod.spec.containers:
-                images.append(container.image)
-        return images
-
-    def get_annotations(self):
-        return [pod.metadata.annotations for pod in self.v1.list_pod_for_all_namespaces()]
-
-    def get_labels(self):
-        return [pod.metadata.labels for pod in self.v1.list_pod_for_all_namespaces()]
-
 
 
 
