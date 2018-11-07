@@ -52,9 +52,9 @@ class Scraper(object):
         while self.is_running:
             try:
                 self.logger.debug("starting kube scrape")
-                scrape = self.kube_client.get_scrape()
+                scrape, err = self.kube_client.get_scrape()
                 metrics.record_scrape("kube_scrape")
-                self.skyfire_delegate.enqueue_kube_scrape(scrape)
+                self.skyfire_delegate.enqueue_kube_scrape(scrape, err)
                 self.logger.debug("got kube scrape")
             except Exception as e:
                 # TODO: MPHammer: add prometheus metrics in
@@ -70,9 +70,9 @@ class Scraper(object):
             if not should_run:
                 break
             try:
-                scrape = client.get_scrape()
+                scrape, err = client.get_scrape()
                 metrics.record_scrape("hub_scrape")
-                self.skyfire_delegate.enqueue_hub_scrape(host, scrape)
+                self.skyfire_delegate.enqueue_hub_scrape(host, scrape, err)
                 self.logger.debug("got hub scrape from %s", host)
             except Exception as e:
                 # TODO: MPHammer: add prometheus metrics in

@@ -1,0 +1,248 @@
+{
+  "Hubs": {
+    "hub_name1": {
+      "HasLoadedAllCodeLocations": true,
+      "CodeLocations": {
+        "codelocation_sha1": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        },
+        "codelocations_sha2": {
+          "Stage": "ScanStageComplete",
+          "Href": "",
+          "URL": "",
+          "MappedProjectVersion": "",
+          "UpdatedAt": "",
+          "ComponentsHref": ""
+        }
+      },
+      "Errors": [
+        "This is an error message"
+      ],
+      "Status": "ClientStatusUp",
+      "CircuitBreaker": {
+        "State": "CircuitBreakerStateEnabled",
+        "NextCheckTime": null,
+        "MaxBackoffDuration": {
+          "Minutes": 60,
+          "Seconds": 3600,
+          "Milliseconds": 3600000
+        },
+        "ConsecutiveFailures": 0
+      },
+      "Host": "webserver.hub-test.svc"
+    }
+  },
+  "CoreModel": {
+    "Pods": {
+      "ns/pod_name1": {
+        "Name": "pod_name1",
+        "UID": "e57d34ea-d6f4-11e8-b402-005056b953a6",
+        "Namespace": "bd",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "gcr.io/saas-hub-stg/blackducksoftware/protoform-installer",
+              "Tag": "master",
+              "Sha": "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42",
+              "Priority": 1
+            },
+            "Name": "blackduck-protoform"
+          },
+          {
+            "Image": {
+              "Repository": "gcr.io/saas-hub-stg/blackducksoftware/protoform-installer",
+              "Tag": "master",
+              "Sha": "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42",
+              "Priority": 1
+            },
+            "Name": "blackduck-protoform"
+          }
+        ]
+      },
+      "ns/pod_name2": {
+        "Name": "pod_name2",
+        "UID": "e57d34ea-d6f4-11e8-b402-005056b953a6",
+        "Namespace": "bd",
+        "Containers": [
+          {
+            "Image": {
+              "Repository": "gcr.io/saas-hub-stg/blackducksoftware/protoform-installer",
+              "Tag": "master",
+              "Sha": "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42",
+              "Priority": 1
+            },
+            "Name": "blackduck-protoform"
+          },
+          {
+            "Image": {
+              "Repository": "gcr.io/saas-hub-stg/blackducksoftware/protoform-installer",
+              "Tag": "master",
+              "Sha": "981f7a3fd56cc72914131ddfcea572c636d25eaf5d612e02b24cf3c3dd14fb42",
+              "Priority": 1
+            },
+            "Name": "blackduck-protoform"
+          }
+        ]
+      }
+    },
+    "Images": {
+      "Image1:0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10": {
+        "ScanStatus": "ScanStatusComplete",
+        "TimeOfLastStatusChange": "2018-10-23 20:04:36.345351127 +0000 UTC m=+4215.637761444",
+        "ScanResults": {
+          "RiskProfile": {
+            "Categories": {
+              "ACTIVITY": {
+                "StatusCounts": {
+                  "HIGH": 29,
+                  "LOW": 15,
+                  "MEDIUM": 5,
+                  "OK": 128,
+                  "UNKNOWN": 0
+                }
+              },
+              "LICENSE": {
+                "StatusCounts": {
+                  "HIGH": 67,
+                  "LOW": 0,
+                  "MEDIUM": 57,
+                  "OK": 53,
+                  "UNKNOWN": 0
+                }
+              },
+              "OPERATIONAL": {
+                "StatusCounts": {
+                  "HIGH": 92,
+                  "LOW": 23,
+                  "MEDIUM": 33,
+                  "OK": 29,
+                  "UNKNOWN": 0
+                }
+              },
+              "VERSION": {
+                "StatusCounts": {
+                  "HIGH": 80,
+                  "LOW": 27,
+                  "MEDIUM": 37,
+                  "OK": 33,
+                  "UNKNOWN": 0
+                }
+              },
+              "VULNERABILITY": {
+                "StatusCounts": {
+                  "HIGH": 18,
+                  "LOW": 4,
+                  "MEDIUM": 17,
+                  "OK": 138,
+                  "UNKNOWN": 0
+                }
+              }
+            },
+            "BomLastUpdatedAt": "2018-10-23T20:04:22.817Z"
+          },
+          "PolicyStatus": {
+            "OverallStatus": "NOT_IN_VIOLATION",
+            "UpdatedAt": "2018-10-23T20:02:33.228Z",
+            "ComponentVersionStatusCounts": {
+              "IN_VIOLATION": 0,
+              "IN_VIOLATION_OVERRIDDEN": 0,
+              "NOT_IN_VIOLATION": 177
+            }
+          },
+          "ScanSummaries": [
+            {
+              "CreatedAt": "2018-10-23T19:55:06.184Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T20:04:22.903Z"
+            },
+            {
+              "CreatedAt": "2018-10-23T19:55:06.184Z",
+              "Status": 1,
+              "UpdatedAt": "2018-10-23T20:04:22.903Z"
+            }
+          ],
+          "ComponentsHref": "https://webserver.hub-test.svc/api/projects/7c6ad770-8909-4d82-a5c9-91e833e19bc9/versions/eae1100b-5f02-4824-8234-665ba8726679/components",
+          "CodeLocationCreatedAt": "2018-10-23T19:55:08.350Z",
+          "CodeLocationHref": "https://webserver.hub-test.svc/api/codelocations/f513628a-c929-44e3-aad3-9590ee834115",
+          "CodeLocationMappedProjectVersion": "https://webserver.hub-test.svc/api/projects/7c6ad770-8909-4d82-a5c9-91e833e19bc9/versions/eae1100b-5f02-4824-8234-665ba8726679",
+          "CodeLocationName": "0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10",
+          "CodeLocationType": "",
+          "CodeLocationURL": "urn:uuid:1db486ac-c96c-377a-9b64-b1d77a709c39",
+          "CodeLocationUpdatedAt": "2018-10-23T20:04:22.907Z"
+        },
+        "ImageSha": "0be3c1d2a3ea185cbae6f8298f409988a63133e95cc2b4387940ae56e2fd1a10",
+        "RepoTags": [
+          {
+            "Repository": "registry.access.redhat.com/rhscl/postgresql-96-rhel7",
+            "Tag": "1"
+          }
+        ],
+        "Priority": -1
+      }
+    },
+    "ImageScanQueue": [],
+    "ImageTransitions": [
+      {
+        "Sha": "cbb81fca618561a607e14ca39c60755cef56e4ba74eb2282169c372745853f72",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.725626101 +0000 UTC m=+15.018036140"
+      },
+      {
+        "Sha": "46b9b555e18e3d6e00b6eab06b3f80a48b8e510f9b0e840f476fa8f8242fdb48",
+        "From": "ScanStatusUnknown",
+        "To": "ScanStatusInQueue",
+        "Err": "",
+        "Time": "2018-10-23 18:54:35.725712562 +0000 UTC m=+15.018122609"
+      }
+    ]
+  },
+  "Config": {
+    "Timings": {
+      "CheckForStalledScansPause": {
+        "Minutes": 59999940,
+        "Seconds": 3599996400,
+        "Milliseconds": 3599996400000
+      },
+      "StalledScanClientTimeout": {
+        "Minutes": 59999940,
+        "Seconds": 3599996400,
+        "Milliseconds": 3599996400000
+      },
+      "ModelMetricsPause": {
+        "Minutes": 0.25,
+        "Seconds": 15,
+        "Milliseconds": 15000
+      },
+      "UnknownImagePause": {
+        "Minutes": 0.25,
+        "Seconds": 15,
+        "Milliseconds": 15000
+      }
+    },
+    "Hub": {
+      "User": "sysadmin",
+      "PasswordEnvVar": "PCP_HUBUSERPASSWORD",
+      "ClientTimeout": {
+        "Minutes": 1.6666666666666667,
+        "Seconds": 100,
+        "Milliseconds": 100000
+      },
+      "Port": 443,
+      "ConcurrentScanLimit": 2,
+      "TotalScanLimit": 1000
+    },
+    "Port": 3001,
+    "LogLevel": "debug"
+  },
+  "Scheduler": {
+    "ConcurrentScanLimit": 2,
+    "TotalScanLimit": 1000
+  }
+}

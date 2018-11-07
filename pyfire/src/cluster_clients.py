@@ -5,10 +5,7 @@ import datetime
 import time
 from kubernetes import client, config
 import logging 
-
-
-def get_current_datetime():
-    return str(datetime.datetime.now())
+from util import *
 
 '''
 Data Scrape Classes
@@ -156,17 +153,16 @@ class MockClient():
         self.name = name
 
     def get_scrape(self):
-        import json
         if self.name in MockClient.static_data_files:
             with open(MockClient.static_data_files[self.name], 'r') as f:
                 if self.name == 'perceptor':
-                    return PerceptorScrape(json.load(f))
+                    return PerceptorScrape(json.load(f)), None 
                 elif self.name == 'kube':
-                    return KubeScrape(json.load(f))
+                    return KubeScrape(json.load(f)), None
                 else:
-                    return HubScrape(json.load(f))
+                    return HubScrape(json.load(f)), None
         logging.error("Mock Client "+self.name+" does not exist")
-        return None 
+        return None, {'error' : 'Could not create Mock'}
 
 class PerceptorClient():
     def __init__(self, host_name, port):
@@ -174,20 +170,19 @@ class PerceptorClient():
         self.port = port
 
     def get_scrape(self):
-        d, err = self.get_dump()
+        dump, err = self.get_dump()
         if err is None:
-            return PerceptorScrape(d), None
+            return PerceptorScrape(dump), None
         return None, err
 
     def get_dump(self):
         url = "http://{}:{}/model".format(self.host_name, self.port)
-        print(url)
         r = requests.get(url)
         if r.status_code == 200:
             return json.loads(r.text), None
         else:
             logging.error("Could not connect to Perceptor")
-            return None, {'error' : "Perceptor Connection Fail", 'status' : r.status_code, 'url' : url} 
+            return {}, {'error' : "Perceptor Connection Fail", 'status' : r.status_code, 'url' : url} 
 
 class HubClient():
     def __init__(self, host_name, port, username, password, client_timeout_seconds):
@@ -206,25 +201,30 @@ class HubClient():
         # verify=False does not verify SSL connection - insecure
         url = "https://{}:{}/j_spring_security_check".format(self.host_name, self.port)
         r = requests.post(url, verify=False, data=security_data, headers=security_headers)
-
-        return r.cookies 
+        if r.status_code == 200:
+            return r.cookies
+        else:
+            logging.error("Could not Secure Login to the Hub")
+            return None 
 
     def api_get(self, url):
         r = requests.get(url, verify=False, cookies=self.secure_login_cookie)
         if r.status_code == 200:
-            return r
+            return r, None
         else:
             logging.error("Could not contact: "+url)
-            logging.error(r.reason)
-            return None 
+            return None, {'error' : 'Hub Connection Fail', 'status' : r.status_code, 'url' : url}
 
     def get_scrape(self):
-        return HubScrape(self.get_dump())
+        dump, err = self.get_dump()
+        if err is None:
+            return HubScrape(dump)
+        return None, err 
 
     def get_dump(self):
-        dump = self.api_get("https://"+self.host_name+":443/api"+"/projects?limit="+str(self.max_projects))
-        if dump == None:
-            return {}
+        dump, err = self.api_get("https://"+self.host_name+":443/api"+"/projects?limit="+str(self.max_projects))
+        if err is not None:
+            return {}, err
         dump = dump.json()
         projects = {}
         for project in dump['items']:
@@ -235,12 +235,15 @@ class HubClient():
             for link in project['_meta']['links']:
                 project_links[link['rel']] = link['href']
             # get data from version url
-            project_versions = self.crawl_version(project_links['versions'])
+            project_versions, err = self.crawl_version(project_links['versions'])
             projects[project_href] = {"name" : project_name, "links" : project_links, "versions" : project_versions}
-        return projects 
+        return projects, None 
     
     def crawl_version(self, version_url):
-        dump = self.api_get(version_url).json()
+        dump, err = self.api_get(version_url)
+        if err is None:
+            return {}, err 
+        dump = dump.json()
         versions = {}
         for version in dump['items']:
             version_href = version['_meta']["href"]
@@ -248,19 +251,22 @@ class HubClient():
             version_links = {}
             for link in version['_meta']["links"]:
                 version_links[link['rel']] = link['href']
-            version_risk_profile = self.crawl_risk_profile(version_links['riskProfile'])
-            version_policy_status = self.crawl_policy_status(version_links['policy-status'])
-            version_code_locations = self.crawl_code_location(version_links['codelocations'])
+            version_risk_profile, err = self.crawl_risk_profile(version_links['riskProfile'])
+            version_policy_status, err = self.crawl_policy_status(version_links['policy-status'])
+            version_code_locations, err = self.crawl_code_location(version_links['codelocations'])
             versions[version_href] = {
                 "links" : version_links, 
                 "policy-status" : version_policy_status,
                 "riskProfile" : version_risk_profile, 
                 "codelocations" : version_code_locations
             }
-        return versions 
+        return versions, None 
 
     def crawl_policy_status(self, policy_status_url):
-        dump = self.api_get(policy_status_url).json()
+        dump, err = self.api_get(policy_status_url)
+        if err is None:
+            return {}, err 
+        dump = dump.json()
         policy_status_overall_status = dump['overallStatus']
         try:
             policy_status_updated_at = dump['updatedAt']
@@ -273,14 +279,20 @@ class HubClient():
         return {'overallStatus' : policy_status_overall_status, 
                 'updatedAt' : policy_status_updated_at,
                 'compnentVersionStatusCounts' : policy_status_component_version_status_counts
-                }
+                } , None
 
     def crawl_risk_profile(self, risk_profile_url):
-        dump = self.api_get(risk_profile_url).json()
-        return {'categories' : dump['categories']}
+        dump, err = self.api_get(risk_profile_url)
+        if err is None:
+            return {}, err
+        dump = dump.json()
+        return {'categories' : dump['categories']}, None
 
     def crawl_code_location(self, code_location_url):
-        dump = self.api_get(code_location_url).json()
+        dump, err = self.api_get(code_location_url)
+        if err is None:
+            return {}, err
+        dump = dump.json()
         code_locations = {}
         for code_location in dump['items']:
             code_location_href = code_location['_meta']['href'] 
@@ -288,16 +300,19 @@ class HubClient():
             code_location_links = {}
             for link in code_location['_meta']['links']:
                 code_location_links[link['rel']] = link['href']
-            code_location_scan_summaries = self.crawl_scan_summary(code_location_links['scans'])
+            code_location_scan_summaries, err = self.crawl_scan_summary(code_location_links['scans'])
             code_locations[code_location_href] = {
                 'sha' : code_location_sha,
                 'links' : code_location_links,
                 'scans' : code_location_scan_summaries
             }
-        return code_locations
+        return code_locations, None
 
     def crawl_scan_summary(self, scan_summary_url):
-        dump = self.api_get(scan_summary_url).json()
+        dump, err = self.api_get(scan_summary_url)
+        if err is None:
+            return {}, err 
+        dump = dump.json()
         scan_summaries = {}
         for scan_summary in dump['items']:
             scan_summary_href = scan_summary['_meta']['href']
@@ -309,4 +324,4 @@ class HubClient():
                 'status' : scan_summary_status,
                 'updatedAt' : scan_summary_updated_at
             }
-        return scan_summaries 
+        return scan_summaries
