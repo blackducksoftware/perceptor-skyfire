@@ -13,7 +13,7 @@ import kubernetes.client
 
 # TODO is this the right way to turn off annoying logging?
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-kubernetes.client.rest.logger.setLevel("INFO")
+kubernetes.client.rest.logger.setLevel("DEBUG")
 
 
 class Config:
@@ -61,36 +61,42 @@ def instantiate_clients(config):
 
 def main():
     # Check parameters and load config file
-    if len(sys.argv) < 2:
-        message = "Missing path to config file"
+    if len(sys.argv) != 2:
+        message = "\n   Usage: python3 main.py <congig_file>\n   BD_HUB_PASSWORD must be set in environment"
         logging.error(message)
-        sys.exit(message)
-    with open(sys.argv[1]) as f:
-        config_dict = json.load(f)
-    print("config: " + json.dumps(config_dict, indent=2))
-    config = Config(config_dict)
+        sys.exit()
+
+    try:
+        with open(sys.argv[1]) as f:
+            config_dict = json.load(f)
+        config = Config(config_dict)
+    except Exception as err:
+        logging.error("Bad Config File: "+str(err))
+        sys.exit()
+    
     logging.getLogger().setLevel(config.log_level.upper())
 
-    print("Starting Skyfire!!!")
+    logging.info("config: " + json.dumps(config_dict, indent=2))
 
     # Instantiate Skyfire Objects
+    logging.info("Starting Skyfire!!!")
     skyfire = Skyfire()
 
     if config.use_mock_mode:
+        logging.info("Skyfire is using mock Clients")
         perceptor_client, kube_client, hub_clients = instantiate_mock_clients()
     else:
+        logging.info("Skyfire is using live Clients")
         perceptor_client, kube_client, hub_clients = instantiate_clients(config)
 
     scraper = Scraper(skyfire, perceptor_client, kube_client, hub_clients)
-    logging.info("instantiated scraper: %s", str(scraper))
+    logging.info("Instantiated scraper: %s", str(scraper))
 
-    # Instantiate Skyfire Metrics Recording
-    print("starting prometheus server on port", config.prometheus_port)
     metrics.start_http_server(config.prometheus_port)
+    logging.info("Started Prometheus server on port "+config.prometheus_port)
 
-    # Instantiate Skyfire server to access data
-    print("starting http server on port", config.skyfire_port)
     start_http_server(config.skyfire_port, skyfire)
+    logging.info("Started Skyfire http server on port "+config.skyfire_port)
 
 
 main()

@@ -56,10 +56,10 @@ class Skyfire:
             try:
                 request()
             except Exception as e:
-                self.logger.error("unable to process event: %s", e)
-            self.logger.debug("finished processing item")
+                self.logger.error("Unable to process event: %s", e)
+            self.logger.debug("Finished processing item")
             self.q.task_done()
-        self.logger.info("exiting skyfire event thread")
+        self.logger.info("Exiting skyfire event thread")
     
     ### Scraper Delegate interface - Put scrapes requests onto the Queue
 
