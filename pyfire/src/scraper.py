@@ -5,9 +5,9 @@ import logging
 from cluster_clients import MockClient 
 
 class Scraper(object):
-    def __init__(self, skyfire_delegate, perceptor_client, kube_client, hub_clients, perceptor_pause=30, kube_pause=30, hub_pause=60):
+    def __init__(self, logger, skyfire_delegate, perceptor_client, kube_client, hub_clients, perceptor_pause, kube_pause, hub_pause):
+        self.logger = logger
         self.skyfire_delegate = skyfire_delegate
-
         self.is_running = True
 
         # Start perceptor thread to put scrapes onto the queue
@@ -28,7 +28,7 @@ class Scraper(object):
         self.hub_clients = {}
         self.hub_pause = hub_pause
         for (host, client) in hub_clients.items():
-            logging.info("adding hub %s", host)
+            self.logger.info("adding hub %s", host)
             thread = threading.Thread(target=self.get_hub_scrape_thread(host))
             thread.daemon = True
             self.hub_clients[host] = {'client' : client, 'thread' : thread, 'should_run' : True}
@@ -36,31 +36,50 @@ class Scraper(object):
 
     def perceptor_scrape_thread(self):
         while self.is_running:
-            scrape, err = self.perceptor_client.get_scrape()
-            metrics.record_scrape("perceptor_scrape")
-            self.skyfire_delegate.enqueue_perceptor_scrape(scrape, err)
-            logging.debug("got perceptor scrape")
+            try:
+                self.logger.debug("starting perceptor scrape")
+                scrape, err = self.perceptor_client.get_scrape()
+                metrics.record_scrape("perceptor_scrape")
+                self.skyfire_delegate.enqueue_perceptor_scrape(scrape, err)
+                self.logger.debug("got perceptor scrape")
+            except Exception as e:
+                # TODO: MPHammer: add prometheus metrics in
+                self.logger.error("uncaught exception in perceptor scrape thread: %s", str(e))
             time.sleep(self.perceptor_pause)
+        self.logger.warning("leaving perceptor thread")
     
     def kube_scrape_thread(self):
         while self.is_running:
-            scrape = self.kube_client.get_scrape()
-            metrics.record_scrape("kube_scrape")
-            self.skyfire_delegate.enqueue_kube_scrape(scrape)
-            logging.debug("got kube scrape")
+            try:
+                self.logger.debug("starting kube scrape")
+                scrape = self.kube_client.get_scrape()
+                metrics.record_scrape("kube_scrape")
+                self.skyfire_delegate.enqueue_kube_scrape(scrape)
+                self.logger.debug("got kube scrape")
+            except Exception as e:
+                # TODO: MPHammer: add prometheus metrics in
+                self.logger.error("uncaught exception in kube scrape thread: %s", str(e))
             time.sleep(self.kube_pause)
+        self.logger.warning("leaving kube thread")
 
     def hub_scrape_thread(self, host):
         while self.is_running:
+            self.logger.debug("starting hub scrape of %s", host)
             client = self.hub_clients[host]['client']
             should_run = self.hub_clients[host]['should_run']
             if not should_run:
                 break
-            scrape = client.get_scrape()
-            metrics.record_scrape("hub_scrape")
-            self.skyfire_delegate.enqueue_hub_scrape(host, scrape)
-            logging.debug("got hub scrape from %s", host)
+            try:
+                scrape = client.get_scrape()
+                metrics.record_scrape("hub_scrape")
+                self.skyfire_delegate.enqueue_hub_scrape(host, scrape)
+                self.logger.debug("got hub scrape from %s", host)
+            except Exception as e:
+                # TODO: MPHammer: add prometheus metrics in
+                self.logger.error("uncaught exception in hub %s scrape thread: %s", host, str(e))
             time.sleep(self.hub_pause)
+        self.logger.warning("leaving hub %s thread", host)
+
 
     def get_hub_scrape_thread(self, host):
         def hub_scrape_thread_wrapper():
@@ -71,14 +90,14 @@ class Scraper(object):
         """
         TODO this can't safely be called more than once
         """
-        if self.is_running == True:
+        if self.is_running:
             self.is_running = False
             self.perceptor_thread.join()
             self.kube_thread.join()
             for host in self.hub_clients:
                 self.stop_hub(host)
         else:
-            logging.error("Scrapper thread already stopped")
+            self.logger.error("Scraper thread already stopped")
 
     def stop_hub(self, host):
         self.hub_clients[host]['should_run'] = False
