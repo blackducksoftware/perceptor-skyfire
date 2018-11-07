@@ -63,14 +63,18 @@ class Dump:
     
 class Client:
     def __init__(self, in_cluster):
+        logging.debug("instantiating kube client with in_cluster %t", in_cluster)
         if in_cluster:
             config.load_incluster_config()
         else:
             config.load_kube_config()
         self.v1 = client.CoreV1Api()
+        logging.debug("instantiated kubeclient")
 
     def get_dump(self):
+        logging.debug("getting kube dump")
         pod_blob = self.get_pods()
+        logging.debug("got kube dump of pods")
         return Dump(pod_blob)
 
     def get_pods(self, namespace=None):
@@ -95,8 +99,8 @@ def analyze_blobs(blob, count):
 #            print(prefix, k, type(b))
             pass
 
-def example():
-    kubeClient = Client(in_cluster=False)
+def example(in_cluster):
+    kubeClient = Client(in_cluster)
     dump = kubeClient.get_dump()
     print(json.dumps(dump, default=util.default_json_serializer, indent=2))
     for pod in dump.pods:
@@ -107,4 +111,8 @@ def example():
             "\n\t", pod.has_all_annotations(), pod.is_partially_annotated(), "\n")
 
 if __name__ == "__main__":
-    example()
+    import sys
+    in_cluster = False
+    if len(sys.argv) > 1:
+        in_cluster = True if sys.argv[1] == 'true' else False
+    example(in_cluster)
