@@ -66,7 +66,7 @@ class Skyfire:
     def enqueue_perceptor_scrape(self, scrape, err):
         if err is not None:
             logging.error(str(err))
-            metrics.record_error("PerceptorDump")
+            metrics.record_error("Perceptor Scrape Error")
             return
         report = PerceptorReport(scrape)
         def request():
@@ -76,7 +76,11 @@ class Skyfire:
             metrics.record_opssight_report(report)
         self.q.put(request)
 
-    def enqueue_kube_scrape(self, scrape):
+    def enqueue_kube_scrape(self, scrape, err):
+        if err is not None:
+            logging.error(str(err))
+            metrics.record_error("Kube Scrape Error")
+            return 
         report = KubeReport(scrape)
         def request():
             metrics.record_skyfire_request("kube_scrape")
@@ -85,7 +89,11 @@ class Skyfire:
             metrics.record_kube_report(report)
         self.q.put(request)
 
-    def enqueue_hub_scrape(self, host, scrape):
+    def enqueue_hub_scrape(self, host, scrape, err):
+        if err is not None:
+            logging.error(str(err))
+            metrics.record_error("Hub Scrape Error")
+            return 
         report = HubReport(scrape)
         def request():
             metrics.record_skyfire_request("hub_scrape")

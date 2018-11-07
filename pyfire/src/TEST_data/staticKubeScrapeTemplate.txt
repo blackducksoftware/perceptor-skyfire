@@ -1,0 +1,66 @@
+{
+  "namespace1": {
+    "pod_name1": {
+      "labels": {
+        "label_name1": "lable_value1",
+        "label_name2": "lable_value1"
+      },
+      "annotations": {
+        "annotation_name1": "annotation_value1",
+        "annotation_name2": "annotation_value2"
+      },
+      "containers": {
+        "container_name": {
+          "image": "image_value"
+        }
+      }
+    },
+    "pod_name2": {
+      "labels": {
+        "label_name1": "lable_value1",
+        "label_name2": "lable_value1"
+      },
+      "annotations": {
+        "annotation_name1": "annotation_value1",
+        "annotation_name2": "annotation_value2"
+      },
+      "containers": {
+        "container_name": {
+          "image": "image_value"
+        }
+      }
+    }
+  },
+  "namespace2": {
+    "pod_name1": {
+      "labels": {
+        "label_name1": "lable_value1",
+        "label_name2": "lable_value1"
+      },
+      "annotations": {
+        "annotation_name1": "annotation_value1",
+        "annotation_name2": "annotation_value2"
+      },
+      "containers": {
+        "container_name": {
+          "image": "image_value"
+        }
+      }
+    },
+    "pod_name2": {
+      "labels": {
+        "label_name1": "lable_value1",
+        "label_name2": "lable_value1"
+      },
+      "annotations": {
+        "annotation_name1": "annotation_value1",
+        "annotation_name2": "annotation_value2"
+      },
+      "containers": {
+        "container_name": {
+          "image": "image_value"
+        }
+      }
+    }
+  }
+}

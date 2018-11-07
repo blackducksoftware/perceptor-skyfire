@@ -15,3 +15,6 @@ def object_to_json(o, types=[int,float,list,str]):
         if True in [True for x in types if isinstance(value, x)]:
             final_json[key] = value
     return final_json
+
+def get_current_datetime():
+    return str(datetime.datetime.now())

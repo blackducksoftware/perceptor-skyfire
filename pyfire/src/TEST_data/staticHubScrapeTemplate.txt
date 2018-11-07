@@ -1,0 +1,196 @@
+{
+  "hub_url1": {
+    "name": "hub_name",
+    "links": {
+      "versions": "versions_url",
+      "canonicalVersion": "cannonicalVersion_url",
+      "assignable-users": "assignable-users_url",
+      "assignable-usergroups": "assignable-usergroups_url",
+      "users": "users_url",
+      "usergroups": "usergroups_url",
+      "tags": "tags_url",
+      "project-mappings": "project-mappings_url"
+    },
+    "versions": {
+      "versions_url": {
+        "links": {
+          "versionReport": "",
+          "licenseReports": "",
+          "riskProfile": "",
+          "components": "",
+          "hierarchical-components": "",
+          "vulnerable-components": "",
+          "comparison": "",
+          "project": "",
+          "policy-status": "",
+          "codelocations": ""
+        },
+        "policy-status": {
+          "overallStatus": "NOT_IN_VIOLATION",
+          "updatedAt": "2018-10-31T11:03:14.457Z",
+          "compnentVersionStatusCounts": {
+            "NOT_IN_VIOLATION": 781,
+            "IN_VIOLATION": 0,
+            "IN_VIOLATION_OVERRIDDEN": 0
+          }
+        },
+        "riskProfile": {
+          "categories": {
+            "ACTIVITY": {
+              "HIGH": 128,
+              "MEDIUM": 1,
+              "LOW": 85,
+              "OK": 567,
+              "UNKNOWN": 0
+            },
+            "LICENSE": {
+              "HIGH": 202,
+              "MEDIUM": 24,
+              "LOW": 0,
+              "OK": 555,
+              "UNKNOWN": 0
+            },
+            "OPERATIONAL": {
+              "HIGH": 459,
+              "MEDIUM": 118,
+              "LOW": 148,
+              "OK": 56,
+              "UNKNOWN": 0
+            },
+            "VERSION": {
+              "HIGH": 418,
+              "MEDIUM": 128,
+              "LOW": 150,
+              "OK": 85,
+              "UNKNOWN": 0
+            },
+            "VULNERABILITY": {
+              "HIGH": 192,
+              "MEDIUM": 75,
+              "LOW": 19,
+              "OK": 495,
+              "UNKNOWN": 0
+            }
+          }
+        },
+        "codelocations": {
+          "codelocation_url1": {
+            "sha": "sreepath-mac#/Users/sreepath/Downloads/snippets-new",
+            "links": {
+              "scans": ""
+            },
+            "scans": {
+              "scan_url1": {
+                "createdAt": "2018-10-18T18:45:33.869Z",
+                "status": "2018-10-18T18:45:33.869Z",
+                "updatedAt": "2018-10-19T04:19:00.385Z"
+              },
+              "scan_url2": {
+                "createdAt": "2018-10-18T18:29:45.686Z",
+                "status": "2018-10-18T18:29:45.686Z",
+                "updatedAt": "2018-10-18T18:45:27.636Z"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "hub_url2": {
+    "name": "hub_name",
+    "links": {
+      "versions": "versions_url",
+      "canonicalVersion": "cannonicalVersion_url",
+      "assignable-users": "assignable-users_url",
+      "assignable-usergroups": "assignable-usergroups_url",
+      "users": "users_url",
+      "usergroups": "usergroups_url",
+      "tags": "tags_url",
+      "project-mappings": "project-mappings_url"
+    },
+    "versions": {
+      "versions_url": {
+        "links": {
+          "versionReport": "",
+          "licenseReports": "",
+          "riskProfile": "",
+          "components": "",
+          "hierarchical-components": "",
+          "vulnerable-components": "",
+          "comparison": "",
+          "project": "",
+          "policy-status": "",
+          "codelocations": ""
+        },
+        "policy-status": {
+          "overallStatus": "NOT_IN_VIOLATION",
+          "updatedAt": "2018-10-31T11:03:14.457Z",
+          "compnentVersionStatusCounts": {
+            "NOT_IN_VIOLATION": 781,
+            "IN_VIOLATION": 0,
+            "IN_VIOLATION_OVERRIDDEN": 0
+          }
+        },
+        "riskProfile": {
+          "categories": {
+            "ACTIVITY": {
+              "HIGH": 128,
+              "MEDIUM": 1,
+              "LOW": 85,
+              "OK": 567,
+              "UNKNOWN": 0
+            },
+            "LICENSE": {
+              "HIGH": 202,
+              "MEDIUM": 24,
+              "LOW": 0,
+              "OK": 555,
+              "UNKNOWN": 0
+            },
+            "OPERATIONAL": {
+              "HIGH": 459,
+              "MEDIUM": 118,
+              "LOW": 148,
+              "OK": 56,
+              "UNKNOWN": 0
+            },
+            "VERSION": {
+              "HIGH": 418,
+              "MEDIUM": 128,
+              "LOW": 150,
+              "OK": 85,
+              "UNKNOWN": 0
+            },
+            "VULNERABILITY": {
+              "HIGH": 192,
+              "MEDIUM": 75,
+              "LOW": 19,
+              "OK": 495,
+              "UNKNOWN": 0
+            }
+          }
+        },
+        "codelocations": {
+          "codelocation_url1": {
+            "sha": "sreepath-mac#/Users/sreepath/Downloads/snippets-new",
+            "links": {
+              "scans": ""
+            },
+            "scans": {
+              "scan_url1": {
+                "createdAt": "2018-10-18T18:45:33.869Z",
+                "status": "2018-10-18T18:45:33.869Z",
+                "updatedAt": "2018-10-19T04:19:00.385Z"
+              },
+              "scan_url2": {
+                "createdAt": "2018-10-18T18:29:45.686Z",
+                "status": "2018-10-18T18:29:45.686Z",
+                "updatedAt": "2018-10-18T18:45:27.636Z"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
