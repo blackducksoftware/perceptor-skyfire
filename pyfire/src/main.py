@@ -61,7 +61,7 @@ def instantiate_clients(config):
 def main():
     # Check parameters and load config file
     if len(sys.argv) != 2:
-        message = "\n   Usage: python3 main.py <congig_file>\n   BD_HUB_PASSWORD must be set in environment"
+        message = "\n   Usage: python3 main.py <config_file>"
         logging.error(message)
         sys.exit()
 
@@ -73,7 +73,8 @@ def main():
         logging.error("Bad Config File: "+str(err))
         sys.exit()
     
-    logging.getLogger().setLevel(config.log_level.upper())
+    root_logger = logging.getLogger()
+    root_logger.setLevel(config.log_level.upper())
 
     logging.info("Config: " + json.dumps(config_dict, indent=2))
 
@@ -88,7 +89,15 @@ def main():
         logging.info("Skyfire is using live Clients")
         perceptor_client, kube_client, hub_clients = instantiate_clients(config)
 
-    scraper = Scraper(skyfire, perceptor_client, kube_client, hub_clients)
+    scraper = Scraper(
+        root_logger.getChild("Scraper"),
+        skyfire,
+        perceptor_client,
+        kube_client,
+        hub_clients,
+        config.perceptor_dump_interval_seconds,
+        config.kub_dump_interval_seconds,
+        config.hub_dump_pause_seconds)
     logging.info("Instantiated Scraper: %s", str(scraper))
 
     metrics.start_http_server(config.prometheus_port)
