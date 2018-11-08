@@ -5,7 +5,7 @@ from scraper import Scraper
 from skyfire import Skyfire
 import metrics
 import logging
-from cluster_clients import PerceptorClient, HubClient, MockClient
+from cluster_clients import PerceptorClient, HubClient, KubeClient, MockClient
 import kube
 import os
 import urllib3
@@ -52,7 +52,7 @@ def instantiate_mock_clients():
 
 def instantiate_clients(config):
     p_client = PerceptorClient(config.perceptor_host, config.perceptor_port)
-    k_client = kube.Client(config.use_in_cluster_config)
+    k_client = KubeClient(config.use_in_cluster_config)
     h_clients = {}
     hub_password = os.getenv(config.hub_password_env_var)
     for host in config.hub_hosts:
@@ -77,7 +77,7 @@ def main():
     root_logger = logging.getLogger()
     root_logger.setLevel(config.log_level.upper())
 
-    logging.info("Config: " + json.dumps(config_dict, indent=2))
+    logging.info("Config: %s", json.dumps(config_dict, indent=2))
 
     # Instantiate Skyfire Objects
     logging.info("Starting Skyfire!!!")

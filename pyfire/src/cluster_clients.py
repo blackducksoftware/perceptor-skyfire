@@ -30,16 +30,15 @@ class KubeScrape:
         self.load_dump(dump)
 
     def load_dump(self, dump):
-        for namespace_name, namespace_data in dump.items():
-            self.namespaces.append(namespace_name)
-            for pod_name, pod_data in namespace_data.items():
-                self.pod_names.append(pod_name)
-                self.pod_annotations.append(pod_data['annotations'])
-                self.pod_labels.append(pod_data['labels'])
-                for container_name, container_data in pod_data['containers'].items():
-                    self.container_names.append(container_name)
-                    self.container_images.append(container_data['image'])
-                    self.image_to_namespace[container_data['image']] = namespace_name
+        for pod_name, pod_data in dump.items():
+            self.pod_names.append(pod_name) 
+            self.namespaces.append(pod_data['namespace'])
+            self.pod_annotations.append(pod_data['annotations'])
+            self.pod_labels.append(pod_data['labels'])
+            for container_name, container_data in pod_data['containers'].items():
+                self.container_names.append(container_name)
+                self.container_images.append(container_data['image'])
+                self.image_to_namespace[container_data['image']] = pod_data['namespace']
 
 
 class HubScrape():
@@ -324,4 +323,42 @@ class HubClient():
                 'status' : scan_summary_status,
                 'updatedAt' : scan_summary_updated_at
             }
-        return scan_summaries
+        return scan_summaries, None 
+
+class KubeClient:
+    def __init__(self, in_cluster):
+        if in_cluster:
+            config.load_incluster_config()
+        else:
+            config.load_kube_config()
+        self.v1 = client.CoreV1Api()
+
+    # TODO - Merge together Matt's Kube Client with this one
+
+    def get_scrape(self):
+        dump, err = self.get_dump()
+        if err is not None:
+            return None, err 
+        return KubeScrape(dump), None
+
+    def get_dump(self):
+        dump = {}
+        pods = self.v1.list_pod_for_all_namespaces().items 
+        for pod in pods:
+            pod_namespace = pod.metadata.namespace 
+            pod_name = pod.metadata.name 
+            pod_labels = pod.metadata.labels
+            pod_annotations = pod.metadata.annotations
+            pod_containers = pod.spec.containers
+            container_dict = {}
+            for container in pod_containers:
+                container_image = container.image 
+                container_name = container.name 
+                container_dict[container_name] = {'image' : container_image}
+            dump[pod_name] = {
+                'namespace' : pod_namespace,
+                'labels' : pod_labels,
+                'annotations' : pod_annotations,
+                'containers' : container_dict
+            }
+        return dump, None 
