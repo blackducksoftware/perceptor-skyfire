@@ -6,6 +6,7 @@ import time
 from kubernetes import client, config
 import logging 
 from util import *
+import podreader 
 
 '''
 Data Scrape Classes
@@ -40,6 +41,36 @@ class KubeScrape:
                 self.container_images.append(container_data['image'])
                 self.image_to_namespace[container_data['image']] = pod_data['namespace']
 
+    def get_opssight_labels(self, pod_name):
+        expected = set(podreader.get_all_labels(len(self.container_names)))
+        actual = set(self.dump[pod_name]['labels'].keys())
+        present = expected.intersection(actual)
+        missing = expected - actual
+        return (missing, present)
+    
+    def has_all_labels(self, pod_name):
+        missing, _ = self.get_opssight_labels(pod_name)
+        return len(missing) == 0
+    
+    def is_partially_labeled(self, pod_name):
+        missing, present = self.get_opssight_labels(pod_name)
+        return len(missing) > 0 and len(present) > 0
+
+    def get_opssight_annotations(self, pod_name):
+        expected = set(podreader.get_all_annotations(len(self.container_names)))
+        actual = set(self.dump[pod_name]['annotations'].keys())
+        present = expected.intersection(actual)
+        missing = expected - actual
+        return (missing, present)
+    
+    def has_all_annotations(self, pod_name):
+        missing, _ = self.get_opssight_annotations(pod_name)
+        return len(missing) == 0
+    
+    def is_partially_annotated(self, pod_name):
+        missing, present = self.get_opssight_annotations(pod_name)
+        return len(missing) > 0 and len(present) > 0
+
 
 class HubScrape():
     def __init__(self, dump={}):
@@ -66,6 +97,8 @@ class HubScrape():
         self.load_dump(dump)
 
     def load_dump(self, dump):
+        if dump == {}:
+            return 
         for project_url, project_data in dump.items():
             self.project_urls.append(project_url)
             self.project_to_versions[project_url] = []
@@ -125,9 +158,10 @@ class PerceptorScrape:
 
         for image_sha, image_data in dump["CoreModel"]["Images"].items():
             self.image_shas.append(image_sha)
-            self.image_sha_to_risk_profile[image_sha] = image_data["ScanResults"]["RiskProfile"]
-            self.image_sha_to_policy_status[image_sha] = image_data["ScanResults"]["PolicyStatus"]
-            self.image_sha_to_scans[image_sha] = image_data["ScanResults"]["ScanSummaries"]
+            if image_data["ScanResults"] is not None:
+                self.image_sha_to_risk_profile[image_sha] = image_data["ScanResults"]["RiskProfile"]
+                self.image_sha_to_policy_status[image_sha] = image_data["ScanResults"]["PolicyStatus"]
+                self.image_sha_to_scans[image_sha] = image_data["ScanResults"]["ScanSummaries"]
             self.image_sha_to_respositories[image_sha] = []
             for repo in image_data["RepoTags"]:
                 self.image_sha_to_respositories[image_sha].append(repo["Repository"]) 
@@ -176,6 +210,7 @@ class PerceptorClient():
 
     def get_dump(self):
         url = "http://{}:{}/model".format(self.host_name, self.port)
+        logging.debug("Perceptor URL: %s",url)
         r = requests.get(url)
         if r.status_code == 200:
             return json.loads(r.text), None
@@ -189,7 +224,7 @@ class HubClient():
         self.port = port
         self.username = username
         self.password = password
-        self.secure_login_cookie = self.get_secure_login_cookie()
+        self.secure_login_cookie = None
         self.max_projects = 10000000
         # TODO do something with this
         self.client_timeout_seconds = client_timeout_seconds
@@ -199,16 +234,27 @@ class HubClient():
         security_data = {'j_username': self.username,'j_password': self.password}
         # verify=False does not verify SSL connection - insecure
         url = "https://{}:{}/j_spring_security_check".format(self.host_name, self.port)
+        print(url)
         r = requests.post(url, verify=False, data=security_data, headers=security_headers)
         if r.status_code == 200:
-            return r.cookies
+            return r.cookies, None
+        elif 200 <= r.status_code <= 299:
+            logging.debug("Hub HTTP Login Request Status Code: %s",r.status_code)
+            return r.cookies, None
         else:
             logging.error("Could not Secure Login to the Hub")
-            return None 
+            return None, {'error' : 'Could not Secure Login to the Hub', 'status' : r.status_code}
 
     def api_get(self, url):
+        if self.secure_login_cookie is None:
+            self.secure_login_cookie, err = self.get_secure_login_cookie()
+            if err is not None:
+                return None, err 
         r = requests.get(url, verify=False, cookies=self.secure_login_cookie)
         if r.status_code == 200:
+            return r, None
+        elif 200 <= r.status_code <= 299:
+            logging.debug("Hub HTTP Request Status Code: %s",r.status_code)
             return r, None
         else:
             logging.error("Could not contact: "+url)
@@ -217,7 +263,7 @@ class HubClient():
     def get_scrape(self):
         dump, err = self.get_dump()
         if err is None:
-            return HubScrape(dump)
+            return HubScrape(dump), None 
         return None, err 
 
     def get_dump(self):

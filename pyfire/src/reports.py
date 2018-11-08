@@ -53,11 +53,14 @@ class HubReport:
         self.parse_scrape(scrape)
 
     def parse_scrape(self, scrape):
+        print("herhehrher")
         self.num_projects = len(scrape.project_urls)
         self.num_versions = len(scrape.version_urls)
         self.num_code_locations = len(scrape.code_location_urls)
         self.num_shas = len(scrape.shas)
         self.num_unique_shas = len(set(scrape.shas))
+
+        
 
         for code_loc in scrape.code_location_urls:
             num_scans = len(scrape.code_location_to_scans[code_loc].keys())
@@ -125,6 +128,8 @@ class KubeReport:
         self.num_containers = len(scrape.container_names)
         self.num_images = len(scrape.container_images)
         self.num_unique_images = len(set(scrape.container_images))
+
+    
 
 class perceptorKubeReport:
     def __init__(self, perceptor_scrape, kube_scrape):
