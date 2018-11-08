@@ -1,4 +1,5 @@
 import logging
+import podreader 
 
 def find_duplicated_items(item_list):
     duplicates = []
@@ -13,6 +14,7 @@ def find_duplicated_items(item_list):
 class PerceptorReport:
     def __init__(self, scrape):
         self.hubs = []
+
         self.num_hubs = 0
         self.num_images = 0
         self.num_pods = 0
@@ -20,6 +22,11 @@ class PerceptorReport:
         self.num_images_in_multiple_containers = 0
         self.num_shas_in_hubs = 0
         self.num_pod_namespaces = 0
+
+        self.has_all_labels_val = False 
+        self.is_partially_labeled_val = False 
+        self.has_all_annotations_val = False 
+        self.is_partially_annotated_val = False 
 
         self.parse_scrape(scrape)
 
@@ -33,6 +40,43 @@ class PerceptorReport:
         self.num_images_in_multiple_containers = len(duplicate_shas)
         self.num_shas_in_hubs = len(scrape.hub_shas)
         self.num_pod_namespaces = len(set(scrape.pod_namespaces))
+
+        self.has_all_labels_val = self.has_all_labels("",scrape) 
+        self.is_partially_labeled_val = self.is_partially_labeled("", scrape) 
+        self.has_all_annotations_val = self.has_all_annotations("", scrape) 
+        self.is_partially_annotated_val = self.is_partially_annotated("", scrape)  
+
+
+    def get_opssight_labels(self, pod_name, scrape):
+        expected = set(podreader.get_all_labels(len(scrape.container_names)))
+        actual = set(scrape.dump[pod_name]['labels'].keys())
+        present = expected.intersection(actual)
+        missing = expected - actual
+        return (missing, present)
+    
+    def has_all_labels(self, pod_name, scrape):
+        missing, _ = scrape.get_opssight_labels(pod_name)
+        return len(missing) == 0
+    
+    def is_partially_labeled(self, pod_name, scrape):
+        missing, present = scrape.get_opssight_labels(pod_name)
+        return len(missing) > 0 and len(present) > 0
+
+    def get_opssight_annotations(self, pod_name, scrape):
+        expected = set(podreader.get_all_annotations(len(scrape.container_names)))
+        actual = set(scrape.dump[pod_name]['annotations'].keys())
+        present = expected.intersection(actual)
+        missing = expected - actual
+        return (missing, present)
+    
+    def has_all_annotations(self, pod_name, scrape):
+        missing, _ = scrape.get_opssight_annotations(pod_name)
+        return len(missing) == 0
+    
+    def is_partially_annotated(self, pod_name, scrape):
+        missing, present = scrape.get_opssight_annotations(pod_name)
+        return len(missing) > 0 and len(present) > 0
+
 
 class HubReport:
     def __init__(self, scrape):

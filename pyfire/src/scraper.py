@@ -17,7 +17,7 @@ class Scraper(object):
         self.perceptor_thread.daemon = True
         self.perceptor_thread.start()
 
-        # Start kube thread to put scrapes onto the queue
+        # Start kube thread to put scrapes onto the queue 
         self.kube_client = kube_client
         self.kube_pause = kube_pause
         self.kube_thread = threading.Thread(target=self.kube_scrape_thread)

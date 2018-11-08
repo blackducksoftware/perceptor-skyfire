@@ -6,7 +6,6 @@ import time
 from kubernetes import client, config
 import logging 
 from util import *
-import podreader 
 
 '''
 Data Scrape Classes
@@ -22,7 +21,6 @@ class KubeScrape:
         self.pod_annotations = []
         self.pod_labels = []
         
-
         self.container_names = []
         self.container_images = []
 
@@ -40,37 +38,6 @@ class KubeScrape:
                 self.container_names.append(container_name)
                 self.container_images.append(container_data['image'])
                 self.image_to_namespace[container_data['image']] = pod_data['namespace']
-
-    def get_opssight_labels(self, pod_name):
-        expected = set(podreader.get_all_labels(len(self.container_names)))
-        actual = set(self.dump[pod_name]['labels'].keys())
-        present = expected.intersection(actual)
-        missing = expected - actual
-        return (missing, present)
-    
-    def has_all_labels(self, pod_name):
-        missing, _ = self.get_opssight_labels(pod_name)
-        return len(missing) == 0
-    
-    def is_partially_labeled(self, pod_name):
-        missing, present = self.get_opssight_labels(pod_name)
-        return len(missing) > 0 and len(present) > 0
-
-    def get_opssight_annotations(self, pod_name):
-        expected = set(podreader.get_all_annotations(len(self.container_names)))
-        actual = set(self.dump[pod_name]['annotations'].keys())
-        present = expected.intersection(actual)
-        missing = expected - actual
-        return (missing, present)
-    
-    def has_all_annotations(self, pod_name):
-        missing, _ = self.get_opssight_annotations(pod_name)
-        return len(missing) == 0
-    
-    def is_partially_annotated(self, pod_name):
-        missing, present = self.get_opssight_annotations(pod_name)
-        return len(missing) > 0 and len(present) > 0
-
 
 class HubScrape():
     def __init__(self, dump={}):
