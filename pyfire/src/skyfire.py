@@ -74,7 +74,7 @@ class Skyfire:
             self.opssight = scrape
             self.opssight_report = report
             metrics.record_opssight_report(report)
-        self.q.put({request})
+        self.q.put(request)
 
     def enqueue_kube_scrape(self, scrape, err):
         if err is not None:

@@ -30,16 +30,15 @@ class KubeScrape:
         self.load_dump(dump)
 
     def load_dump(self, dump):
-        for namespace_name, namespace_data in dump.items():
-            self.namespaces.append(namespace_name)
-            for pod_name, pod_data in namespace_data.items():
-                self.pod_names.append(pod_name)
-                self.pod_annotations.append(pod_data['annotations'])
-                self.pod_labels.append(pod_data['labels'])
-                for container_name, container_data in pod_data['containers'].items():
-                    self.container_names.append(container_name)
-                    self.container_images.append(container_data['image'])
-                    self.image_to_namespace[container_data['image']] = namespace_name
+        for pod_name, pod_data in dump.items():
+            self.pod_names.append(pod_name) 
+            self.namespaces.append(pod_data['namespace'])
+            self.pod_annotations.append(pod_data['annotations'])
+            self.pod_labels.append(pod_data['labels'])
+            for container_name, container_data in pod_data['containers'].items():
+                self.container_names.append(container_name)
+                self.container_images.append(container_data['image'])
+                self.image_to_namespace[container_data['image']] = pod_data['namespace']
 
 
 class HubScrape():
@@ -342,26 +341,24 @@ class KubeClient:
             return None, err 
         return KubeScrape(dump), None
 
-    def old_get_dump(self):
+    def get_dump(self):
         dump = {}
-        cluster_namespaces = [ns.metadata.name for ns in self.v1.list_namespace().items]
-        for namespace in cluster_namespaces:
-            namespace_pods = self.v1.list_namespaced_pod(namespace).items
-            pod_dict = {}
-            for pod in namespace_pods:
-                pod_name = pod.metadata.name
-                pod_labels = pod.metadata.labels
-                pod_annotations = pod.metadata.annotations 
-                pod_containers = pod.spec.containers
-                container_dict = {}
-                for container in pod_containers:
-                    container_image = container.image 
-                    container_name = container.name
-                    container_dict[container_name] = {'image' : container_image}
-                pod_dict[pod_name] = {
-                    'labels' : pod_labels,
-                    'annotations' : pod_annotations,
-                    'containers' : container_dict
-                }
-            dump[namespace] = pod_dict
+        pods = self.v1.list_pod_for_all_namespaces().items 
+        for pod in pods:
+            pod_namespace = pod.metadata.namespace 
+            pod_name = pod.metadata.name 
+            pod_labels = pod.metadata.labels
+            pod_annotations = pod.metadata.annotations
+            pod_containers = pod.spec.containers
+            container_dict = {}
+            for container in pod_containers:
+                container_image = container.image 
+                container_name = container.name 
+                container_dict[container_name] = {'image' : container_image}
+            dump[pod_name] = {
+                'namespace' : pod_namespace,
+                'labels' : pod_labels,
+                'annotations' : pod_annotations,
+                'containers' : container_dict
+            }
         return dump, None 
