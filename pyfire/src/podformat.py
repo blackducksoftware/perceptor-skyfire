@@ -87,6 +87,10 @@ def get_all_image_annotations(image_count):
 def get_all_annotations(image_count):
     return {**pod_annotations, **get_all_image_annotations(image_count)}
 
+
+
+
+
 if __name__ == "__main__":
     for (key, t) in get_all_labels(3).items():
         print("label:", key, str(t))

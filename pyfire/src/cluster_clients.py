@@ -20,6 +20,8 @@ class KubeScrape:
         self.pod_names = []
         self.pod_annotations = []
         self.pod_labels = []
+        self.pod_to_labels = {}
+        self.pod_to_annotations = {}
         
         self.container_names = []
         self.container_images = []
@@ -33,7 +35,9 @@ class KubeScrape:
             self.pod_names.append(pod_name) 
             self.namespaces.append(pod_data['namespace'])
             self.pod_annotations.append(pod_data['annotations'])
+            self.pod_to_annotations[pod_name] = pod_data['annotations']
             self.pod_labels.append(pod_data['labels'])
+            self.pod_to_labels[pod_name] = pod_data['labels']
             for container_name, container_data in pod_data['containers'].items():
                 self.container_names.append(container_name)
                 self.container_images.append(container_data['image'])
@@ -98,6 +102,7 @@ class PerceptorScrape:
         self.container_names = []
         self.repositories = []
         self.pod_namespaces = []
+        self.pod_to_labels = {}
 
         self.image_shas = []
         self.image_repositories = []

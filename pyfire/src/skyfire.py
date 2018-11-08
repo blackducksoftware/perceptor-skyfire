@@ -39,6 +39,7 @@ class Skyfire:
         self.kube_opssight_report = None
 
         self.hubs = {}
+        self.hub_reports = {}
     
     def stop(self):
         self.is_running = False
