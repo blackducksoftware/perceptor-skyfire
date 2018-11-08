@@ -12,8 +12,6 @@ def find_duplicated_items(item_list):
 
 class PerceptorReport:
     def __init__(self, scrape):
-        logging.debug("perceptor report, scrape: ")
-
         self.hubs = []
         self.num_hubs = 0
         self.num_images = 0
@@ -53,7 +51,6 @@ class HubReport:
         self.parse_scrape(scrape)
 
     def parse_scrape(self, scrape):
-        print("herhehrher")
         self.num_projects = len(scrape.project_urls)
         self.num_versions = len(scrape.version_urls)
         self.num_code_locations = len(scrape.code_location_urls)

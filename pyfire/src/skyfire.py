@@ -28,7 +28,6 @@ class Skyfire:
         self.event_thread = threading.Thread(target=self.handle_requests)
         self.event_thread.daemon = True
         self.is_running = True
-        self.logger.info("starting skyfire event thread")
         self.event_thread.start()
 
         # Report objects - Represent latest state of Skyfire
@@ -42,24 +41,26 @@ class Skyfire:
         self.hubs = {}
     
     def stop(self):
-        self.logger.info("stopping skyfire event thread")
         self.is_running = False
         self.event_thread.join()
+        self.logger.info("Skyfire Event Thread is terminated")
     
     ### Read requests and scrapes off the Queue
 
     def handle_requests(self):
+        self.logger.info("Started Skyfire Requests Queue")
         while self.is_running:
-            self.logger.debug("Skyfire: Reading items off the queue...")
             request = self.q.get()
-            self.logger.debug("Skyfire: Got a request from the queue")
+            self.logger.debug("Got a Request off the Queue")
+            metrics.record_skyfire_request_event("received_queue_request")
             try:
                 request()
             except Exception as e:
-                self.logger.error("Unable to process event: %s", e)
-            self.logger.debug("Finished processing item")
+                self.logger.error("Unable to process Request: %s", e)
+                metrics.record_error("failed_queue_request")
+            self.logger.debug("Finished processing Request from the Queue")
             self.q.task_done()
-        self.logger.info("Exiting skyfire event thread")
+        self.logger.warning("Skyfire Request Thread is terminated")
     
     ### Scraper Delegate interface - Put scrapes requests onto the Queue
 
@@ -98,7 +99,6 @@ class Skyfire:
         def request():
             metrics.record_skyfire_request_event("hub_scrape")
             self.hubs[host] = scrape
-            hub_report = report
             metrics.record_hub_report(report)
         self.q.put(request)
 

@@ -50,9 +50,9 @@ def get_server_handler(model):
 
 def start_http_server(port, skyfire):
     server = ThreadingHTTPServer(('', port), get_server_handler(skyfire))
-    logging.info('Starting http server...')
     try:
         server.serve_forever()
+        logging.info('Started Skyfire http server')
     except:
         logging.error("Could not serve forever")
         server.socket.close()

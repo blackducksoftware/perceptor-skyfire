@@ -28,57 +28,56 @@ class Scraper(object):
         self.hub_clients = {}
         self.hub_pause = hub_pause
         for (host, client) in hub_clients.items():
-            self.logger.info("adding hub %s", host)
             thread = threading.Thread(target=self.get_hub_scrape_thread(host))
             thread.daemon = True
             self.hub_clients[host] = {'client' : client, 'thread' : thread, 'should_run' : True}
             thread.start()
 
     def perceptor_scrape_thread(self):
+        self.logger.info("Starting the Perceptor Scrape Thread")
         while self.is_running:
             try:
-                self.logger.debug("starting perceptor scrape")
                 scrape, err = self.perceptor_client.get_scrape()
+                self.logger.debug("Received Perceptor Scrape")
                 metrics.record_scrape_event("perceptor_scrape")
                 self.skyfire_delegate.enqueue_perceptor_scrape(scrape, err)
-                self.logger.debug("got perceptor scrape")
             except Exception as e:
-                # TODO: MPHammer: add prometheus metrics in
-                self.logger.error("uncaught exception in perceptor scrape thread: %s", str(e))
+                metrics.record_error("failed_perceptor_scrape")
+                self.logger.error("Uncaught Exception in Perceptor Scrape Thread: %s", str(e))
             time.sleep(self.perceptor_pause)
-        self.logger.warning("leaving perceptor thread")
+        self.logger.warning("Perceptor Scrape Thread terminated")
     
     def kube_scrape_thread(self):
+        self.logger.info("Starting the Kube Scrape Thread")
         while self.is_running:
             try:
-                self.logger.debug("starting kube scrape")
                 scrape, err = self.kube_client.get_scrape()
+                self.logger.debug("Received Kube Scrape")
                 metrics.record_scrape_event("kube_scrape")
                 self.skyfire_delegate.enqueue_kube_scrape(scrape, err)
-                self.logger.debug("got kube scrape")
             except Exception as e:
-                # TODO: MPHammer: add prometheus metrics in
-                self.logger.error("uncaught exception in kube scrape thread: %s", str(e))
+                metrics.record_error("failed_kube_scrape")
+                self.logger.error("Uncaught Exception in Kube Scrape Thread: %s", str(e))
             time.sleep(self.kube_pause)
-        self.logger.warning("leaving kube thread")
+        self.logger.warning("Kube Scrape Thread terminated")
 
     def hub_scrape_thread(self, host):
+        self.logger.info("Starting the Hub Scrape thread for %s", host)
         while self.is_running:
-            self.logger.debug("starting hub scrape of %s", host)
             client = self.hub_clients[host]['client']
             should_run = self.hub_clients[host]['should_run']
             if not should_run:
                 break
             try:
                 scrape, err = client.get_scrape()
+                self.logger.debug("Received Hub Scrape from %s", host)
                 metrics.record_scrape_event("hub_scrape")
                 self.skyfire_delegate.enqueue_hub_scrape(host, scrape, err)
-                self.logger.debug("got hub scrape from %s", host)
             except Exception as e:
-                # TODO: MPHammer: add prometheus metrics in
-                self.logger.error("uncaught exception in hub %s scrape thread: %s", host, str(e))
+                metrics.record_error("failed_hub_scrape")
+                self.logger.error("Uncaught Exception in Hub %s scrape thread: %s", host, str(e))
             time.sleep(self.hub_pause)
-        self.logger.warning("leaving hub %s thread", host)
+        self.logger.warning("Hub Scrape Thread terminated - %s", host)
 
 
     def get_hub_scrape_thread(self, host):
@@ -96,8 +95,9 @@ class Scraper(object):
             self.kube_thread.join()
             for host in self.hub_clients:
                 self.stop_hub(host)
+            self.logger.info("All Scraper Threads terminated")
         else:
-            self.logger.error("Scraper thread already stopped")
+            self.logger.warning("Scraper Threads already stopped")
 
     def stop_hub(self, host):
         self.hub_clients[host]['should_run'] = False

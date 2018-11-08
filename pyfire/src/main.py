@@ -55,6 +55,8 @@ def instantiate_clients(config):
     k_client = KubeClient(config.use_in_cluster_config)
     h_clients = {}
     hub_password = os.getenv(config.hub_password_env_var)
+    if hub_password is None:
+        logging.debug("Hub Password environment variable is not set")
     for host in config.hub_hosts:
         h_clients[host] = HubClient(host, config.hub_port, config.hub_user, hub_password, config.hub_client_timeout_seconds)
     return p_client, k_client, h_clients
@@ -65,7 +67,6 @@ def main():
         message = "\n   Usage: python3 main.py <config_file>"
         logging.error(message)
         sys.exit()
-
     try:
         with open(sys.argv[1]) as f:
             config_dict = json.load(f)
@@ -73,23 +74,27 @@ def main():
     except Exception as err:
         logging.error("Bad Config File: "+str(err))
         sys.exit()
-    
     root_logger = logging.getLogger()
     root_logger.setLevel(config.log_level.upper())
 
     logging.info("Config: %s", json.dumps(config_dict, indent=2))
 
     # Instantiate Skyfire Objects
-    logging.info("Starting Skyfire!!!")
+    logging.info("Starting Prometheus server on port %d", config.prometheus_port)
+    metrics.start_http_server(config.prometheus_port)
+
+    logging.info("Initializing Skyfire Components...")
+    logging.info("Starting Skyfire requests queue...")
     skyfire = Skyfire()
 
     if config.use_mock_mode:
-        logging.info("Skyfire is using mock Clients")
+        logging.info("Creating Mock Clients...")
         perceptor_client, kube_client, hub_clients = instantiate_mock_clients()
     else:
-        logging.info("Skyfire is using live Clients")
+        logging.info("Creating Live Clients...")
         perceptor_client, kube_client, hub_clients = instantiate_clients(config)
-
+        
+    logging.info("Starting Skyfire Scrapper...")
     scraper = Scraper(
         root_logger.getChild("Scraper"),
         skyfire,
@@ -99,13 +104,13 @@ def main():
         config.perceptor_dump_interval_seconds,
         config.kub_dump_interval_seconds,
         config.hub_dump_pause_seconds)
-    logging.info("Instantiated Scraper: %s", str(scraper))
 
-    metrics.start_http_server(config.prometheus_port)
-    logging.info("Started Prometheus server on port %d", config.prometheus_port)
+    logging.info("Skyfire was launched successfully!")
 
+    logging.info("Starting Skyfire http server on port %d...", config.skyfire_port)
     start_http_server(config.skyfire_port, skyfire)
-    logging.info("Started Skyfire http server on port %d", config.skyfire_port)
+
+    
 
 
 main()

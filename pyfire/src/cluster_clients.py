@@ -210,9 +210,9 @@ class PerceptorClient():
 
     def get_dump(self):
         url = "http://{}:{}/model".format(self.host_name, self.port)
-        logging.debug("Perceptor URL: %s",url)
         r = requests.get(url)
-        if r.status_code == 200:
+        if 200 <= r.status_code <= 299:
+            logging.debug("Perceptor http Dump Request Status Code: %s - %s", r.status_code, url)
             return json.loads(r.text), None
         else:
             logging.error("Could not connect to Perceptor")
@@ -232,14 +232,10 @@ class HubClient():
     def get_secure_login_cookie(self):
         security_headers = {'Content-Type':'application/x-www-form-urlencoded'}
         security_data = {'j_username': self.username,'j_password': self.password}
-        # verify=False does not verify SSL connection - insecure
-        url = "https://{}:{}/j_spring_security_check".format(self.host_name, self.port)
-        print(url)
+        url = "https://{}:{}/j_spring_security_check".format(self.host_name, self.port) # verify=False does not verify SSL connection - insecure
         r = requests.post(url, verify=False, data=security_data, headers=security_headers)
-        if r.status_code == 200:
-            return r.cookies, None
-        elif 200 <= r.status_code <= 299:
-            logging.debug("Hub HTTP Login Request Status Code: %s",r.status_code)
+        if 200 <= r.status_code <= 299:
+            logging.debug("Hub http Login Request Status Code: %s",r.status_code)
             return r.cookies, None
         else:
             logging.error("Could not Secure Login to the Hub")
@@ -251,10 +247,8 @@ class HubClient():
             if err is not None:
                 return None, err 
         r = requests.get(url, verify=False, cookies=self.secure_login_cookie)
-        if r.status_code == 200:
-            return r, None
-        elif 200 <= r.status_code <= 299:
-            logging.debug("Hub HTTP Request Status Code: %s",r.status_code)
+        if 200 <= r.status_code <= 299:
+            logging.debug("Hub http Request Status Code: %s - %s", r.status_code, url)
             return r, None
         else:
             logging.error("Could not contact: "+url)
@@ -378,8 +372,6 @@ class KubeClient:
         else:
             config.load_kube_config()
         self.v1 = client.CoreV1Api()
-
-    # TODO - Merge together Matt's Kube Client with this one
 
     def get_scrape(self):
         dump, err = self.get_dump()
