@@ -43,6 +43,61 @@ class KubeScrape:
                 self.container_images.append(container_data['image'])
                 self.image_to_namespace[container_data['image']] = pod_data['namespace']
 
+    def viz_dump(self):
+        viz = {}
+        for pod_name, pod_data in self.dump.items():
+            pod_node = pod_data['node']
+            pod_namespace = pod_data['namespace']
+            pod_containers = pod_data['containers'].keys()
+            if pod_node in viz:
+                if pod_namespace in viz[pod_node]:
+                    viz[pod_node][pod_namespace][pod_name] = {}
+                    for container in pod_containers:
+                        viz[pod_node][pod_namespace][pod_name][container] = True 
+                else:
+                    viz[pod_node][pod_namespace] = {pod_name : {}}
+                    for container in pod_containers:
+                        viz[pod_node][pod_namespace][pod_name][container] = True 
+            else:
+                viz[pod_node] = {}
+                viz[pod_node][pod_namespace] = {pod_name : {}}
+                for container in pod_containers:
+                    viz[pod_node][pod_namespace][pod_name][container] = True 
+        viz_out = {
+            'name' : 'cluster',
+            'children' : []
+        }
+        for node_name, node_data in viz.items():
+            node = {
+                'name' : node_name,
+                'children' : []
+            }
+            for ns_name, ns_data in node_data.items():
+                ns = {
+                    'name' : ns_name,
+                    'children' : []
+                }
+                for pod_name, pod_data in ns_data.items():
+                    pod = {
+                        'name' : pod_name,
+                        'children' : []
+                    }
+                    for container_name, container_data in pod_data.items():
+                        container = {
+                            'name' : container_name,
+                            'size' :  40
+                        }
+                        pod['children'].append(container)
+                    ns['children'].append(pod)
+                node['children'].append(ns)
+            viz_out['children'].append(node)
+        return viz_out 
+                
+                    
+
+
+
+
 class HubScrape():
     def __init__(self, dump={}):
         self.time_stamp = get_current_datetime()
@@ -360,12 +415,14 @@ class KubeClient:
             pod_labels = pod.metadata.labels
             pod_annotations = pod.metadata.annotations
             pod_containers = pod.spec.containers
+            pod_node = pod.spec.node_name
             container_dict = {}
             for container in pod_containers:
                 container_image = container.image 
                 container_name = container.name 
                 container_dict[container_name] = {'image' : container_image}
             dump[pod_name] = {
+                'node' : pod_node,
                 'namespace' : pod_namespace,
                 'labels' : pod_labels,
                 'annotations' : pod_annotations,
