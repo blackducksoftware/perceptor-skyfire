@@ -6,7 +6,6 @@ from skyfire import Skyfire
 import metrics
 import logging
 from cluster_clients import PerceptorClient, HubClient, KubeClient, MockClient
-import kube
 import os
 import urllib3
 import kubernetes.client
