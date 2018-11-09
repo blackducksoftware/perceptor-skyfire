@@ -57,6 +57,11 @@ http_request_counter = Counter(
 def record_http_request_event(label):
     http_request_counter.labels(name=label).inc()
 
+error_counter = Counter('errors', 'internal skyfire errors', ['name'], 'perceptor', 'skyfire')
+def record_error(label):
+    error_counter.labels(name=label).inc()
+
+
 '''
 Data Metrics
 '''
@@ -98,27 +103,3 @@ def record_hub_report(report):
 
 
 
-'''
-EXAMPLES
-'''
-
-
-### Guage Example
-problems_gauge = Gauge(
-    'test_issues',
-    'names and counts for issues discovered in perceptor testing',
-    ['name'],
-    'perceptor',
-    'skyfire')
-def record_problem(name, count):
-    problems_gauge.labels(name=name).set(count)
-
-### Counter Example
-error_counter = Counter('errors', 'internal skyfire errors', ['name'], 'perceptor', 'skyfire')
-def record_error(label):
-    error_counter.labels(name=label).inc()
-
-### Histogram Example
-hist = Histogram('my_hist', 'just a hist', ['name'], 'perceptor', 'skyfire')
-def do_hist():
-    hist.labels("blug").observe(4.7)

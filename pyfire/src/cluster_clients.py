@@ -6,7 +6,6 @@ import time
 from kubernetes import client, config
 import logging 
 from util import *
-import podreader 
 
 '''
 Data Scrape Classes
@@ -21,8 +20,9 @@ class KubeScrape:
         self.pod_names = []
         self.pod_annotations = []
         self.pod_labels = []
+        self.pod_to_labels = {}
+        self.pod_to_annotations = {}
         
-
         self.container_names = []
         self.container_images = []
 
@@ -35,41 +35,67 @@ class KubeScrape:
             self.pod_names.append(pod_name) 
             self.namespaces.append(pod_data['namespace'])
             self.pod_annotations.append(pod_data['annotations'])
+            self.pod_to_annotations[pod_name] = pod_data['annotations']
             self.pod_labels.append(pod_data['labels'])
+            self.pod_to_labels[pod_name] = pod_data['labels']
             for container_name, container_data in pod_data['containers'].items():
                 self.container_names.append(container_name)
                 self.container_images.append(container_data['image'])
                 self.image_to_namespace[container_data['image']] = pod_data['namespace']
 
-    def get_opssight_labels(self, pod_name):
-        expected = set(podreader.get_all_labels(len(self.container_names)))
-        actual = set(self.dump[pod_name]['labels'].keys())
-        present = expected.intersection(actual)
-        missing = expected - actual
-        return (missing, present)
-    
-    def has_all_labels(self, pod_name):
-        missing, _ = self.get_opssight_labels(pod_name)
-        return len(missing) == 0
-    
-    def is_partially_labeled(self, pod_name):
-        missing, present = self.get_opssight_labels(pod_name)
-        return len(missing) > 0 and len(present) > 0
+    def viz_dump(self):
+        viz = {}
+        for pod_name, pod_data in self.dump.items():
+            pod_node = pod_data['node']
+            pod_namespace = pod_data['namespace']
+            pod_containers = pod_data['containers'].keys()
+            if pod_node in viz:
+                if pod_namespace in viz[pod_node]:
+                    viz[pod_node][pod_namespace][pod_name] = {}
+                    for container in pod_containers:
+                        viz[pod_node][pod_namespace][pod_name][container] = True 
+                else:
+                    viz[pod_node][pod_namespace] = {pod_name : {}}
+                    for container in pod_containers:
+                        viz[pod_node][pod_namespace][pod_name][container] = True 
+            else:
+                viz[pod_node] = {}
+                viz[pod_node][pod_namespace] = {pod_name : {}}
+                for container in pod_containers:
+                    viz[pod_node][pod_namespace][pod_name][container] = True 
+        viz_out = {
+            'name' : 'cluster',
+            'children' : []
+        }
+        for node_name, node_data in viz.items():
+            node = {
+                'name' : node_name,
+                'children' : []
+            }
+            for ns_name, ns_data in node_data.items():
+                ns = {
+                    'name' : ns_name,
+                    'children' : []
+                }
+                for pod_name, pod_data in ns_data.items():
+                    pod = {
+                        'name' : pod_name,
+                        'children' : []
+                    }
+                    for container_name, container_data in pod_data.items():
+                        container = {
+                            'name' : container_name,
+                            'size' :  40
+                        }
+                        pod['children'].append(container)
+                    ns['children'].append(pod)
+                node['children'].append(ns)
+            viz_out['children'].append(node)
+        return viz_out 
+                
+                    
 
-    def get_opssight_annotations(self, pod_name):
-        expected = set(podreader.get_all_annotations(len(self.container_names)))
-        actual = set(self.dump[pod_name]['annotations'].keys())
-        present = expected.intersection(actual)
-        missing = expected - actual
-        return (missing, present)
-    
-    def has_all_annotations(self, pod_name):
-        missing, _ = self.get_opssight_annotations(pod_name)
-        return len(missing) == 0
-    
-    def is_partially_annotated(self, pod_name):
-        missing, present = self.get_opssight_annotations(pod_name)
-        return len(missing) > 0 and len(present) > 0
+
 
 
 class HubScrape():
@@ -131,6 +157,7 @@ class PerceptorScrape:
         self.container_names = []
         self.repositories = []
         self.pod_namespaces = []
+        self.pod_to_labels = {}
 
         self.image_shas = []
         self.image_repositories = []
@@ -210,9 +237,9 @@ class PerceptorClient():
 
     def get_dump(self):
         url = "http://{}:{}/model".format(self.host_name, self.port)
-        logging.debug("Perceptor URL: %s",url)
         r = requests.get(url)
-        if r.status_code == 200:
+        if 200 <= r.status_code <= 299:
+            logging.debug("Perceptor http Dump Request Status Code: %s - %s", r.status_code, url)
             return json.loads(r.text), None
         else:
             logging.error("Could not connect to Perceptor")
@@ -232,14 +259,10 @@ class HubClient():
     def get_secure_login_cookie(self):
         security_headers = {'Content-Type':'application/x-www-form-urlencoded'}
         security_data = {'j_username': self.username,'j_password': self.password}
-        # verify=False does not verify SSL connection - insecure
-        url = "https://{}:{}/j_spring_security_check".format(self.host_name, self.port)
-        print(url)
+        url = "https://{}:{}/j_spring_security_check".format(self.host_name, self.port) # verify=False does not verify SSL connection - insecure
         r = requests.post(url, verify=False, data=security_data, headers=security_headers)
-        if r.status_code == 200:
-            return r.cookies, None
-        elif 200 <= r.status_code <= 299:
-            logging.debug("Hub HTTP Login Request Status Code: %s",r.status_code)
+        if 200 <= r.status_code <= 299:
+            logging.debug("Hub http Login Request Status Code: %s",r.status_code)
             return r.cookies, None
         else:
             logging.error("Could not Secure Login to the Hub")
@@ -251,10 +274,8 @@ class HubClient():
             if err is not None:
                 return None, err 
         r = requests.get(url, verify=False, cookies=self.secure_login_cookie)
-        if r.status_code == 200:
-            return r, None
-        elif 200 <= r.status_code <= 299:
-            logging.debug("Hub HTTP Request Status Code: %s",r.status_code)
+        if 200 <= r.status_code <= 299:
+            logging.debug("Hub http Request Status Code: %s - %s", r.status_code, url)
             return r, None
         else:
             logging.error("Could not contact: "+url)
@@ -379,8 +400,6 @@ class KubeClient:
             config.load_kube_config()
         self.v1 = client.CoreV1Api()
 
-    # TODO - Merge together Matt's Kube Client with this one
-
     def get_scrape(self):
         dump, err = self.get_dump()
         if err is not None:
@@ -396,12 +415,14 @@ class KubeClient:
             pod_labels = pod.metadata.labels
             pod_annotations = pod.metadata.annotations
             pod_containers = pod.spec.containers
+            pod_node = pod.spec.node_name
             container_dict = {}
             for container in pod_containers:
                 container_image = container.image 
                 container_name = container.name 
                 container_dict[container_name] = {'image' : container_image}
             dump[pod_name] = {
+                'node' : pod_node,
                 'namespace' : pod_namespace,
                 'labels' : pod_labels,
                 'annotations' : pod_annotations,
