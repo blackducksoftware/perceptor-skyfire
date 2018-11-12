@@ -408,7 +408,7 @@ class KubeClient:
 
     def get_dump(self):
         dump = {}
-        pods = self.v1.list_pod_for_all_namespaces().items 
+        pods = self.v1.list_pod_for_all_namespaces().items
         for pod in pods:
             pod_namespace = pod.metadata.namespace 
             pod_name = pod.metadata.name 

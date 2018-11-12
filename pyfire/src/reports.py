@@ -170,7 +170,7 @@ class KubeReport:
 
     
 
-class perceptorKubeReport:
+class PerceptorKubeReport:
     def __init__(self, perceptor_scrape, kube_scrape):
         self.all_kube_repositories = set()
         self.all_perceptor_repositories = set()
