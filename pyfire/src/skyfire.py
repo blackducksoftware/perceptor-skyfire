@@ -6,6 +6,8 @@ from reports import *
 import util
 import metrics 
 
+import sys
+
 
 class MockSkyfire():
     def __init__(self):
@@ -45,8 +47,8 @@ class Skyfire:
     def handle_requests(self):
         self.logger.info("Started Skyfire Requests Queue")
         while self.is_running:
-            request = self.q.get()
-            self.logger.debug("Got a Request off the Queue")
+            request_type, request = self.q.get()
+            self.logger.debug("Got a Request off the Queue - %s", request_type)
             metrics.record_skyfire_request_event("received_queue_request")
             try:
                 request()
@@ -67,7 +69,7 @@ class Skyfire:
         def request():
             metrics.record_skyfire_request_event("perceptor_scrape")
             self.perceptor_scrape = scrape
-        self.q.put(request)
+        self.q.put(("perceptor",request))
 
     def enqueue_kube_scrape(self, scrape, err):
         if err is not None:
@@ -77,7 +79,7 @@ class Skyfire:
         def request():
             metrics.record_skyfire_request_event("kube_scrape")
             self.kube_scrape = scrape
-        self.q.put(request)
+        self.q.put(("kube",request))
 
     def enqueue_hub_scrape(self, host, scrape, err):
         if err is not None:
@@ -87,7 +89,7 @@ class Skyfire:
         def request():
             metrics.record_skyfire_request_event("hub_scrape")
             self.hub_scrapes[host] = scrape
-        self.q.put(request)
+        self.q.put(("hub",request))
 
     ### Web Server interface - Put server requests onto the queue
 
@@ -99,6 +101,7 @@ class Skyfire:
         # this nasty `wrapper` hack is because python doesn't like capturing+mutating strings
         report_wrapper = {} # wrapper remains in this scope but can be accessed from where the function is called
         def request():
+            
             metrics.record_skyfire_request_event("get_latest_report")
             skyfire_report = {
                 'reports' : {
@@ -118,7 +121,7 @@ class Skyfire:
             self.logger.debug("Waiting in queue in request function")
             barrier.wait()
 
-        self.q.put(request)
+        self.q.put(("latestreport",request))
 
         # Wait until request is executed on the queue and updates wrapper
         self.logger.debug("Waiting for queued request in get_latest_report")
