@@ -26,6 +26,8 @@ class PerceptorReport:
         self.parse_scrape(scrape)
 
     def parse_scrape(self, scrape):
+        if scrape is None:
+            return 
         self.hubs = scrape.hub_names
         self.num_hubs = len(scrape.hub_names)
         self.num_pods = len(scrape.pod_names)
@@ -54,6 +56,8 @@ class HubReport:
         self.parse_scrape(scrape)
 
     def parse_scrape(self, scrape):
+        if scrape is None:
+            return 
         self.num_projects = len(scrape.project_urls)
         self.num_versions = len(scrape.version_urls)
         self.num_code_locations = len(scrape.code_location_urls)
@@ -95,6 +99,8 @@ class MultipleHubReport:
         self.parse_scrapes(scrapes)
 
     def parse_scrapes(self, scrapes):
+        if scrapes is None:
+            return
         for scrape in scrapes:
             self.projects.extend(scrape.project_urls)
             self.versions.extend(scrape.version_urls)
@@ -125,6 +131,8 @@ class KubeReport:
         self.parse_scrape(scrape)
 
     def parse_scrape(self, scrape):
+        if scrape is None:
+            return 
         self.num_namespaces = len(scrape.namespaces)
         self.num_pods = len(scrape.pod_names)
         self.num_annotations = len(scrape.pod_annotations)
@@ -140,7 +148,9 @@ class KubeReport:
 
     def get_opssight_labels(self, pod_name, scrape):
         expected = set(podformat.get_all_labels(len(scrape.container_names)))
-        actual = set(scrape.pod_to_labels[pod_name].keys())
+        actual = set()
+        if scrape.pod_to_labels[pod_name] is not None:
+            actual = set(scrape.pod_to_labels[pod_name].keys())
         present = expected.intersection(actual)
         missing = expected - actual
         return (missing, present)
@@ -155,7 +165,9 @@ class KubeReport:
 
     def get_opssight_annotations(self, pod_name, scrape):
         expected = set(podformat.get_all_annotations(len(scrape.container_names)))
-        actual = set(scrape.pod_to_annotations[pod_name].keys())
+        actual = set()
+        if scrape.pod_to_annotations[pod_name] is not None:
+            actual = set(scrape.pod_to_annotations[pod_name].keys())
         present = expected.intersection(actual)
         missing = expected - actual
         return (missing, present)
@@ -187,6 +199,8 @@ class PerceptorKubeReport:
         self.parse_scrapes(perceptor_scrape, kube_scrape)
 
     def parse_scrapes(self, perceptor_scrape, kube_scrape):
+        if perceptor_scrape is None or kube_scrape is None:
+            return 
         self.all_kube_repositories = set( [x.split(":")[0] for x in kube_scrape.container_images] )
         self.all_perceptor_repositories = set(perceptor_scrape.image_repositories)
         self.only_perceptor_repositories = self.all_perceptor_repositories.difference(self.all_kube_repositories)
@@ -216,6 +230,8 @@ class HubPerceptorReport:
         self.parse_scrape(hub_scrape, perceptor_scrape)
     
     def parse_scrape(self, hub_scrape, perceptor_scrape):
+        if hub_scrape is None or perceptor_scrape is None:
+            return 
         self.all_hub_shas = set(hub_scrape.shas)
         self.all_perceptor_shas = set(perceptor_scrape.image_shas)
         self.only_hub_shas = self.all_hub_shas.difference(self.all_perceptor_shas)
@@ -233,6 +249,8 @@ class MultipleHubPerceptorReport:
         self.parse_scrapes(hub_scrapes, perceptor_scrape)
     
     def parse_scrapes(self, hub_scrapes, perceptor_scrape):
+        if hub_scrapes is None or perceptor_scrape is None:
+            return 
         pass
 
 class HubKubeReport:
@@ -240,6 +258,8 @@ class HubKubeReport:
         self.parse_scrapes(hub_scrape, kube_scrape)
 
     def parse_scrapes(self, hub_scrape, kube_scrape):
+        if hub_scrape is None or kube_scrape is None:
+            return 
         pass
 
 class MultipleHubKubeReport:
@@ -247,6 +267,8 @@ class MultipleHubKubeReport:
         self.parse_scrapes(hub_scrapes, kube_scrape)
 
     def parse_scrapes(self, hub_scrapes, kube_scrape):
+        if hub_scrapes is None or kube_scrape is None:
+            return 
         pass
 
 
