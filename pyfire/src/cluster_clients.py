@@ -246,7 +246,7 @@ class PerceptorScrape:
             self.hub_code_loc_shas.extend(code_loc_shas)
             self.hub_host_to_code_locs[hub_host] = hub_data["CodeLocations"]
         # Remove duplicates
-        self.hub_shas = list(set(self.hub_shas)) 
+        self.hub_code_loc_shas = list(set(self.hub_code_loc_shas)) 
 
         # Load the Pod Section
         for pod_name, pod_data in dump["CoreModel"]["Pods"].items():

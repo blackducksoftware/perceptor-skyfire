@@ -50,17 +50,17 @@ class KubeReport:
         self.pods_fully_labeled = [pod_name for pod_name in scrape.ns_pod_names if self.has_all_labels(pod_name,scrape)]
         self.pods_partially_labeled = [pod_name for pod_name in scrape.ns_pod_names if self.is_partially_labeled(pod_name,scrape)]
         self.pods_not_labeled = [pod_name for pod_name in scrape.ns_pod_names if self.has_no_labels(pod_name,scrape)]
-        
-        self.pods_full_label_coverage = (len(self.pods_fully_labeled) / float(self.num_pods)) * 100
-        self.pods_partial_label_coverage = (len(self.pods_partially_labeled) / float(self.num_pods)) * 100
+        if float(self.num_pods) > 0.0:
+            self.pods_full_label_coverage = (len(self.pods_fully_labeled) / float(self.num_pods)) * 100
+            self.pods_partial_label_coverage = (len(self.pods_partially_labeled) / float(self.num_pods)) * 100
 
         # Check Annotations
         self.pods_fully_annotated = [pod_name for pod_name in scrape.ns_pod_names if self.has_all_annotations(pod_name,scrape)]
         self.pods_partially_annotated = [pod_name for pod_name in scrape.ns_pod_names if self.is_partially_annotated(pod_name,scrape)]
         self.pods_not_annotated = [pod_name for pod_name in scrape.ns_pod_names if self.has_no_annotations(pod_name,scrape)]
-        
-        self.pods_full_annotation_coverage = (len(self.pods_fully_annotated) / float(self.num_pods)) * 100
-        self.pods_partial_annotation_coverage = (len(self.pods_partially_annotated) / float(self.num_pods)) * 100
+        if float(self.num_pods) > 0.0:
+            self.pods_full_annotation_coverage = (len(self.pods_fully_annotated) / float(self.num_pods)) * 100
+            self.pods_partial_annotation_coverage = (len(self.pods_partially_annotated) / float(self.num_pods)) * 100
 
     def get_opssight_labels(self, pod_name, scrape):
         expected = set(podformat.get_all_labels(len(scrape.container_names)))
@@ -189,19 +189,23 @@ class PerceptorReport:
     def parse_scrape(self, scrape):
         if scrape is None:
             return 
-        self.hubs = scrape.hub_names
-        self.num_hubs = len(scrape.hub_names)
-        self.num_images_in_hubs = len(scrape.hub_name_to_shas.values())
+        # Analyze Hub Section
+        self.hubs = scrape.hub_hosts
+        self.num_hubs = len(scrape.hub_hosts)
+        self.num_images_in_hubs = len(scrape.hub_host_to_code_loc_shas.values())
 
+        # Analyze Pod Section
         self.num_pods = len(scrape.ns_pod_names)
         self.num_containers = len(scrape.ns_pod_name_to_containers.values())
 
+        # Analyze Iamge Section
         sha_per_container = []
         for pod_name, pod_containers in scrape.ns_pod_name_to_containers.items():
             sha_per_container.extend([container['Image']['Sha'] for container in pod_containers])
         duplicate_shas = find_duplicated_items(sha_per_container)
         self.num_images_in_multiple_containers = len(duplicate_shas)
 
+        # Analyze Queue Section
         self.num_code_loc_shas_in_queue = len(scrape.scan_queue_shas)
 
 
@@ -237,7 +241,8 @@ class PerceptorKubeReport:
         total_repos += len(self.only_perceptor_repos)
         total_repos += len(self.both_repos)
         num_in_both = len(self.both_repos)
-        self.repo_coverage = (num_in_both / float(total_repos))*100.0
+        if float(total_repos) > 0.0:
+            self.repo_coverage = (num_in_both / float(total_repos))*100.0
 
         # Compare Pods
         kube_pods = set(kube_scrape.ns_pod_names)
@@ -251,7 +256,8 @@ class PerceptorKubeReport:
         total_pods += len(self.only_perceptor_pod_names)
         total_pods += len(self.both_pod_names)
         num_in_both = len(self.both_pod_names)
-        self.pod_coverage = (num_in_both / float(total_pods))*100.0
+        if float(total_pods) > 0.0:
+            self.pod_coverage = (num_in_both / float(total_pods))*100.0
 
 class HubPerceptorReport:
     def __init__(self, hub_scrapes, perceptor_scrape):
@@ -280,6 +286,7 @@ class HubPerceptorReport:
         total_images += len(self.only_perceptor_images)
         total_images += len(self.both_images)
         num_in_both = len(self.both_images)
-        self.image_coverage = (num_in_both / float(total_images))*100.0
+        if float(total_images) > 0.0:
+            self.image_coverage = (num_in_both / float(total_images))*100.0
 
 
