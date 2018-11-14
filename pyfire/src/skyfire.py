@@ -23,7 +23,7 @@ class MockSkyfire():
         return {'abc': 123}
 
 class Skyfire:
-    def __init__(self, logger=logging.getLogger("Skyfire")):
+    def __init__(self, logger=logging.getLogger("Skyfire"), skyfire_port=80):
         self.logger = logger
 
         # Thread for reading requests off the Queue
@@ -39,7 +39,7 @@ class Skyfire:
         self.hub_scrapes = {}
 
         # Testing object
-        self.tester = TestSuite()
+        self.tester = TestSuite(skyfire_port)
         self.test_report = {}
     
     def stop(self):

@@ -9,13 +9,15 @@ import json
 import random
 
 class TestSuite:
-    def __init__(self):
+    def __init__(self, skyfire_port):
         self.event_thread = threading.Thread(target=self.tests)
         self.event_thread.daemon = True
         self.test_state = "STOPPED"
         self.in_progress = False
         self.accessing_data = False
         self.event_thread.start()
+
+        self.skyfire_port = skyfire_port
         
         self.test_results = {'state' : 'NO_TESTS', 'summary' : '','data' : {}}
 
@@ -112,7 +114,7 @@ class TestSuite:
             return "FAILED"
 
     def opssight_repo_coverage(self, policy):
-        dump, err = getSkyfireDump()
+        dump, err = getSkyfireDump(host_name="localhost", port=self.skyfire_port)
         total_repos = 0
         total_repos += len(dump["perceptor-kube-report"]["only_kube_repos"])
         total_repos += len(dump["perceptor-kube-report"]["only_perceptor_repos"])
@@ -125,7 +127,7 @@ class TestSuite:
             return "PASSED"
 
     def opssight_pod_coverage(self, policy):
-        dump, err = getSkyfireDump()
+        dump, err = getSkyfireDump(host_name="localhost", port=self.skyfire_port)
         total_pods = 0
         total_pods += len(dump["perceptor-kube-report"]["only_kube_pod_names"])
         total_pods += len(dump["perceptor-kube-report"]["only_perceptor_pod_names"])
@@ -138,7 +140,7 @@ class TestSuite:
             return "PASSED"
 
     def hub_image_coverage(self, policy):
-        dump, err = getSkyfireDump()
+        dump, err = getSkyfireDump(host_name="localhost", port=self.skyfire_port)
         total_images = 0
         total_images += len(dump["mult-hub-perceptor-report"]["only_hub_image_shas"])
         total_images += len(dump["mult-hub-perceptor-report"]["only_perceptor_images"])
@@ -182,7 +184,7 @@ class TestSuite:
         test_result = "FAILED"
 
         for i in range(90):
-            dump, err = getSkyfireDump()
+            dump, err = getSkyfireDump(host_name="localhost", port=self.skyfire_port)
             if err is not None:
                 logging.error(err)
                 time.sleep(10)
@@ -210,7 +212,7 @@ class TestSuite:
             
 
 def getSkyfireDump(host_name="localhost", port=80):
-    url = "http://{}:{}/latestreport".format(host_name, 9092)
+    url = "http://{}:{}/latestreport".format(host_name, port)
     r = requests.get(url)
     if 200 <= r.status_code <= 299:
         logging.debug("Skyfire http Dump Request Status Code: %s - %s", r.status_code, url)
