@@ -41,24 +41,31 @@ class Config:
         self.hub_password_env_var = hub['PasswordEnvVar']
         
 def instantiate_mock_clients():
-    perceptor_client = MockClient("perceptor")
     kube_client = MockClient("kube")
+    perceptor_clients = {
+        'perceptor_name_1' : MockClient("perceptor")
+    }
     hub_clients = {
         'hub_name_1': MockClient("hub1"),
         'hub_name_2': MockClient("hub2")
     }
-    return perceptor_client, kube_client, hub_clients
+    return kube_client, perceptor_clients, hub_clients
 
 def instantiate_clients(config):
-    p_client = PerceptorClient(config.perceptor_host, config.perceptor_port)
     k_client = KubeClient(config.use_in_cluster_config)
+
+    p_clients = {}
+    for host in [config.perceptor_host]:
+        p_clients[host] = PerceptorClient(host, config.perceptor_port)
     h_clients = {}
     hub_password = os.getenv(config.hub_password_env_var)
+
     if hub_password is None:
         logging.debug("Hub Password environment variable is not set")
     for host in config.hub_hosts:
         h_clients[host] = HubClient(host, config.hub_port, config.hub_user, hub_password, config.hub_client_timeout_seconds)
-    return p_client, k_client, h_clients
+    
+    return k_client, p_clients, h_clients
 
 def main():
     # Check parameters and load config file
@@ -88,17 +95,17 @@ def main():
 
     if config.use_mock_mode:
         logging.info("Creating Mock Clients...")
-        perceptor_client, kube_client, hub_clients = instantiate_mock_clients()
+        kube_client, perceptor_clients, hub_clients = instantiate_mock_clients()
     else:
         logging.info("Creating Live Clients...")
-        perceptor_client, kube_client, hub_clients = instantiate_clients(config)
+        kube_client, perceptor_clients, hub_clients = instantiate_clients(config)
         
     logging.info("Starting Skyfire Scrapper...")
     scraper = Scraper(
         root_logger.getChild("Scraper"),
         skyfire,
-        perceptor_client,
         kube_client,
+        perceptor_clients,
         hub_clients,
         config.perceptor_dump_interval_seconds,
         config.kub_dump_interval_seconds,
