@@ -1,4 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
+import cgi
 import threading
 import json
 import time
@@ -8,7 +9,7 @@ import metrics
 import logging 
 
 
-paths = set(['/latestreport'])
+paths = set(['/latestreport','/testsuite'])
 
 class Handler(BaseHTTPRequestHandler):
     def __init__(self, model, *args, **kwargs):
@@ -31,16 +32,31 @@ class Handler(BaseHTTPRequestHandler):
             return
         self.send_response(200)
         self._set_headers({'Content-type': 'application/json'})
-        report = self.model.get_latest_report()
+        if self.path == '/latestreport':
+            report = self.model.get_latest_report()
+        elif self.path == '/testsuite':
+            report = self.model.get_test_suite()
         self.wfile.write(bytes(report, 'utf-8'))
         logging.debug("GET request successful")
 
 #    def do_HEAD(self):
 #        self._set_headers()
 #        
-#    def do_POST(self):
-#        self._set_headers()
-#        self.wfile.write(b"{}")
+    def do_POST(self):
+        form = cgi.FieldStorage(
+            fp=self.rfile, 
+            headers=self.headers,
+            environ={'REQUEST_METHOD':'POST',
+                     'CONTENT_TYPE':self.headers['Content-Type'],
+                     })
+
+        # Begin the response
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(bytes('Path: %s\n' % self.path,'utf-8'))
+        print(self.path)
+        if self.path == "/starttest":
+            self.model.start_test_suite()
 
 
 def get_server_handler(model):

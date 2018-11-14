@@ -16,32 +16,37 @@ class KubeScrape:
         self.time_stamp = get_current_datetime()
         self.dump = dump
 
-        self.namespaces = []
         self.pod_names = []
-        self.pod_annotations = []
-        self.pod_labels = []
-        self.pod_to_labels = {}
-        self.pod_to_annotations = {}
-        
+        self.ns_pod_names = [] # ns = namespace
+        self.uids = []
+        self.namespaces = []
         self.container_names = []
-        self.container_images = []
+        self.image_repos = []
 
-        self.image_to_namespace = {}
+        self.ns_pod_name_to_uid = {}
+        self.ns_pod_name_to_annotations = {}
+        self.ns_pod_name_to_labels = {}
+        self.ns_pod_name_to_containers = {}
 
         self.load_dump(dump)
 
     def load_dump(self, dump):
         for pod_name, pod_data in dump.items():
             self.pod_names.append(pod_name) 
+            ns_pod_name = "{}/{}".format(pod_data['namespace'],pod_name)
+            self.ns_pod_names.append(ns_pod_name)
             self.namespaces.append(pod_data['namespace'])
-            self.pod_annotations.append(pod_data['annotations'])
-            self.pod_to_annotations[pod_name] = pod_data['annotations']
-            self.pod_labels.append(pod_data['labels'])
-            self.pod_to_labels[pod_name] = pod_data['labels']
+            self.ns_pod_name_to_uid[ns_pod_name] = pod_data['uid']
+            self.ns_pod_name_to_annotations[ns_pod_name] = pod_data['annotations']
+            self.ns_pod_name_to_labels[ns_pod_name] = pod_data['labels']
+            self.ns_pod_name_to_containers[ns_pod_name] = pod_data['containers']
             for container_name, container_data in pod_data['containers'].items():
                 self.container_names.append(container_name)
-                self.container_images.append(container_data['image'])
-                self.image_to_namespace[container_data['image']] = pod_data['namespace']
+                self.image_repos.append(container_data['image'])
+
+        self.pod_names = list(set(self.pod_names))
+        self.namespaces = list(set(self.namespaces))
+        self.image_repos = list(set(self.image_repos))
 
     def viz_dump(self):
         viz = {}
@@ -93,32 +98,28 @@ class KubeScrape:
             viz_out['children'].append(node)
         return viz_out 
                 
-                    
-
-
-
-
 class HubScrape():
     def __init__(self, dump={}):
         self.time_stamp = get_current_datetime()
         self.dump = dump
+        
+        self.project_names = []
+        self.code_loc_shas = []
 
         self.project_urls = []
         self.version_urls = []
-        self.code_location_urls = []
-        self.shas = []
+        self.code_loc_urls = []
 
-        self.project_to_versions = {}
+        self.project_url_to_version_urls = {}
 
-        self.version_to_risk_profile = {}
-        self.version_to_policy_status = {}
+        self.version_url_to_risk_profile = {}
+        self.version_url_to_policy_status = {}
 
-        self.code_location_to_scans = {}
+        self.code_loc_sha_to_code_location_url = {}
+        self.code_loc_sha_to_scans = {}
 
-        self.sha_to_code_location_url = {}
-        self.sha_to_version_url = {}
-        self.sha_to_project_url = {}
-        self.sha_to_scans = {}
+        self.code_loc_sha_to_project_urls = {}
+        self.code_loc_sha_to_version_urls = {}
 
         self.load_dump(dump)
 
@@ -126,22 +127,32 @@ class HubScrape():
         if dump == {}:
             return 
         for project_url, project_data in dump.items():
+            self.project_names.append(project_data['name'])
             self.project_urls.append(project_url)
-            self.project_to_versions[project_url] = []
             for version_url, version_data in project_data['versions'].items():
+                if project_url not in self.project_url_to_version_urls:
+                    self.project_url_to_version_urls[project_url] = []
+                self.project_url_to_version_urls[project_url].append(version_url)
                 self.version_urls.append(version_url)
-                self.project_to_versions[project_url].append(version_url)
-                self.version_to_risk_profile[version_url] = version_data['riskProfile']
-                self.version_to_policy_status[version_url] = version_data['policy-status']
+                self.version_url_to_risk_profile[version_url] = version_data["riskProfile"]
+                self.version_url_to_policy_status[version_url] = version_data["policy-status"]
                 for code_loc_url, code_loc_data in version_data['codelocations'].items():
-                    self.code_location_urls.append(code_loc_url)
-                    self.code_location_to_scans[code_loc_url] = code_loc_data['scans']
+                    self.code_loc_urls.append(code_loc_url)
                     sha = code_loc_data['sha']
-                    self.shas.append(sha)
-                    self.sha_to_code_location_url[sha] = code_loc_url 
-                    self.sha_to_version_url[sha] = version_url 
-                    self.sha_to_project_url[sha] = project_url
-                    self.sha_to_scans[sha] = code_loc_data['scans']
+                    self.code_loc_shas.append(sha)
+                    self.code_loc_sha_to_code_location_url[sha] = code_loc_url 
+                    self.code_loc_sha_to_scans[sha] = code_loc_data['scans']
+
+                    if sha not in self.code_loc_sha_to_version_urls:
+                        self.code_loc_sha_to_version_urls[sha] = []
+                    self.code_loc_sha_to_version_urls[sha].append(version_url)
+
+                    if sha not in self.code_loc_sha_to_project_urls:
+                        self.code_loc_sha_to_project_urls[sha] = []
+                    if project_url not in self.code_loc_sha_to_project_urls[sha]:
+                        self.code_loc_sha_to_project_urls[sha].append(project_url)
+                    
+        self.code_loc_shas = list(set(self.code_loc_shas))
 
 class PerceptorScrape:
     def __init__(self, dump={}):
@@ -150,21 +161,27 @@ class PerceptorScrape:
 
         self.hub_names = []
         self.hub_shas = []
-        self.hub_to_shas = {}
+        self.hub_name_to_shas = {}
 
         self.pod_names = []
-        self.pod_shas = []
-        self.container_names = []
-        self.repositories = []
+        self.ns_pod_names = [] # ns = namespace
+        self.pod_uids = []
+        self.pod_image_shas = []
+        self.pod_container_names = []
+        self.pod_image_repos = []
         self.pod_namespaces = []
-        self.pod_to_labels = {}
+        self.ns_pod_name_to_containers = {}
 
         self.image_shas = []
-        self.image_repositories = []
+        self.image_repos = []
+        self.image_code_loc_shas = []
+        self.image_code_loc_uids = []
         self.image_sha_to_risk_profile = {}
         self.image_sha_to_policy_status = {}
         self.image_sha_to_scans = {}
         self.image_sha_to_respositories = {}
+
+        self.scan_queue_shas = []
 
         self.load_dump(dump)
 
@@ -172,30 +189,37 @@ class PerceptorScrape:
         for hub_name, hub_data in dump["Hubs"].items():
             self.hub_names.append(hub_name)
             shas = list(hub_data["CodeLocations"].keys())
-            self.hub_to_shas[hub_name] = shas 
+            self.hub_name_to_shas[hub_name] = shas 
             self.hub_shas.extend(shas)
+        self.hub_shas = list(set(self.hub_shas))
 
         for pod_name, pod_data in dump["CoreModel"]["Pods"].items():
-            self.pod_names.append(pod_name)
+            self.ns_pod_names.append(pod_name)
+            self.pod_names.append(pod_data['Name'])
             self.pod_namespaces.append(pod_data["Namespace"])
+            self.pod_uids.append(pod_data['UID'])
+            self.ns_pod_name_to_containers[pod_name] = pod_data["Containers"]
             for container in pod_data["Containers"]:
-                self.repositories.append(container["Image"]["Repository"])
-                self.pod_shas.append(container["Image"]["Sha"])
-                self.container_names.append(container["Name"])
+                self.pod_container_names.append(container["Name"])
+                self.pod_image_repos.append("{}:{}".format(container["Image"]["Repository"],container["Image"]["Tag"]))
+                self.pod_image_shas.append(container["Image"]["Sha"])
+            self.pod_namespaces = list(set(self.pod_namespaces))
 
         for image_sha, image_data in dump["CoreModel"]["Images"].items():
             self.image_shas.append(image_sha)
             if image_data["ScanResults"] is not None:
                 self.image_sha_to_risk_profile[image_sha] = image_data["ScanResults"]["RiskProfile"]
                 self.image_sha_to_policy_status[image_sha] = image_data["ScanResults"]["PolicyStatus"]
-                self.image_sha_to_scans[image_sha] = image_data["ScanResults"]["ScanSummaries"]
+                self.image_sha_to_scans[image_sha] = image_data["ScanResults"]["ScanSummaries"] 
+                self.image_code_loc_shas.append(image_data["ScanResults"]["CodeLocationName"]) 
+                self.image_code_loc_uids.append(image_data["ScanResults"]["CodeLocationURL"].split(":")[2])
             self.image_sha_to_respositories[image_sha] = []
             for repo in image_data["RepoTags"]:
                 self.image_sha_to_respositories[image_sha].append(repo["Repository"]) 
-                self.image_repositories.append(repo["Repository"])
+                self.image_repos.append(repo["Repository"])
 
-        for image_sha in dump["CoreModel"]["ImageScanQueue"]:
-            pass 
+        for queue_item in dump["CoreModel"]["ImageScanQueue"]:
+            self.scan_queue_shas.append(queue_item["Key"])
 
 
 '''
@@ -302,7 +326,7 @@ class HubClient():
                 project_links[link['rel']] = link['href']
             # get data from version url
             project_versions, err = self.crawl_version(project_links['versions'])
-            projects[project_href] = {"name" : project_name, "links" : project_links, "versions" : project_versions}
+            projects[project_href] = {"name" : project_name, "versions" : project_versions}
         return projects, None 
     
     def crawl_version(self, version_url):
@@ -321,7 +345,6 @@ class HubClient():
             version_policy_status, err = self.crawl_policy_status(version_links['policy-status'])
             version_code_locations, err = self.crawl_code_location(version_links['codelocations'])
             versions[version_href] = {
-                "links" : version_links, 
                 "policy-status" : version_policy_status,
                 "riskProfile" : version_risk_profile, 
                 "codelocations" : version_code_locations
@@ -369,7 +392,6 @@ class HubClient():
             code_location_scan_summaries, err = self.crawl_scan_summary(code_location_links['scans'])
             code_locations[code_location_href] = {
                 'sha' : code_location_sha,
-                'links' : code_location_links,
                 'scans' : code_location_scan_summaries
             }
         return code_locations, None
@@ -410,18 +432,20 @@ class KubeClient:
         dump = {}
         pods = self.v1.list_pod_for_all_namespaces().items
         for pod in pods:
-            pod_namespace = pod.metadata.namespace 
             pod_name = pod.metadata.name 
+            pod_uid = pod.metadata.uid
+            pod_node = pod.spec.node_name
+            pod_namespace = pod.metadata.namespace 
             pod_labels = pod.metadata.labels
             pod_annotations = pod.metadata.annotations
             pod_containers = pod.spec.containers
-            pod_node = pod.spec.node_name
             container_dict = {}
             for container in pod_containers:
-                container_image = container.image 
                 container_name = container.name 
+                container_image = container.image 
                 container_dict[container_name] = {'image' : container_image}
             dump[pod_name] = {
+                'uid' : pod_uid,
                 'node' : pod_node,
                 'namespace' : pod_namespace,
                 'labels' : pod_labels,
