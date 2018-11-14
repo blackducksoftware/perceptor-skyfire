@@ -13,8 +13,6 @@ def find_duplicated_items(item_list):
 
 class KubeReport:
     def __init__(self, scrape):
-        self.scrape = scrape 
-
         # Basic Kube Metrics
         self.num_namespaces = 0
         self.num_pods = 0
@@ -107,8 +105,6 @@ class KubeReport:
     
 class HubReport:
     def __init__(self, scrape):
-        self.scrapes = scrape 
-
         # Basic Hub Metrics
         self.num_projects = 0
         self.num_versions = 0
@@ -129,7 +125,6 @@ class HubReport:
         self.parse_scrape(scrape)
 
     def parse_scrape(self, scrapes):
-        #TODO - check logic for combining multiple hubs and not double-couting items
         if scrapes is None:
             return 
         code_loc_shas = []
@@ -166,9 +161,7 @@ class HubReport:
                 
 
 class PerceptorReport:
-    def __init__(self, scrape):
-        self.scrape = scrape 
-
+    def __init__(self, scrapes):
         # Hub Section Metrics
         self.hubs = []
         self.num_hubs = 0
@@ -184,34 +177,34 @@ class PerceptorReport:
         # Queue Section Metrics
         self.num_code_loc_shas_in_queue = 0
 
-        self.parse_scrape(scrape)
+        self.parse_scrape(scrapes)
 
-    def parse_scrape(self, scrape):
-        if scrape is None:
+    def parse_scrape(self, scrapes):
+        if scrapes is None:
             return 
-        # Analyze Hub Section
-        self.hubs = scrape.hub_hosts
-        self.num_hubs = len(scrape.hub_hosts)
-        self.num_images_in_hubs = len(scrape.hub_host_to_code_loc_shas.values())
+        for scrape in scrapes:
+            # Analyze Hub Section
+            self.hubs = scrape.hub_hosts
+            self.num_hubs = len(scrape.hub_hosts)
+            self.num_images_in_hubs = len(scrape.hub_host_to_code_loc_shas.values())
 
-        # Analyze Pod Section
-        self.num_pods = len(scrape.ns_pod_names)
-        self.num_containers = len(scrape.ns_pod_name_to_containers.values())
+            # Analyze Pod Section
+            self.num_pods = len(scrape.ns_pod_names)
+            self.num_containers = len(scrape.ns_pod_name_to_containers.values())
 
-        # Analyze Iamge Section
-        sha_per_container = []
-        for pod_name, pod_containers in scrape.ns_pod_name_to_containers.items():
-            sha_per_container.extend([container['Image']['Sha'] for container in pod_containers])
-        duplicate_shas = find_duplicated_items(sha_per_container)
-        self.num_images_in_multiple_containers = len(duplicate_shas)
+            # Analyze Iamge Section
+            sha_per_container = []
+            for pod_name, pod_containers in scrape.ns_pod_name_to_containers.items():
+                sha_per_container.extend([container['Image']['Sha'] for container in pod_containers])
+            duplicate_shas = find_duplicated_items(sha_per_container)
+            self.num_images_in_multiple_containers = len(duplicate_shas)
 
-        # Analyze Queue Section
-        self.num_code_loc_shas_in_queue = len(scrape.scan_queue_shas)
+            # Analyze Queue Section
+            self.num_code_loc_shas_in_queue = len(scrape.scan_queue_shas)
 
 
 class PerceptorKubeReport:
-    def __init__(self, perceptor_scrape, kube_scrape):
-        # TODO
+    def __init__(self, perceptor_scrapes, kube_scrape):
         # Compare Images
         self.only_kube_repos = set()
         self.only_perceptor_repos = set()
@@ -224,59 +217,65 @@ class PerceptorKubeReport:
         self.both_pod_names = set()
         self.pod_coverage = 0
 
-        self.parse_scrapes(perceptor_scrape, kube_scrape)
+        self.parse_scrapes(perceptor_scrapes, kube_scrape)
 
-    def parse_scrapes(self, perceptor_scrape, kube_scrape):
-        if perceptor_scrape is None or kube_scrape is None:
+    def parse_scrapes(self, perceptor_scrapes, kube_scrape):
+        if perceptor_scrapes is None or kube_scrape is None:
             return 
-        # Compare Image Repos
-        kube_repos = set(kube_scrape.image_repos)
-        perceptor_repos = set(perceptor_scrape.pod_image_repos)
-        self.only_kube_repos = kube_repos.difference(perceptor_repos)
-        self.only_perceptor_repos = perceptor_repos.difference(kube_repos)
-        self.both_repos = kube_repos.intersection(perceptor_repos)
+        for perceptor_scrape in perceptor_scrapes:
+            # Compare Image Repos
+            kube_repos = set(kube_scrape.image_repos)
+            perceptor_repos = set(perceptor_scrape.pod_image_repos)
+            self.only_kube_repos = kube_repos.difference(perceptor_repos)
+            self.only_perceptor_repos = perceptor_repos.difference(kube_repos)
+            self.both_repos = kube_repos.intersection(perceptor_repos)
 
-        total_repos = 0
-        total_repos += len(self.only_kube_repos)
-        total_repos += len(self.only_perceptor_repos)
-        total_repos += len(self.both_repos)
-        num_in_both = len(self.both_repos)
-        if float(total_repos) > 0.0:
-            self.repo_coverage = (num_in_both / float(total_repos))*100.0
+            total_repos = 0
+            total_repos += len(self.only_kube_repos)
+            total_repos += len(self.only_perceptor_repos)
+            total_repos += len(self.both_repos)
+            num_in_both = len(self.both_repos)
+            if float(total_repos) > 0.0:
+                self.repo_coverage = (num_in_both / float(total_repos))*100.0
 
-        # Compare Pods
-        kube_pods = set(kube_scrape.ns_pod_names)
-        perceptor_pods = set(perceptor_scrape.ns_pod_names)
-        self.only_kube_pod_names = kube_pods.difference(perceptor_pods)
-        self.only_perceptor_pod_names = perceptor_pods.difference(kube_pods)
-        self.both_pod_names = kube_pods.intersection(perceptor_pods)
+            # Compare Pods
+            kube_pods = set(kube_scrape.ns_pod_names)
+            perceptor_pods = set(perceptor_scrape.ns_pod_names)
+            self.only_kube_pod_names = kube_pods.difference(perceptor_pods)
+            self.only_perceptor_pod_names = perceptor_pods.difference(kube_pods)
+            self.both_pod_names = kube_pods.intersection(perceptor_pods)
 
-        total_pods = 0
-        total_pods += len(self.only_kube_pod_names)
-        total_pods += len(self.only_perceptor_pod_names)
-        total_pods += len(self.both_pod_names)
-        num_in_both = len(self.both_pod_names)
-        if float(total_pods) > 0.0:
-            self.pod_coverage = (num_in_both / float(total_pods))*100.0
+            total_pods = 0
+            total_pods += len(self.only_kube_pod_names)
+            total_pods += len(self.only_perceptor_pod_names)
+            total_pods += len(self.both_pod_names)
+            num_in_both = len(self.both_pod_names)
+            if float(total_pods) > 0.0:
+                self.pod_coverage = (num_in_both / float(total_pods))*100.0
 
 class HubPerceptorReport:
-    def __init__(self, hub_scrapes, perceptor_scrape):
+    def __init__(self, hub_scrapes, perceptor_scrapes):
         # Compare Images
         self.only_hub_image_shas = set()
         self.only_perceptor_images = set()
         self.both_images = set()
         self.image_coverage = 0
 
-        self.parse_scrape(hub_scrapes, perceptor_scrape)
+        self.parse_scrape(hub_scrapes, perceptor_scrapes)
     
-    def parse_scrape(self, hub_scrapes, perceptor_scrape):
-        if hub_scrapes is None or perceptor_scrape is None:
+    def parse_scrape(self, hub_scrapes, perceptor_scrapes):
+        if hub_scrapes is None or perceptor_scrapes is None:
             return 
         hub_image_shas = []
         for hub_scrape in hub_scrapes:
             hub_image_shas.extend(hub_scrape.code_loc_shas)
         hub_image_shas = set(hub_image_shas)
-        perceptor_image_shas = set(perceptor_scrape.pod_image_shas)
+
+        perceptor_image_shas = []
+        for perceptor_scrape in perceptor_scrapes:
+            perceptor_image_shas.extend(perceptor_scrape.pod_image_shas)
+        perceptor_image_shas = set(perceptor_image_shas)
+
         self.only_hub_image_shas = hub_image_shas.difference(perceptor_image_shas)
         self.only_perceptor_images = perceptor_image_shas.difference(hub_image_shas)
         self.both_images = hub_image_shas.intersection(perceptor_image_shas)
