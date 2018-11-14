@@ -5,6 +5,7 @@ import logging
 from reports import *
 import util
 import metrics 
+from testsuite import TestSuite
 
 import sys
 
@@ -36,6 +37,10 @@ class Skyfire:
         self.perceptor_scrape = None
         self.kube_scrape = None
         self.hub_scrapes = {}
+
+        # Testing object
+        self.tester = TestSuite()
+        self.test_report = {}
     
     def stop(self):
         self.is_running = False
@@ -120,5 +125,28 @@ class Skyfire:
 
         # Wait until request is executed on the queue and updates wrapper
         self.logger.debug("Waiting for queued request in get_latest_report")
+        barrier.wait()
+        return report_wrapper['report_json']
+
+            
+    def start_test_suite(self):
+        self.logger.debug("skyfire: start_test_suite")
+        def request():
+            metrics.record_skyfire_request_event("start_test_suite")
+            self.tester.start()
+        self.q.put(('starttestsuite',request))
+
+    def get_test_suite(self):
+        self.logger.debug("skyfire: get_test_suite")
+        barrier = threading.Barrier(2)
+        report_wrapper = {}
+        def request():
+            metrics.record_skyfire_request_event("get_test_suite")
+            self.test_report = self.tester.get_results()
+            report_wrapper['report_json'] = json.dumps(self.test_report, default=util.default_json_serializer, indent=2)
+            self.logger.debug("Waiting in queue in request function")
+            barrier.wait()
+        self.q.put(('gettestsuite',request))
+        self.logger.debug("Waiting for queued request in get_test_suite")
         barrier.wait()
         return report_wrapper['report_json']
