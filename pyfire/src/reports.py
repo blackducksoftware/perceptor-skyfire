@@ -15,46 +15,52 @@ class KubeReport:
     def __init__(self, scrape):
         self.scrape = scrape 
 
+        # Basic Kube Metrics
         self.num_namespaces = 0
         self.num_pods = 0
         self.num_containers = 0
         self.num_images = 0
 
-        self.num_pods_fully_labeled = 0
-        self.num_pods_partially_labeled = 0
-        self.num_pods_fully_annotated = 0 
-        self.num_pods_partially_annotated = 0
-
+        # Pod Label Metrics
         self.pods_fully_labeled = []
         self.pods_partially_labeled = []
+        self.pods_note_labeled = []
+        self.pods_full_label_coverage = 0
+        self.pods_partial_label_coverage = 0
+
+        # Pod Annotation Metrics
         self.pods_fully_annotated = []
         self.pods_partially_annotated = []
+        self.pods_not_annotated = []
+        self.pods_full_annotation_coverage = 0
+        self.pods_partial_annotation_coverage = 0
 
         self.parse_scrape(scrape)
 
     def parse_scrape(self, scrape):
         if scrape is None:
             return 
+        # Check Basic Kube Metrics
         self.num_namespaces = len(scrape.namespaces)
         self.num_pods = len(scrape.uids)
         self.num_containers = len(scrape.ns_pod_name_to_containers.values())
         self.num_images = len(scrape.image_repos)
 
+        # Check Labels
         self.pods_fully_labeled = [pod_name for pod_name in scrape.ns_pod_names if self.has_all_labels(pod_name,scrape)]
         self.pods_partially_labeled = [pod_name for pod_name in scrape.ns_pod_names if self.is_partially_labeled(pod_name,scrape)]
         self.pods_not_labeled = [pod_name for pod_name in scrape.ns_pod_names if self.has_no_labels(pod_name,scrape)]
+        
+        self.pods_full_label_coverage = (len(self.pods_fully_labeled) / float(self.num_pods)) * 100
+        self.pods_partial_label_coverage = (len(self.pods_partially_labeled) / float(self.num_pods)) * 100
 
+        # Check Annotations
         self.pods_fully_annotated = [pod_name for pod_name in scrape.ns_pod_names if self.has_all_annotations(pod_name,scrape)]
         self.pods_partially_annotated = [pod_name for pod_name in scrape.ns_pod_names if self.is_partially_annotated(pod_name,scrape)]
         self.pods_not_annotated = [pod_name for pod_name in scrape.ns_pod_names if self.has_no_annotations(pod_name,scrape)]
-
-        self.num_pods_fully_labeled = len(self.pods_fully_labeled)
-        self.num_pods_partially_labeled = len(self.pods_partially_labeled)
-        self.pods_not_labeled = len(self.pods_not_labeled)
-
-        self.num_pods_fully_annotated = len(self.pods_fully_annotated)
-        self.num_pods_partially_annotated = len(self.pods_partially_annotated)
-        self.pods_not_annotated = len(self.pods_not_annotated)
+        
+        self.pods_full_annotation_coverage = (len(self.pods_fully_annotated) / float(self.num_pods)) * 100
+        self.pods_partial_annotation_coverage = (len(self.pods_partially_annotated) / float(self.num_pods)) * 100
 
     def get_opssight_labels(self, pod_name, scrape):
         expected = set(podformat.get_all_labels(len(scrape.container_names)))
@@ -103,18 +109,20 @@ class HubReport:
     def __init__(self, scrape):
         self.scrapes = scrape 
 
+        # Basic Hub Metrics
         self.num_projects = 0
         self.num_versions = 0
         self.num_code_locs = 0
         self.num_code_loc_shas = 0
 
+        # Project Version Metrics
         self.num_projects_with_one_version = 0
         self.num_projects_with_multiple_versions = 0
         self.num_projects_with_no_versions = 0
         
+        # Code Location Metrics
         self.num_code_locations_with_scans = 0
         self.num_code_locations_with_no_scans = 0
-
         self.num_code_loc_in_multiple_projects = 0
         self.num_code_loc_in_multiple_versions = 0
 
@@ -161,16 +169,19 @@ class PerceptorReport:
     def __init__(self, scrape):
         self.scrape = scrape 
 
+        # Hub Section Metrics
         self.hubs = []
-
         self.num_hubs = 0
         self.num_images_in_hubs = 0
 
+        # Pod Section Metrics
         self.num_pods = 0
         self.num_containers = 0
 
+        # Image Section Metrics
         self.num_images_in_multiple_containers = 0
 
+        # Queue Section Metrics
         self.num_code_loc_shas_in_queue = 0
 
         self.parse_scrape(scrape)
@@ -201,11 +212,13 @@ class PerceptorKubeReport:
         self.only_kube_repos = set()
         self.only_perceptor_repos = set()
         self.both_repos = set()
+        self.repo_coverage = 0
 
         # Compare Pods
         self.only_kube_pod_names = set()
         self.only_perceptor_pod_names = set()
         self.both_pod_names = set()
+        self.pod_coverage = 0
 
         self.parse_scrapes(perceptor_scrape, kube_scrape)
 
@@ -219,6 +232,13 @@ class PerceptorKubeReport:
         self.only_perceptor_repos = perceptor_repos.difference(kube_repos)
         self.both_repos = kube_repos.intersection(perceptor_repos)
 
+        total_repos = 0
+        total_repos += len(self.only_kube_repos)
+        total_repos += len(self.only_perceptor_repos)
+        total_repos += len(self.both_repos)
+        num_in_both = len(self.both_repos)
+        self.repo_coverage = (num_in_both / float(total_repos))*100.0
+
         # Compare Pods
         kube_pods = set(kube_scrape.ns_pod_names)
         perceptor_pods = set(perceptor_scrape.ns_pod_names)
@@ -226,12 +246,20 @@ class PerceptorKubeReport:
         self.only_perceptor_pod_names = perceptor_pods.difference(kube_pods)
         self.both_pod_names = kube_pods.intersection(perceptor_pods)
 
+        total_pods = 0
+        total_pods += len(self.only_kube_pod_names)
+        total_pods += len(self.only_perceptor_pod_names)
+        total_pods += len(self.both_pod_names)
+        num_in_both = len(self.both_pod_names)
+        self.pod_coverage = (num_in_both / float(total_pods))*100.0
+
 class HubPerceptorReport:
     def __init__(self, hub_scrapes, perceptor_scrape):
         # Compare Images
         self.only_hub_image_shas = set()
         self.only_perceptor_images = set()
         self.both_images = set()
+        self.image_coverage = 0
 
         self.parse_scrape(hub_scrapes, perceptor_scrape)
     
@@ -246,5 +274,12 @@ class HubPerceptorReport:
         self.only_hub_image_shas = hub_image_shas.difference(perceptor_image_shas)
         self.only_perceptor_images = perceptor_image_shas.difference(hub_image_shas)
         self.both_images = hub_image_shas.intersection(perceptor_image_shas)
+
+        total_images = 0
+        total_images += len(self.only_hub_image_shas)
+        total_images += len(self.only_perceptor_images)
+        total_images += len(self.both_images)
+        num_in_both = len(self.both_images)
+        self.image_coverage = (num_in_both / float(total_images))*100.0
 
 
