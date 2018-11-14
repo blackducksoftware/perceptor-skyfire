@@ -46,6 +46,7 @@ class TestSuite:
                 pass
             self.accessing_data = True
             self.test_results["state"] = "IN_PROGRESS"
+            self.test_results["summary"] = ""
             self.test_results["data"]['MockTest1'] = ""
             self.test_results["data"]['MockTest2'] = ""
             self.test_results["data"]['OpsSightRepoCoverage'] = ""
