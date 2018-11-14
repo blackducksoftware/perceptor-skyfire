@@ -171,8 +171,6 @@ class PerceptorReport:
 
         self.num_images_in_multiple_containers = 0
 
-
-
         self.num_code_loc_shas_in_queue = 0
 
         self.parse_scrape(scrape)
@@ -198,75 +196,55 @@ class PerceptorReport:
 
 class PerceptorKubeReport:
     def __init__(self, perceptor_scrape, kube_scrape):
-        self.all_kube_repositories = set()
-        self.all_perceptor_repositories = set()
-        self.only_perceptor_repositories = set()
-        self.only_kube_repositories = set()
-        self.intersection_repositories = set()
+        # TODO
+        # Compare Images
+        self.only_kube_repos = set()
+        self.only_perceptor_repos = set()
+        self.both_repos = set()
 
-        self.num_all_kube_repositories = 0
-        self.num_all_perceptor_repositories = 0
-        self.num_only_perceptor_repositories = 0
-        self.num_only_kube_repositories = 0
-        self.num_intersection_repositories = 0
+        # Compare Pods
+        self.only_kube_pod_names = set()
+        self.only_perceptor_pod_names = set()
+        self.both_pod_names = set()
 
         self.parse_scrapes(perceptor_scrape, kube_scrape)
 
     def parse_scrapes(self, perceptor_scrape, kube_scrape):
         if perceptor_scrape is None or kube_scrape is None:
             return 
-        return
-        #TODO - change to use scrape attributes
-        self.all_kube_repositories = set( [x.split(":")[0] for x in kube_scrape.container_images] )
-        self.all_perceptor_repositories = set(perceptor_scrape.image_repositories)
-        self.only_perceptor_repositories = self.all_perceptor_repositories.difference(self.all_kube_repositories)
-        self.only_kube_repositories = self.all_kube_repositories.difference(self.all_perceptor_repositories)
-        self.intersection_repositories = self.all_kube_repositories.intersection(self.all_perceptor_repositories)
+        # Compare Image Repos
+        kube_repos = set(kube_scrape.image_repos)
+        perceptor_repos = set(perceptor_scrape.pod_image_repos)
+        self.only_kube_repos = kube_repos.difference(perceptor_repos)
+        self.only_perceptor_repos = perceptor_repos.difference(kube_repos)
+        self.both_repos = kube_repos.intersection(perceptor_repos)
 
-        self.num_all_kube_repositories = len(self.all_kube_repositories)
-        self.num_all_perceptor_repositories = len(self.all_perceptor_repositories)
-        self.num_only_perceptor_repositories = len(self.only_perceptor_repositories)
-        self.num_only_kube_repositories = len(self.only_kube_repositories)
-        self.num_intersection_repositories = len(self.intersection_repositories)
+        # Compare Pods
+        kube_pods = set(kube_scrape.ns_pod_names)
+        perceptor_pods = set(perceptor_scrape.ns_pod_names)
+        self.only_kube_pod_names = kube_pods.difference(perceptor_pods)
+        self.only_perceptor_pod_names = perceptor_pods.difference(kube_pods)
+        self.both_pod_names = kube_pods.intersection(perceptor_pods)
 
 class HubPerceptorReport:
-    def __init__(self, hub_scrape, perceptor_scrape):
-        self.all_hub_shas = set()
-        self.all_perceptor_shas = set()
-        self.only_hub_shas = set()
-        self.only_perceptor_shas = set()
-        self.intersection_shas = set()
+    def __init__(self, hub_scrapes, perceptor_scrape):
+        # Compare Images
+        self.only_hub_image_shas = set()
+        self.only_perceptor_images = set()
+        self.both_images = set()
 
-        self.num_all_hub_shas = 0
-        self.num_all_perceptor_shas = 0
-        self.num_only_hub_shas = 0
-        self.num_only_perceptor_shas = 0
-        self.num_intersection_shas = 0
-
-        self.parse_scrape(hub_scrape, perceptor_scrape)
+        self.parse_scrape(hub_scrapes, perceptor_scrape)
     
-    def parse_scrape(self, hub_scrape, perceptor_scrape):
-        if hub_scrape is None or perceptor_scrape is None:
+    def parse_scrape(self, hub_scrapes, perceptor_scrape):
+        if hub_scrapes is None or perceptor_scrape is None:
             return 
-        return 
-        #TODO - change to use scrape attributes
-        self.all_hub_shas = set(hub_scrape.shas)
-        self.all_perceptor_shas = set(perceptor_scrape.image_shas)
-        self.only_hub_shas = self.all_hub_shas.difference(self.all_perceptor_shas)
-        self.only_perceptor_shas = self.all_perceptor_shas.difference(self.all_hub_shas)
-        self.intersection_shas = self.all_hub_shas.intersection(self.all_perceptor_shas)
+        hub_image_shas = []
+        for hub_scrape in hub_scrapes:
+            hub_image_shas.extend(hub_scrape.code_loc_shas)
+        hub_image_shas = set(hub_image_shas)
+        perceptor_image_shas = set(perceptor_scrape.pod_image_shas)
+        self.only_hub_image_shas = hub_image_shas.difference(perceptor_image_shas)
+        self.only_perceptor_images = perceptor_image_shas.difference(hub_image_shas)
+        self.both_images = hub_image_shas.intersection(perceptor_image_shas)
 
-        self.num_all_hub_shas = len(self.all_hub_shas)
-        self.num_all_perceptor_shas = len(self.all_perceptor_shas)
-        self.num_only_hub_shas = len(self.only_hub_shas)
-        self.num_only_perceptor_shas = len(self.only_perceptor_shas)
-        self.num_intersection_shas = len(self.intersection_shas)
 
-class HubKubeReport:
-    def __init__(self, hub_scrape, kube_scrape):
-        self.parse_scrapes(hub_scrape, kube_scrape)
-
-    def parse_scrapes(self, hub_scrape, kube_scrape):
-        if hub_scrape is None or kube_scrape is None:
-            return 
-        pass

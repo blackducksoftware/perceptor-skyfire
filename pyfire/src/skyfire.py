@@ -107,8 +107,10 @@ class Skyfire:
                 'opssight-report': PerceptorReport(self.perceptor_scrape),
                 'kube-report': KubeReport(self.kube_scrape),
                 'hub-reports' : dict([(host,HubReport([scrape])) for (host,scrape) in self.hub_scrapes.items()]),
+                'mult-hub-reports' : HubReport(list(self.hub_scrapes.values())),
                 'perceptor-kube-report' : PerceptorKubeReport(self.perceptor_scrape, self.kube_scrape), 
-                'hub-perceptor-reports' : dict([(host,HubPerceptorReport(scrape, self.perceptor_scrape)) for (host,scrape) in self.hub_scrapes.items()])
+                'hub-perceptor-reports' : dict([(host,HubPerceptorReport([scrape], self.perceptor_scrape)) for (host,scrape) in self.hub_scrapes.items()]),
+                'mult-hub-perceptor-report' : HubPerceptorReport(list(self.hub_scrapes.values()), self.perceptor_scrape)
             }
             report_wrapper['report_json'] = json.dumps(skyfire_report, default=util.default_json_serializer, indent=2)
             self.logger.debug("Waiting in queue in request function")
