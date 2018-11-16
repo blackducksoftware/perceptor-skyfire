@@ -147,7 +147,7 @@ class PerceptorReport:
 
 
 class HubReport:
-    def __init__(self, scrape):
+    def __init__(self, scrapes):
         # Basic Hub Metrics
         self.num_projects = 0
         self.num_versions = 0
@@ -165,7 +165,7 @@ class HubReport:
         self.num_code_loc_in_multiple_projects = 0
         self.num_code_loc_in_multiple_versions = 0
 
-        self.parse_scrape(scrape)
+        self.parse_scrape(scrapes)
 
     def parse_scrape(self, scrapes):
         if scrapes is None:
@@ -200,7 +200,7 @@ class HubReport:
                 if len(version_urls) > 1:
                     self.num_code_loc_in_multiple_versions += 1
 
-        self.num_code_loc_shas += len(set(scrape.code_loc_shas))
+            self.num_code_loc_shas += len(set(scrape.code_loc_shas))
 
 
 class PerceptorKubeReport:
