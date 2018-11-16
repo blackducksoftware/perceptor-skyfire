@@ -13,6 +13,8 @@ def find_duplicated_items(item_list):
 
 class KubeReport:
     def __init__(self, scrape):
+        self.scrape = scrape
+
         # Basic Kube Metrics
         self.num_namespaces = 0
         self.num_pods = 0
@@ -105,6 +107,8 @@ class KubeReport:
 
 class PerceptorReport:
     def __init__(self, scrapes):
+        self.scrapes = scrapes
+
         # Hub Section Metrics
         self.hubs = []
         self.num_hubs = 0
@@ -148,6 +152,8 @@ class PerceptorReport:
 
 class HubReport:
     def __init__(self, scrapes):
+        self.scrapes = scrapes 
+
         # Basic Hub Metrics
         self.num_projects = 0
         self.num_versions = 0
@@ -205,6 +211,9 @@ class HubReport:
 
 class PerceptorKubeReport:
     def __init__(self, perceptor_scrapes, kube_scrape):
+        self.perceptor_scrapes = perceptor_scrapes
+        self.kube_scrape = kube_scrape
+
         # Compare Images
         self.only_kube_repos = set()
         self.only_perceptor_repos = set()
@@ -262,6 +271,9 @@ class PerceptorKubeReport:
 
 class HubPerceptorReport:
     def __init__(self, hub_scrapes, perceptor_scrapes):
+        self.hub_scrapes = hub_scrapes
+        self.perceptor_scrapes = perceptor_scrapes
+
         # Compare Images
         self.only_hub_image_shas = set()
         self.only_perceptor_images = set()
