@@ -72,8 +72,9 @@ class Skyfire:
             metrics.record_error("Kube Scrape Error")
             return 
         def request():
-            metrics.record_skyfire_request_event("kube_scrape")
             self.kube_scrape = scrape
+            metrics.record_skyfire_request_event("kube_scrape")
+            metrics.record_kube_report(KubeReport(self.kube_scrape))
         self.q.put(("kube",request))
 
     def enqueue_perceptor_scrape(self, host, scrape, err):
@@ -82,8 +83,9 @@ class Skyfire:
             metrics.record_error("Perceptor Scrape Error")
             return
         def request():
-            metrics.record_skyfire_request_event("perceptor_scrape")
             self.perceptor_scrapes[host] = scrape
+            metrics.record_skyfire_request_event("perceptor_scrape")
+            metrics.record_opssight_report(PerceptorReport(list(self.perceptor_scrapes.values())))
         self.q.put(("perceptor",request))
 
     def enqueue_hub_scrape(self, host, scrape, err):
@@ -92,8 +94,9 @@ class Skyfire:
             metrics.record_error("Hub Scrape Error")
             return 
         def request():
-            metrics.record_skyfire_request_event("hub_scrape")
             self.hub_scrapes[host] = scrape
+            metrics.record_skyfire_request_event("hub_scrape")
+            metrics.record_hub_report(HubReport(list(self.hub_scrapes.values())))
         self.q.put(("hub",request))
 
     ### Web Server interface - Put server requests onto the queue
