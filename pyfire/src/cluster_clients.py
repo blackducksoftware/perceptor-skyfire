@@ -6,6 +6,7 @@ import time
 from kubernetes import client, config
 import logging 
 from util import *
+import podformat
 
 ''' 
 Data Scrape Classes - Data Access Objects for Dumps
@@ -490,6 +491,16 @@ class KubeClient:
         if err is not None:
             return None, err 
         return KubeScrape(dump), None
+    
+    def remove_pod_annotations_and_labels(self):
+        pods = self.v1.list_pod_for_all_namespaces()
+        for pod in pods.items:
+            container_count = len(pod.spec.containers)
+            for label_key in podformat.get_all_labels(container_count).keys():
+                pod.metadata.labels.pop(label_key, None)
+            for annot_key in podformat.get_all_annotations(container_count).keys():
+                pod.metadata.annotations.pop(annot_key, None)
+            self.v1.patch_namespaced_pod(pod)
 
     def get_dump(self):
         dump = {}
