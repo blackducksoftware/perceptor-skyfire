@@ -38,13 +38,13 @@ class KubeReport:
     def parse_scrape(self, scrape):
         if scrape is None:
             return 
-        # Check Basic Kube Metrics
+        # Get Basic Kube Metrics
         self.num_namespaces = len(scrape.namespaces)
         self.num_pods = len(scrape.uids)
         self.num_containers = len(scrape.ns_pod_name_to_containers.values())
         self.num_images = len(scrape.image_repos)
 
-        # Check Labels
+        # Get Labels
         self.pods_fully_labeled = [pod_name for pod_name in scrape.ns_pod_names if self.has_all_labels(pod_name,scrape)]
         self.pods_partially_labeled = [pod_name for pod_name in scrape.ns_pod_names if self.is_partially_labeled(pod_name,scrape)]
         self.pods_not_labeled = [pod_name for pod_name in scrape.ns_pod_names if self.has_no_labels(pod_name,scrape)]
@@ -52,7 +52,7 @@ class KubeReport:
             self.pods_full_label_coverage = (len(self.pods_fully_labeled) / float(self.num_pods)) * 100
             self.pods_partial_label_coverage = (len(self.pods_partially_labeled) / float(self.num_pods)) * 100
 
-        # Check Annotations
+        # Get Annotations
         self.pods_fully_annotated = [pod_name for pod_name in scrape.ns_pod_names if self.has_all_annotations(pod_name,scrape)]
         self.pods_partially_annotated = [pod_name for pod_name in scrape.ns_pod_names if self.is_partially_annotated(pod_name,scrape)]
         self.pods_not_annotated = [pod_name for pod_name in scrape.ns_pod_names if self.has_no_annotations(pod_name,scrape)]
@@ -102,7 +102,50 @@ class KubeReport:
         _, present = self.get_opssight_annotations(pod_name, scrape)
         return len(present) == 0
 
-    
+
+class PerceptorReport:
+    def __init__(self, scrapes):
+        # Hub Section Metrics
+        self.hubs = []
+        self.num_hubs = 0
+        self.num_images_in_hubs = 0
+
+        # Pod Section Metrics
+        self.num_pods = 0
+        self.num_containers = 0
+
+        # Image Section Metrics
+        self.num_images_in_multiple_containers = 0
+
+        # Queue Section Metrics
+        self.num_code_loc_shas_in_queue = 0
+
+        self.parse_scrape(scrapes)
+
+    def parse_scrape(self, scrapes):
+        if scrapes is None:
+            return 
+        for scrape in scrapes:
+            # Analyze Hub Section
+            self.hubs.extend(scrape.hub_hosts)
+            self.num_hubs += len(scrape.hub_hosts)
+            self.num_images_in_hubs += len(scrape.hub_host_to_code_loc_shas.values())
+
+            # Analyze Pod Section
+            self.num_pods += len(scrape.ns_pod_names)
+            self.num_containers += len(scrape.ns_pod_name_to_containers.values())
+
+            # Analyze Iamge Section
+            sha_per_container = []
+            for pod_name, pod_containers in scrape.ns_pod_name_to_containers.items():
+                sha_per_container.extend([container['Image']['Sha'] for container in pod_containers])
+            duplicate_shas = find_duplicated_items(sha_per_container)
+            self.num_images_in_multiple_containers += len(duplicate_shas)
+
+            # Analyze Queue Section
+            self.num_code_loc_shas_in_queue += len(scrape.scan_queue_shas)
+
+
 class HubReport:
     def __init__(self, scrape):
         # Basic Hub Metrics
@@ -158,49 +201,6 @@ class HubReport:
                     self.num_code_loc_in_multiple_versions += 1
 
         self.num_code_loc_shas += len(set(scrape.code_loc_shas))
-                
-
-class PerceptorReport:
-    def __init__(self, scrapes):
-        # Hub Section Metrics
-        self.hubs = []
-        self.num_hubs = 0
-        self.num_images_in_hubs = 0
-
-        # Pod Section Metrics
-        self.num_pods = 0
-        self.num_containers = 0
-
-        # Image Section Metrics
-        self.num_images_in_multiple_containers = 0
-
-        # Queue Section Metrics
-        self.num_code_loc_shas_in_queue = 0
-
-        self.parse_scrape(scrapes)
-
-    def parse_scrape(self, scrapes):
-        if scrapes is None:
-            return 
-        for scrape in scrapes:
-            # Analyze Hub Section
-            self.hubs.extend(scrape.hub_hosts)
-            self.num_hubs += len(scrape.hub_hosts)
-            self.num_images_in_hubs += len(scrape.hub_host_to_code_loc_shas.values())
-
-            # Analyze Pod Section
-            self.num_pods += len(scrape.ns_pod_names)
-            self.num_containers += len(scrape.ns_pod_name_to_containers.values())
-
-            # Analyze Iamge Section
-            sha_per_container = []
-            for pod_name, pod_containers in scrape.ns_pod_name_to_containers.items():
-                sha_per_container.extend([container['Image']['Sha'] for container in pod_containers])
-            duplicate_shas = find_duplicated_items(sha_per_container)
-            self.num_images_in_multiple_containers += len(duplicate_shas)
-
-            # Analyze Queue Section
-            self.num_code_loc_shas_in_queue += len(scrape.scan_queue_shas)
 
 
 class PerceptorKubeReport:

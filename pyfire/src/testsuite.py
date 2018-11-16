@@ -22,7 +22,7 @@ class TestSuite:
         self.test_results = {'state' : 'NO_TESTS', 'summary' : '','data' : {}}
 
     def start(self):
-        if self.in_progress == False:
+        if not self.in_progress:
             self.in_progress = True
         else:
             logging.error("Test Already Started")
