@@ -91,7 +91,7 @@ def main():
 
     logging.info("Initializing Skyfire Components...")
     logging.info("Starting Skyfire requests queue...")
-    skyfire = Skyfire(root_logger.getChild("Skyfire"), config.skyfire_port)
+    skyfire = Skyfire(root_logger.getChild("Skyfire"), config.skyfire_port, config.use_in_cluster_config)
 
     if config.use_mock_mode:
         logging.info("Creating Mock Clients...")

@@ -9,7 +9,7 @@ import json
 import random
 
 class TestSuite:
-    def __init__(self, skyfire_port):
+    def __init__(self, skyfire_port, in_cluster):
         self.event_thread = threading.Thread(target=self.tests)
         self.event_thread.daemon = True
         self.test_state = "STOPPED"
@@ -18,6 +18,7 @@ class TestSuite:
         self.event_thread.start()
 
         self.skyfire_port = skyfire_port
+        self.in_cluster = in_cluster 
         
         self.test_results = {'state' : 'NO_TESTS', 'summary' : '','data' : {}}
 
@@ -161,7 +162,7 @@ class TestSuite:
 
     def create_namespace_test(self, ns):
         logging.debug("Starting Creating a Pod Test")
-        k_client = KubeClient(in_cluster=False)
+        k_client = KubeClient(in_cluster=self.in_cluster)
 
         # Create a namespace
         namespace = ns
@@ -184,7 +185,7 @@ class TestSuite:
 
     def create_pod_test(self):
         logging.debug("Starting Creating a Pod Test")
-        k_client = KubeClient(in_cluster=False)
+        k_client = KubeClient(in_cluster=self.in_cluster)
 
         # Create a namespace
         logging.debug("Creating namespace test-space")
