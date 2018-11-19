@@ -256,10 +256,10 @@ class TestSuite:
         # Clean up the pod
         logging.debug("Cleaning up Pod Test")
         try:
-            r = subprocess.run("oc delete pod {} -n {}".format(pod_name,namespace),shell=True,stdout=subprocess.PIPE)
-            r = subprocess.run("oc delete ns {}".format(namespace),shell=True,stdout=subprocess.PIPE) 
+            api_response = k_client.v1.delete_namespaced_pod(name=pod_name, namespace=namespace, body={})
+            api_response = k_client.v1.create_namespace(name=namespace_body, body={})
         except Exception as e:
-            logging.error("Exception when Cleaning up Pod Test: %s\n" % e)
+            logging.error("Exception when Cleaning up Pod Test: %s\n" % e) 
 
         logging.debug("Finished Pod Test")
         return test_result
