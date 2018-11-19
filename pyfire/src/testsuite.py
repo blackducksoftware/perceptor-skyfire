@@ -9,7 +9,7 @@ import json
 import random
 
 class TestSuite:
-    def __init__(self, skyfire_port):
+    def __init__(self, skyfire_port, in_cluster):
         self.event_thread = threading.Thread(target=self.tests)
         self.event_thread.daemon = True
         self.test_state = "STOPPED"
@@ -18,11 +18,12 @@ class TestSuite:
         self.event_thread.start()
 
         self.skyfire_port = skyfire_port
+        self.in_cluster = in_cluster 
         
         self.test_results = {'state' : 'NO_TESTS', 'summary' : '','data' : {}}
 
     def start(self):
-        if self.in_progress == False:
+        if not self.in_progress:
             self.in_progress = True
         else:
             logging.error("Test Already Started")
@@ -54,6 +55,7 @@ class TestSuite:
             self.test_results["data"]['OpsSightRepoCoverage'] = ""
             self.test_results["data"]['OpsSightPodCoverage'] = ""
             self.test_results["data"]['HubImageCoverage'] = ""
+            self.test_results["data"]['CreatingPod'] = ""
             self.accessing_data = False
 
             r = self.mock_test()
@@ -91,6 +93,13 @@ class TestSuite:
             self.test_results["data"]['HubImageCoverage'] = r
             self.accessing_data = False
 
+            r = self.create_pod_test()
+            while self.accessing_data:
+                pass
+            self.accessing_data = True
+            self.test_results["data"]['CreatingPod'] = r
+            self.accessing_data = False
+
             while self.accessing_data:
                 pass
             self.accessing_data = True
@@ -106,60 +115,98 @@ class TestSuite:
             self.in_progress = False
 
     def mock_test(self):
+        logging.debug("Starting Mock Test")
         time.sleep(7)
         val = random.randint(0,10)
+        logging.debug("Finished Mock Test")
         if val <= 8:
             return "PASSED"
         else:
             return "FAILED"
 
     def opssight_repo_coverage(self, policy):
+        logging.debug("Starting OpsSight Repo Coverage Test")
         dump, err = getSkyfireDump(host_name="localhost", port=self.skyfire_port)
-        total_repos = 0
-        total_repos += len(dump["perceptor-kube-report"]["only_kube_repos"])
-        total_repos += len(dump["perceptor-kube-report"]["only_perceptor_repos"])
-        total_repos += len(dump["perceptor-kube-report"]["both_repos"])
-        num_in_both = len(dump["perceptor-kube-report"]["both_repos"])
-        logging.debug("OpsSight Repo Coverage: %f", (num_in_both / float(total_repos))*100.0)
-        if (num_in_both / float(total_repos))*100.0 < policy:
+        if err is not None:
+            logging.debug("Could not get Skyfire Report: %s" % err)
+            return "FAILED"
+        logging.debug("OpsSight Repo Coverage: %f", dump["mult-perceptor-kube-report"]["repo_coverage"])
+        if dump["mult-perceptor-kube-report"]["repo_coverage"] < policy:
             return "FAILED"
         else:
             return "PASSED"
 
     def opssight_pod_coverage(self, policy):
+        logging.debug("Starting OpsSight Pod Coverage Test")
         dump, err = getSkyfireDump(host_name="localhost", port=self.skyfire_port)
-        total_pods = 0
-        total_pods += len(dump["perceptor-kube-report"]["only_kube_pod_names"])
-        total_pods += len(dump["perceptor-kube-report"]["only_perceptor_pod_names"])
-        total_pods += len(dump["perceptor-kube-report"]["both_pod_names"])
-        num_in_both = len(dump["perceptor-kube-report"]["both_pod_names"])
-        logging.debug("OpsSight Pod Coverage: %f", (num_in_both / float(total_pods))*100.0)
-        if (num_in_both / float(total_pods))*100.0 < policy:
+        if err is not None:
+            logging.debug("Could not get Skyfire Report: %s" % err)
+            return "FAILED"
+        logging.debug("OpsSight Pod Coverage: %f", dump["mult-perceptor-kube-report"]["pod_coverage"])
+        if dump["mult-perceptor-kube-report"]["pod_coverage"] < policy:
             return "FAILED"
         else:
             return "PASSED"
 
     def hub_image_coverage(self, policy):
+        logging.debug("Starting Hub Image Coverage Test")
         dump, err = getSkyfireDump(host_name="localhost", port=self.skyfire_port)
-        total_images = 0
-        total_images += len(dump["mult-hub-perceptor-report"]["only_hub_image_shas"])
-        total_images += len(dump["mult-hub-perceptor-report"]["only_perceptor_images"])
-        total_images += len(dump["mult-hub-perceptor-report"]["both_images"])
-        num_in_both = len(dump["mult-hub-perceptor-report"]["both_images"])
-        logging.debug("Hub Image Coverage: %f", (num_in_both / float(total_images))*100.0)
-        if (num_in_both / float(total_images))*100.0 < policy:
+        if err is not None:
+            logging.debug("Could not get Skyfire Report: %s" % err)
+            return "FAILED"
+        logging.debug("Hub Image Coverage: %f", dump["mult-hub-mult-perceptor-report"]["image_coverage"])
+        if dump["mult-hub-mult-perceptor-report"]["image_coverage"] < policy:
             return "FAILED"
         else:
             return "PASSED"
 
-    def create_pod_test(self):
-        logging.debug("Starting Pod Test")
-        k_client = KubeClient(in_cluster=False)
+    def create_namespace_test(self, ns):
+        logging.debug("Starting Creating a Pod Test")
+        k_client = KubeClient(in_cluster=self.in_cluster)
 
         # Create a namespace
-        namespace = 'bd' 
+        namespace = ns
+
+        namespace_body = {
+            'apiVersion' : 'v1',
+            'kind' : 'Namespace',
+            'metadata' : {
+                'name' : namespace
+            }
+        }
+
+        try: 
+            api_response = k_client.v1.create_namespace(body=namespace_body)
+            logging.info(api_response)
+        except Exception as e:
+            logging.error("Exception when calling CoreV1Api->create_namespaced_pod: %s\n" % e)
+            return "FAILED"
+        return "PASSED"
+
+    def create_pod_test(self):
+        logging.debug("Starting Creating a Pod Test")
+        k_client = KubeClient(in_cluster=self.in_cluster)
+
+        # Create a namespace
+        logging.debug("Creating namespace test-space")
+        namespace = 'test-space' 
+
+        namespace_body = {
+            'apiVersion' : 'v1',
+            'kind' : 'Namespace',
+            'metadata' : {
+                'name' : namespace
+            }
+        }
+
+        try: 
+            api_response = k_client.v1.create_namespace(body=namespace_body)
+        except Exception as e:
+            logging.error("Exception when creating Namespace: %s\n" % e)
+            return "FAILED"
 
         # Create a pod
+        logging.debug("Creating a Pod in %s namespace" % namespace)
         pod_name = "hammer-pod"
         pod_body = {
             'apiVersion': 'v1',
@@ -177,41 +224,49 @@ class TestSuite:
         }
         try: 
             api_response = k_client.v1.create_namespaced_pod(namespace=namespace, body=pod_body)
-            logging.info(api_response)
         except Exception as e:
-            logging.error("Exception when calling CoreV1Api->create_namespaced_pod: %s\n" % e)
+            logging.error("Exception when creating Pod: %s\n" % e)
+            return "FAILED"
 
+        # Check for the pod in Skyfire Reports
+        logging.debug("Searching for Pod in Kube and OpsSight for 2 minutes")
         test_result = "FAILED"
-
-        for i in range(90):
+        for i in range(24):
             dump, err = getSkyfireDump(host_name="localhost", port=self.skyfire_port)
             if err is not None:
-                logging.error(err)
-                time.sleep(10)
-                continue
+                logging.debug("Could not get Skyfire Report: %s" % err)
+                return test_result
 
-            kd = dump['scrapes']['kube']['pod_names']
-            pod_in_kube = 'hammer-pod' in kd
+            kd = dump['kube-report']['scrape']['pod_names']
+            pod_in_kube = pod_name in kd
             
-            pd = dump['scrapes']['perceptor']['pod_names']
-            pod_in_opssight = 'bd/hammer-pod' in pd
+            pod_in_opssight = False
+            for perceptor_scrape in dump['mult-opssight-reports']['scrapes']:
+                pd = perceptor_scrape['pod_names']
+                pod_in_opssight = pod_name in pd 
+                if pod_in_opssight:
+                    break 
+            logging.debug("Checking for Test Pod. Kube: {}. OpsSight: {}".format(str(pod_in_kube),str(pod_in_opssight)))
 
             if pod_in_kube and pod_in_opssight:
                 test_result = "PASSED"
                 break
-            time.sleep(10)
+            time.sleep(5)
 
-        try: 
+        # Clean up the pod
+        logging.debug("Cleaning up Pod Test")
+        try:
             r = subprocess.run("oc delete pod {} -n {}".format(pod_name,namespace),shell=True,stdout=subprocess.PIPE)
-            logging.info(r)
+            r = subprocess.run("oc delete ns {}".format(namespace),shell=True,stdout=subprocess.PIPE) 
         except Exception as e:
-            logging.error("Exception when calling CoreV1Api->create_namespaced_pod: %s\n" % e)
+            logging.error("Exception when Cleaning up Pod Test: %s\n" % e)
 
         logging.debug("Finished Pod Test")
         return test_result
             
 
 def getSkyfireDump(host_name="localhost", port=80):
+    logging.debug("Getting Skyfire Dump for a Test")
     url = "http://{}:{}/latestreport".format(host_name, port)
     r = requests.get(url)
     if 200 <= r.status_code <= 299:

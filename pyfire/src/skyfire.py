@@ -23,7 +23,7 @@ class MockSkyfire():
         return {'abc': 123}
 
 class Skyfire:
-    def __init__(self, logger=logging.getLogger("Skyfire"), skyfire_port=80):
+    def __init__(self, logger=logging.getLogger("Skyfire"), skyfire_port=80, in_cluster=True):
         self.logger = logger
 
         # Thread for reading requests off the Queue
@@ -34,12 +34,12 @@ class Skyfire:
         self.event_thread.start()
 
         # Report objects - Represent latest state of Skyfire
-        self.perceptor_scrape = None
         self.kube_scrape = None
+        self.perceptor_scrapes = {}
         self.hub_scrapes = {}
 
         # Testing object
-        self.tester = TestSuite(skyfire_port)
+        self.tester = TestSuite(skyfire_port, in_cluster)
         self.test_report = {}
     
     def stop(self):
@@ -66,25 +66,27 @@ class Skyfire:
     
     ### Scraper Delegate interface - Put scrapes requests onto the Queue
 
-    def enqueue_perceptor_scrape(self, scrape, err):
-        if err is not None:
-            logging.error(str(err))
-            metrics.record_error("Perceptor Scrape Error")
-            return
-        def request():
-            metrics.record_skyfire_request_event("perceptor_scrape")
-            self.perceptor_scrape = scrape
-        self.q.put(("perceptor",request))
-
     def enqueue_kube_scrape(self, scrape, err):
         if err is not None:
             logging.error(str(err))
             metrics.record_error("Kube Scrape Error")
             return 
         def request():
-            metrics.record_skyfire_request_event("kube_scrape")
             self.kube_scrape = scrape
+            metrics.record_skyfire_request_event("kube_scrape")
+            metrics.record_kube_report(KubeReport(self.kube_scrape))
         self.q.put(("kube",request))
+
+    def enqueue_perceptor_scrape(self, host, scrape, err):
+        if err is not None:
+            logging.error(str(err))
+            metrics.record_error("Perceptor Scrape Error")
+            return
+        def request():
+            self.perceptor_scrapes[host] = scrape
+            metrics.record_skyfire_request_event("perceptor_scrape")
+            metrics.record_opssight_report(PerceptorReport(list(self.perceptor_scrapes.values())))
+        self.q.put(("perceptor",request))
 
     def enqueue_hub_scrape(self, host, scrape, err):
         if err is not None:
@@ -92,8 +94,9 @@ class Skyfire:
             metrics.record_error("Hub Scrape Error")
             return 
         def request():
-            metrics.record_skyfire_request_event("hub_scrape")
             self.hub_scrapes[host] = scrape
+            metrics.record_skyfire_request_event("hub_scrape")
+            metrics.record_hub_report(HubReport(list(self.hub_scrapes.values())))
         self.q.put(("hub",request))
 
     ### Web Server interface - Put server requests onto the queue
@@ -109,13 +112,13 @@ class Skyfire:
             
             metrics.record_skyfire_request_event("get_latest_report")
             skyfire_report = {
-                'opssight-report': PerceptorReport(self.perceptor_scrape),
-                'kube-report': KubeReport(self.kube_scrape),
+                'kube-report' : KubeReport(self.kube_scrape),
+                'opssight-reports' : dict([(host,PerceptorReport([scrape])) for (host,scrape) in self.perceptor_scrapes.items()]),
+                'mult-opssight-reports' : PerceptorReport(list(self.perceptor_scrapes.values())),
                 'hub-reports' : dict([(host,HubReport([scrape])) for (host,scrape) in self.hub_scrapes.items()]),
                 'mult-hub-reports' : HubReport(list(self.hub_scrapes.values())),
-                'perceptor-kube-report' : PerceptorKubeReport(self.perceptor_scrape, self.kube_scrape), 
-                'hub-perceptor-reports' : dict([(host,HubPerceptorReport([scrape], self.perceptor_scrape)) for (host,scrape) in self.hub_scrapes.items()]),
-                'mult-hub-perceptor-report' : HubPerceptorReport(list(self.hub_scrapes.values()), self.perceptor_scrape)
+                'mult-perceptor-kube-report' : PerceptorKubeReport(list(self.perceptor_scrapes.values()), self.kube_scrape), 
+                'mult-hub-mult-perceptor-report' : HubPerceptorReport(list(self.hub_scrapes.values()), list(self.perceptor_scrapes.values()))
             }
             report_wrapper['report_json'] = json.dumps(skyfire_report, default=util.default_json_serializer, indent=2)
             self.logger.debug("Waiting in queue in request function")

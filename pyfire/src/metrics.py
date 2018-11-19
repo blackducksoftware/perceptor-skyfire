@@ -66,17 +66,6 @@ def record_error(label):
 Data Metrics
 '''
 
-opssight_report_gauge = Gauge(
-    'OpsSightReportValues',
-    'Values for OpsSight performance',
-    ['name'], 'perceptor', 'skyfire'
-)
-def record_opssight_report(report):
-    opssight_report_gauge.labels(name="num_hubs").set(report.num_hubs)
-    opssight_report_gauge.labels(name="num_images").set(report.num_images)
-    opssight_report_gauge.labels(name="num_pods").set(report.num_pods)
-    opssight_report_gauge.labels(name="num_containers").set(report.num_containers)
-
 kube_report_gauge = Gauge(
     'KubeReportValues',
     'Values for OpsSight performance',
@@ -86,7 +75,23 @@ def record_kube_report(report):
     kube_report_gauge.labels(name="num_namespaces").set(report.num_namespaces)
     kube_report_gauge.labels(name="num_pods").set(report.num_pods)
     kube_report_gauge.labels(name="num_containers").set(report.num_containers)
-    kube_report_gauge.labels(name="num_unique_images").set(report.num_unique_images)
+    kube_report_gauge.labels(name="num_unique_images").set(report.num_images)
+    kube_report_gauge.labels(name="pods_full_label_coverage").set(report.pods_full_label_coverage)
+    kube_report_gauge.labels(name="pods_partial_label_coverage").set(report.pods_partial_label_coverage)
+    kube_report_gauge.labels(name="pods_full_annotation_coverage").set(report.pods_full_annotation_coverage)
+    kube_report_gauge.labels(name="pods_partial_annotation_coverage").set(report.pods_partial_annotation_coverage)
+
+opssight_report_gauge = Gauge(
+    'OpsSightReportValues',
+    'Values for OpsSight performance',
+    ['name'], 'perceptor', 'skyfire'
+)
+def record_opssight_report(report):
+    opssight_report_gauge.labels(name="num_hubs").set(report.num_hubs)
+    opssight_report_gauge.labels(name="num_images_in_hubs").set(report.num_images_in_hubs)
+    opssight_report_gauge.labels(name="num_pods").set(report.num_pods)
+    opssight_report_gauge.labels(name="num_containers").set(report.num_containers)
+    opssight_report_gauge.labels(name="num_code_loc_shas_in_queue").set(report.num_code_loc_shas_in_queue)
 
 hub_report_gauge = Gauge(
     'HubReportValues',
@@ -96,9 +101,15 @@ hub_report_gauge = Gauge(
 def record_hub_report(report):
     hub_report_gauge.labels(name="num_projects").set(report.num_projects)
     hub_report_gauge.labels(name="num_versions").set(report.num_versions)
-    hub_report_gauge.labels(name="num_code_locations").set(report.num_code_locations)
-    hub_report_gauge.labels(name="num_unique_shas").set(report.num_unique_shas)
-    hub_report_gauge.labels(name="num_scans").set(report.num_scans)
+    hub_report_gauge.labels(name="num_code_locs").set(report.num_code_locs)
+    hub_report_gauge.labels(name="num_code_loc_shas").set(report.num_code_loc_shas)
+    hub_report_gauge.labels(name="num_projects_with_one_version").set(report.num_projects_with_one_version)
+    hub_report_gauge.labels(name="num_projects_with_multiple_versions").set(report.num_projects_with_multiple_versions)
+    hub_report_gauge.labels(name="num_projects_with_no_versions").set(report.num_projects_with_no_versions)
+    hub_report_gauge.labels(name="num_code_locations_with_scans").set(report.num_code_locations_with_scans)
+    hub_report_gauge.labels(name="num_code_locations_with_no_scans").set(report.num_code_locations_with_no_scans)
+    hub_report_gauge.labels(name="num_code_loc_in_multiple_projects").set(report.num_code_loc_in_multiple_projects)
+    hub_report_gauge.labels(name="num_code_loc_in_multiple_versions").set(report.num_code_loc_in_multiple_versions)
 
 
 
