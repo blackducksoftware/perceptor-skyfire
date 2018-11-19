@@ -1,0 +1,73 @@
+apiVersion: synopsys.com/v1
+kind: OpsSight
+metadata:
+  clusterName: ''
+  name: opssight-de-jenkins
+spec:
+  defaultCPU: 300m
+  defaultMem: 1300Mi
+  enableMetrics: true
+  enableSkyfire: true
+  hub:
+    concurrentScanLimit: 2
+    hubSpec:
+      backupSupport: 'No'
+      certificateName: default
+      dbPrototype: empty
+      dockerRegistry: docker.io
+      dockerRepo: blackducksoftware
+      flavor: small
+      hubType: senthil
+      hubVersion: 5.0.0
+    initialNoOfHubs: 0
+    maxNoOfHubs: 4
+    totalScanLimit: 1000
+  logLevel: debug
+  namespace: opssight-de-jenkins
+  perceiver:
+    annotationIntervalSeconds: 30
+    dumpIntervalMinutes: 30
+    enableImagePerceiver: false
+    enablePodPerceiver: true
+    imagePerceiver:
+      image: gcr.io/saas-hub-stg/blackducksoftware/image-perceiver:master
+      name: image-perceiver
+    podPerceiver:
+      image: gcr.io/saas-hub-stg/blackducksoftware/pod-perceiver:master
+      name: pod-perceiver
+    port: 3002
+    serviceAccount: perceiver
+  perceptor:
+    checkForStalledScansPauseHours: 999999
+    clientTimeoutMilliseconds: 100000
+    image: gcr.io/saas-hub-stg/blackducksoftware/perceptor:master
+    modelMetricsPauseSeconds: 15
+    name: perceptor
+    port: 3001
+    stalledScanClientTimeoutHours: 999999
+    unknownImagePauseMilliseconds: 15000
+  scannerPod:
+    imageFacade:
+      image: gcr.io/saas-hub-stg/blackducksoftware/perceptor-imagefacade:master
+      internalRegistries: []
+      name: perceptor-imagefacade
+      port: 3004
+      serviceAccount: perceptor-scanner
+    name: perceptor-scanner
+    replicaCount: 1
+    scanner:
+      clientTimeoutSeconds: 600
+      image: gcr.io/saas-hub-stg/blackducksoftware/perceptor-scanner:master
+      name: perceptor-scanner
+      port: 3003
+  secretName: perceptor
+  skyfire:
+    hubClientTimeoutSeconds: 120
+    hubDumpPauseSeconds: 240
+    image: gcr.io/saas-hub-stg/blackducksoftware/pyfire:master
+    kubeDumpIntervalSeconds: 60
+    name: skyfire
+    perceptorDumpIntervalSeconds: 60
+    port: 3005
+    prometheusPort: 3006
+    serviceAccount: skyfire
