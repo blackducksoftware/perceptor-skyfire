@@ -1,0 +1,10 @@
+# OS Files
+.DS_Store
+
+# Python Files
+*.pyc
+__pycache__/
+.pytest_cache/
+
+# Environments
+./venv/
