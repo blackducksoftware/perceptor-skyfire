@@ -106,54 +106,53 @@ class TestSuite:
             self.in_progress = False
 
     def mock_test(self):
+        logging.debug("Starting Mock Test")
         time.sleep(7)
         val = random.randint(0,10)
+        logging.debug("Finished Mock Test")
         if val <= 8:
             return "PASSED"
         else:
             return "FAILED"
 
     def opssight_repo_coverage(self, policy):
+        logging.debug("Starting OpsSight Repo Coverage Test")
         dump, err = getSkyfireDump(host_name="localhost", port=self.skyfire_port)
-        total_repos = 0
-        total_repos += len(dump["perceptor-kube-report"]["only_kube_repos"])
-        total_repos += len(dump["perceptor-kube-report"]["only_perceptor_repos"])
-        total_repos += len(dump["perceptor-kube-report"]["both_repos"])
-        num_in_both = len(dump["perceptor-kube-report"]["both_repos"])
-        logging.debug("OpsSight Repo Coverage: %f", (num_in_both / float(total_repos))*100.0)
-        if (num_in_both / float(total_repos))*100.0 < policy:
+        if err is not None:
+            logging.debug("Could not get Skyfire Report: %s" % err)
+            return "FAILED"
+        logging.debug("OpsSight Repo Coverage: %f", dump["mult-perceptor-kube-report"]["repo_coverage"])
+        if dump["mult-perceptor-kube-report"]["repo_coverage"] < policy:
             return "FAILED"
         else:
             return "PASSED"
 
     def opssight_pod_coverage(self, policy):
+        logging.debug("Starting OpsSight Pod Coverage Test")
         dump, err = getSkyfireDump(host_name="localhost", port=self.skyfire_port)
-        total_pods = 0
-        total_pods += len(dump["perceptor-kube-report"]["only_kube_pod_names"])
-        total_pods += len(dump["perceptor-kube-report"]["only_perceptor_pod_names"])
-        total_pods += len(dump["perceptor-kube-report"]["both_pod_names"])
-        num_in_both = len(dump["perceptor-kube-report"]["both_pod_names"])
-        logging.debug("OpsSight Pod Coverage: %f", (num_in_both / float(total_pods))*100.0)
-        if (num_in_both / float(total_pods))*100.0 < policy:
+        if err is not None:
+            logging.debug("Could not get Skyfire Report: %s" % err)
+            return "FAILED"
+        logging.debug("OpsSight Pod Coverage: %f", dump["mult-perceptor-kube-report"]["pod_coverage"])
+        if dump["mult-perceptor-kube-report"]["pod_coverage"] < policy:
             return "FAILED"
         else:
             return "PASSED"
 
     def hub_image_coverage(self, policy):
+        logging.debug("Starting Hub Image Coverage Test")
         dump, err = getSkyfireDump(host_name="localhost", port=self.skyfire_port)
-        total_images = 0
-        total_images += len(dump["mult-hub-perceptor-report"]["only_hub_image_shas"])
-        total_images += len(dump["mult-hub-perceptor-report"]["only_perceptor_images"])
-        total_images += len(dump["mult-hub-perceptor-report"]["both_images"])
-        num_in_both = len(dump["mult-hub-perceptor-report"]["both_images"])
-        logging.debug("Hub Image Coverage: %f", (num_in_both / float(total_images))*100.0)
-        if (num_in_both / float(total_images))*100.0 < policy:
+        if err is not None:
+            logging.debug("Could not get Skyfire Report: %s" % err)
+            return "FAILED"
+        logging.debug("Hub Image Coverage: %f", dump["mult-hub-mult-perceptor-report"]["image_coverage"])
+        if dump["mult-hub-mult-perceptor-report"]["image_coverage"] < policy:
             return "FAILED"
         else:
             return "PASSED"
 
     def create_pod_test(self):
-        logging.debug("Starting Pod Test")
+        logging.debug("Starting Creating a Pod Test")
         k_client = KubeClient(in_cluster=False)
 
         # Create a namespace
@@ -212,6 +211,7 @@ class TestSuite:
             
 
 def getSkyfireDump(host_name="localhost", port=80):
+    logging.debug("Getting Skyfire Dump for a Test")
     url = "http://{}:{}/latestreport".format(host_name, port)
     r = requests.get(url)
     if 200 <= r.status_code <= 299:
