@@ -1,11 +1,12 @@
 #!/usr/bin/python
 
-# Requirements: must be run using pytest
-# Download this with "pip install pytest"
+# Requirements: must be run using pytest and python3.
+# Also requires you to have logged into or be inside your cluster before running.
 # To run tests on the command line, run "pytest -v test_kubedeployments.py"
 
 from kubernetes import client, utils
 from kubernetes.client.rest import ApiException
+import logging
 import pytest
 import qa_opssight_tasks
 import time
@@ -13,35 +14,72 @@ import time
 
 # Setup & global variables
 kubeClient = qa_opssight_tasks.kubeClientSetup()
+utilsClient = client.ApiClient()
 ns = "default"
 assertTimeout = 900  # time in seconds before we give up trying to assert
 
 
+# Shared assertion template for test cases
 def assertTemplate(podName, namespace):
     endTime = time.monotonic() + assertTimeout
+    podFoundInKube = False
+    podFoundInOpssight = False
     while time.monotonic() < endTime:
-        skyfireReport = qa_opssight_tasks.getSkyfireReport()
-        # parse skyfireReport to see if pod was created, labels/annotations are there, etc.
-        assert True  # get rid of this eventually obviously
-        break  # this should eventually be used in conjunction with an if-else
+        report, err = qa_opssight_tasks.getSkyfireReport()
+        if err is not None:
+            logging.error(err)
+            time.sleep(10)
+            continue
+
+        if not podFoundInKube:
+            podsInKube = report['kube-report']['scrape']['pod_names']
+            podFoundInKube = podName in podsInKube
+
+        if not podFoundInOpssight:
+            opssights = report['mult-opssight-reports']['scrapes']
+            for i in opssights:
+                podsInOpssight = opssights[i]['pod_names']
+                if podName in podsInOpssight:
+                    podFoundInOpssight = True
+                    break
+
+        if podFoundInKube and podFoundInOpssight:
+            break
+        time.sleep(10)
+
+    assert podFoundInKube  # assert that pod exists in the cluster
+    assert podFoundInOpssight  # assert that pod was picked up by OpsSight
+
+
+# Shared test teardown template for test cases
+# This might be removed if we eventually have a method that wipes the whole cluster
+def teardownTemplate(podName, namespace):
+    logging.log("Teardown - deleting pod {0} in namespace {1}".format(podName, namespace))
+    deleteBody = kubeClient.V1DeleteOptions()
+    try:
+        response = kubeClient.delete_namespaced_pod(name=podName, namespace=ns, body=deleteBody)
+        logging.info(response)
+    except ApiException as err:
+        logging.error("Error occurred when deleting pod {0} in namespace {1}: {2}".format(podName, namespace, err))
 
 
 @pytest.mark.kubedeployment
 def testAddPodFromFile():
-    print("Deploying a pod with kubectl create -f in namespace: {}".format(ns))
+    logging.log("Deploying a pod with kubectl create -f in namespace: {}".format(ns))
     podName = "addpodfromfile-ibmjava"
-    k8s_client = client.ApiClient()
     try:
-        utils.create_from_yaml(k8s_client, "./ibmjava.yml")
+        response = utils.create_from_yaml(utilsClient, "./ibmjava.yml")
+        logging.info(response)
         assertTemplate(podName, ns)
     except ApiException as err:
-        print("Error occurred when testing deploying a pod with kubectl create -f: {}".format(err))
+        logging.error("Error occurred when testing deploying a pod with kubectl create -f: {}".format(err))
         assert False
+    # teardownTemplate(podName, ns)
 
 
 @pytest.mark.kubedeployment
 def testAddPodWithRun():
-    print("Deploying a pod with kubectl run in namespace: {}".format(ns))
+    logging.log("Deploying a pod with kubectl run in namespace: {}".format(ns))
     podName = "addpodwithrun-rabbitmq36"
     podManifest = {
         'apiVersion': 'v1',
@@ -58,16 +96,18 @@ def testAddPodWithRun():
         }
     }
     try:
-        kubeClient.create_namespaced_pod(namespace=ns, body=podManifest)
+        response = kubeClient.create_namespaced_pod(namespace=ns, body=podManifest)
+        logging.info(response)
         assertTemplate(podName, ns)
     except ApiException as err:
-        print("Error occurred when testing deploying a pod with kubectl run: {}".format(err))
+        logging.error("Error occurred when testing deploying a pod with kubectl run: {}".format(err))
         assert False
+    # teardownTemplate(podName, ns)
 
 
 @pytest.mark.kubedeployment
 def testAddPodBySha():
-    print("Deploying a pod with kubectl run in namespace: {} using SHA instead of tag".format(ns))
+    logging.log("Deploying a pod with kubectl run in namespace: {} using SHA instead of tag".format(ns))
     podName = "addpodbysha-perceptor"
     podManifest = {
         'apiVersion': 'v1',
@@ -84,8 +124,10 @@ def testAddPodBySha():
         }
     }
     try:
-        kubeClient.create_namespaced_pod(namespace=ns, body=podManifest)
+        response = kubeClient.create_namespaced_pod(namespace=ns, body=podManifest)
+        logging.info(response)
         assertTemplate(podName, ns)
     except ApiException as err:
-        print("Error occurred when testing deploying a pod by SHA with kubectl run: {}".format(err))
+        logging.error("Error occurred when testing deploying a pod by SHA with kubectl run: {}".format(err))
         assert False
+    # teardownTemplate(podName, ns)

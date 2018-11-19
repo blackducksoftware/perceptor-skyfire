@@ -2,6 +2,7 @@
 
 from configparser import SafeConfigParser
 from kubernetes import client, config
+import logging
 import os
 import requests
 
@@ -29,4 +30,9 @@ def kubeClientSetup(runInCluster=False):
 def getSkyfireReport():
     skyfireReportUrl = opsConfig['SKYFIRE']['reportUrl']
     response = requests.get(url=skyfireReportUrl)
-    return response.json()
+    if 200 <= response.status_code <= 299:
+        logging.debug("http request to {0} returned status code: {1}".format(skyfireReportUrl, response.status_code))
+        return response.json(), None
+    else:
+        logging.error("Error connecting to Skyfire")
+        return {}, {'error': "Skyfire Connection Fail", 'status': response.status_code, 'url': skyfireReportUrl}
