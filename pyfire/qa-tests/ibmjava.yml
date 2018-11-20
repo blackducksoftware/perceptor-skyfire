@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: ibmjava
-  namespace: default
+  name: addpodfromfile-ibmjava
+  namespace: kubedeployments
 spec:
   containers:
   - image: ibmjava:latest
