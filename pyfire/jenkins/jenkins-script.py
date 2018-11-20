@@ -143,17 +143,16 @@ def main():
     # curl to start skyfire tests
     logging.info("Starting Skyfire Tests...")
     print("Route: ",skyfire_route)
-    try: 
-        for i in range(10):
+    for i in range(10):
+        try: 
             url = "http://{}/starttest".format(skyfire_route.decode("utf-8"))
             r = requests.post(url, data={'nothing' : 'nothing'}, verify=False)
             print(url)
             if 200 <= r.status_code <= 299:
                 break 
             time.sleep(2)
-    except Exception as e:
-        logging.error("Exception when starting skyfire tests: %s\n" % e)
-        sys.exit(1)
+        except Exception as e:
+            logging.error("Exception when starting skyfire tests: %s\n" % e)
 
     # curl to get skyfire results
     logging.info("Getting Skyfire Results...")

@@ -201,6 +201,7 @@ class TestSuite:
 
         try: 
             api_response = k_client.v1.create_namespace(body=namespace_body)
+            logging.debug(api_response)
         except Exception as e:
             logging.error("Exception when creating Namespace: %s\n" % e)
             return "FAILED"
@@ -224,6 +225,7 @@ class TestSuite:
         }
         try: 
             api_response = k_client.v1.create_namespaced_pod(namespace=namespace, body=pod_body)
+            logging.debug(api_response)
         except Exception as e:
             logging.error("Exception when creating Pod: %s\n" % e)
             return "FAILED"
@@ -256,8 +258,8 @@ class TestSuite:
         # Clean up the pod
         logging.debug("Cleaning up Pod Test")
         try:
-            api_response = k_client.v1.delete_namespaced_pod(name=pod_name, namespace=namespace, body={})
-            api_response = k_client.v1.create_namespace(name=namespace_body, body={})
+            api_response = k_client.v1.delete_namespace(name=namespace, body={})
+            logging.debug(api_response)
         except Exception as e:
             logging.error("Exception when Cleaning up Pod Test: %s\n" % e) 
 
