@@ -24,6 +24,24 @@ def kubeClientSetup(runInCluster=False):
     return kClient
 
 
+# Create a namespace with name namespaceName
+# Input: kubernetes client, name of namespace
+def createNamespace(kClient, namespaceName):
+    logging.debug("Creating namespace {}".format(namespaceName))
+    nsBody = {
+        'apiVersion': 'v1',
+        'kind': 'Namespace',
+        'metadata': {
+            'name': namespaceName
+        }
+    }
+    try:
+        response = kClient.create_namespace(body=nsBody)
+        logging.debug(response)
+    except Exception as err:
+        logging.error("Exception when creating namespace {}".format(namespaceName))
+
+
 # ===== Skyfire-related tasks =====
 # Get and return the skyfire report in JSON format
 # Output: Skyfire report Dict object
