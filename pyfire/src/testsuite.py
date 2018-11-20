@@ -199,11 +199,18 @@ class TestSuite:
             }
         }
 
-        try: 
-            api_response = k_client.v1.create_namespace(body=namespace_body)
-            logging.debug(api_response)
-        except Exception as e:
-            logging.error("Exception when creating Namespace: %s\n" % e)
+        created_namespace = False
+        for i in range(10):
+            try: 
+                api_response = k_client.v1.create_namespace(body=namespace_body)
+                logging.debug(api_response)
+                created_namespace = True 
+                break 
+            except Exception as e:
+                logging.warning("Exception when creating Namespace: %s\n" % e)
+            time.sleep(2)
+        if not created_namespace:
+            logging.error("Could not create Namespace")
             return "FAILED"
 
         # Create a pod
@@ -223,11 +230,18 @@ class TestSuite:
                 }]
             }
         }
-        try: 
-            api_response = k_client.v1.create_namespaced_pod(namespace=namespace, body=pod_body)
-            logging.debug(api_response)
-        except Exception as e:
-            logging.error("Exception when creating Pod: %s\n" % e)
+        created_pod = False 
+        for i in range(10):
+            try: 
+                api_response = k_client.v1.create_namespaced_pod(namespace=namespace, body=pod_body)
+                logging.debug(api_response)
+                created_pod = True 
+                break 
+            except Exception as e:
+                logging.warning("Exception when creating Pod: %s\n" % e)
+            time.sleep(2)
+        if not created_pod:
+            logging.error("Could not create Pod")
             return "FAILED"
 
         # Check for the pod in Skyfire Reports
@@ -255,13 +269,20 @@ class TestSuite:
                 break
             time.sleep(5)
 
-        # Clean up the pod
+        # Clean up the test namespace
         logging.debug("Cleaning up Pod Test")
-        try:
-            api_response = k_client.v1.delete_namespace(name=namespace, body={})
-            logging.debug(api_response)
-        except Exception as e:
-            logging.error("Exception when Cleaning up Pod Test: %s\n" % e) 
+        cleaned_namespace = False 
+        for i in range(10):
+            try:
+                api_response = k_client.v1.delete_namespace(name=namespace, body={})
+                logging.debug(api_response)
+                cleaned_namespace = True
+                break 
+            except Exception as e:
+                logging.warning("Exception when Cleaning up Pod Test: %s\n" % e) 
+            time.sleep(2)
+        if not cleaned_namespace:
+            logging.error("Could not clean test namespace")
 
         logging.debug("Finished Pod Test")
         return test_result
