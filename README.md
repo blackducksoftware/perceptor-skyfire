@@ -2,4 +2,3 @@
 
 Automated testing of perceptor!
 
-omg
