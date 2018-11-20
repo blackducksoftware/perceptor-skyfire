@@ -1,8 +1,8 @@
 import time
 import threading
-import metrics
+from . import metrics
 import logging 
-from cluster_clients import MockClient 
+from .cluster_clients import MockClient 
 
 class Scraper(object):
     def __init__(self, logger, skyfire_delegate, kube_client, perceptor_clients, hub_clients, perceptor_pause, kube_pause, hub_pause):

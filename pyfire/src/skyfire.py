@@ -2,12 +2,14 @@ import threading
 import json
 import queue
 import logging
-from reports import *
-import util
-import metrics 
-from testsuite import TestSuite
+from .reports import KubeReport, PerceptorReport, HubReport, PerceptorKubeReport, HubPerceptorReport
+from . import util
+from . import metrics 
+from .tests.testsuite import TestSuite
 
 import sys
+
+raise 3
 
 
 class MockSkyfire():

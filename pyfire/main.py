@@ -1,11 +1,11 @@
 import json
 import sys
-from .webserver import start_http_server
-from .scraper import Scraper
-from .skyfire import Skyfire
-from . import metrics
+from src.webserver import start_http_server
+from src.scraper import Scraper
+from src.skyfire import Skyfire
+from src import metrics
 import logging
-from .cluster_clients import PerceptorClient, HubClient, KubeClient, MockClient
+from src.cluster_clients import PerceptorClient, HubClient, KubeClient, MockClient
 import os
 import urllib3
 import kubernetes.client
@@ -117,7 +117,4 @@ def main():
     start_http_server(config.skyfire_port, skyfire)
 
     
-
-
 main()
-

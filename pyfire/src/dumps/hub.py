@@ -1,5 +1,6 @@
 import sys
-from cluster_clients import *
+import json
+from ..cluster_clients import HubClient
 
 def main():
     if len(sys.argv) != 4:
@@ -19,7 +20,7 @@ def main():
     hub_scrape = hub_client.get_scrape()
 
     # Print the Dump
-    print(json.dumps(  hub_scrape.dump  , indent=2))
+    print(json.dumps(hub_scrape.dump, indent=2))
 
 
 if __name__ == "__main__":

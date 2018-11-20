@@ -1,5 +1,5 @@
 import logging
-import podformat 
+from . import podformat 
 
 def find_duplicated_items(item_list):
     duplicates = []

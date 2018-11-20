@@ -1,5 +1,6 @@
 import sys
-from cluster_clients import *
+import json
+from ..cluster_clients import PerceptorClient
 
 def main():
     if len(sys.argv) != 2:
@@ -17,7 +18,7 @@ def main():
         print(str(err))
 
     # Print the Dump
-    print(json.dumps(  perceptor_scrape.dump  , indent=2))
+    print(json.dumps(perceptor_scrape.dump, indent=2))
 
 
 if __name__ == "__main__":

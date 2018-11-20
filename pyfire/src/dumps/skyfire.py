@@ -1,16 +1,15 @@
 import json
-from scraper import Scraper
-from cluster_clients import *
-from skyfire import MockSkyfire
+from ..scraper import Scraper
+from ..cluster_clients import PerceptorClient, KubeClient, HubClient
+from ..skyfire import MockSkyfire
 import sys
+import logging
 
 
 def real_reader(conf):
     """
     Another example not to be used in PDCs!
     """
-    from cluster_clients import PerceptorClient, KubeClient, HubClient
-
     # Create a logger
     root_logger = logging.getLogger()
 

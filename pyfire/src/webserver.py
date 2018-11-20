@@ -4,8 +4,8 @@ import threading
 import json
 import time
 import queue
-from skyfire import *
-import metrics 
+from .skyfire import MockSkyfire
+from . import metrics 
 import logging 
 
 

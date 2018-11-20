@@ -5,7 +5,6 @@ import datetime
 import time
 from kubernetes import client, config
 import logging 
-from util import *
 
 ''' 
 Data Scrape Classes - Data Access Objects for Dumps
@@ -14,7 +13,7 @@ Data Scrape Classes - Data Access Objects for Dumps
 # Data Access Object for Kube Dump
 class KubeScrape:
     def __init__(self, dump={}):
-        self.time_stamp = get_current_datetime()
+        self.time_stamp = datetime.datetime.now()
         self.dump = dump
 
         # Kube Information
@@ -106,7 +105,7 @@ class KubeScrape:
 # Data Access Object for Hub Dump
 class HubScrape():
     def __init__(self, dump={}):
-        self.time_stamp = get_current_datetime()
+        self.time_stamp = datetime.datetime.now()
         self.dump = dump
         
         # Project Data and Data Access
@@ -200,7 +199,7 @@ class HubScrape():
 # Data Access Object for Perceptor Dump
 class PerceptorScrape:
     def __init__(self, dump={}):
-        self.time_stamp = get_current_datetime()
+        self.time_stamp = datetime.datetime.now()
         self.dump = dump
 
         # Hub Section Data

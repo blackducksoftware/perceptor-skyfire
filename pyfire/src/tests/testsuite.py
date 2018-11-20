@@ -1,6 +1,6 @@
 import threading 
 import logging
-from cluster_clients import KubeClient
+from ..cluster_clients import KubeClient
 import subprocess
 import requests 
 import time
