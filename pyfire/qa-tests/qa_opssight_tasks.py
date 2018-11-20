@@ -1,14 +1,8 @@
 #!/usr/bin/python
 
-from configparser import SafeConfigParser
 from kubernetes import client, config
 import logging
-import os
 import requests
-
-
-opsConfig = SafeConfigParser(os.environ)
-opsConfig.read('./qa-opssight.cfg')
 
 
 # ===== Python Kubernetes Client-related tasks =====
@@ -44,9 +38,11 @@ def createNamespace(kClient, namespaceName):
 
 # ===== Skyfire-related tasks =====
 # Get and return the skyfire report in JSON format
+# Input: host name, port
 # Output: Skyfire report Dict object
-def getSkyfireReport():
-    skyfireReportUrl = opsConfig['SKYFIRE']['reportUrl']
+def getSkyfireReport(host="localhost", port=80):
+    skyfireReportUrl = "http://{}:{}/latestreport".format(host, port)
+    logging.info("Getting Skyfire report from {}".format(skyfireReportUrl))
     response = requests.get(url=skyfireReportUrl)
     if 200 <= response.status_code <= 299:
         logging.debug("http request to {0} returned status code: {1}".format(skyfireReportUrl, response.status_code))
