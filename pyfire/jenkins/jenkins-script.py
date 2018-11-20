@@ -86,7 +86,7 @@ def main():
             r = subprocess.run(command,shell=True,stdout=subprocess.PIPE)
             pods = r.stdout.split(b'\n')
             pods_statuses = [pod.split()[2] == b'Running' for pod in pods if pod != b'']
-            print([pod.split()[0]+" : "+pod.split()[2] for pod in pods if pod != b''])
+            print([pod.split()[0].decode("utf-8")+" : "+pod.split()[2].decode("utf-8") for pod in pods if pod != b''])
             if pods_statuses != [] and False not in pods_statuses:
                 good = True
                 break
