@@ -13,9 +13,11 @@ paths = set(['/latestreport','/testsuite'])
 
 class Handler(BaseHTTPRequestHandler):
     def __init__(self, model, *args, **kwargs):
-        logging.info("Init Handler: %s", str(args)+" "+str(kwargs))
+        self.logger = logging.getLogger("HTTPHandler")
+
+        self.logger .info("Init Handler: %s", str(args)+" "+str(kwargs))
         self.model = model
-        logging.info("Model: %s", self.model)
+        self.logger .info("Model: %s", self.model)
         super(Handler, self).__init__(*args, **kwargs)
     
     def _set_headers(self, headers):
@@ -28,7 +30,7 @@ class Handler(BaseHTTPRequestHandler):
         if self.path not in paths:
             self.send_response(404)
             self.wfile.write(b'')
-            logging.debug("GET request for invalid Path")
+            self.logger .debug("GET request for invalid Path")
             return
         self.send_response(200)
         self._set_headers({'Content-type': 'application/json'})
@@ -37,7 +39,7 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path == '/testsuite':
             report = self.model.get_test_suite()
         self.wfile.write(bytes(report, 'utf-8'))
-        logging.debug("GET request successful")
+        self.logger .debug("GET request successful")
 
 #    def do_HEAD(self):
 #        self._set_headers()
@@ -54,10 +56,10 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()
         self.wfile.write(bytes('Path: %s\n' % self.path,'utf-8'))
-        print(self.path)
         if self.path == "/starttest":
             self.model.start_test_suite()
 
+web_logger = logging.getLogger("webserver")
 
 def get_server_handler(model):
     def handler(*args, **kwargs):
@@ -68,9 +70,9 @@ def start_http_server(port, skyfire):
     server = ThreadingHTTPServer(('', port), get_server_handler(skyfire))
     try:
         server.serve_forever()
-        logging.info('Started Skyfire http server')
+        web_logger.info('Started Skyfire http server')
     except:
-        logging.error("Could not serve forever")
+        web_logger.error("Could not serve forever")
         server.socket.close()
 
 

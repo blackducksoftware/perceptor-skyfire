@@ -23,23 +23,23 @@ def main():
     password = sys.argv[4]
 
     # Login to the Cluster
-    root_logger = logging.getLogger()
-    root_logger.setLevel("DEBUG")
-    logging.info("Logging In...")
+    jenkins_logger = logging.getLogger("JenkinsScript")
+    jenkins_logger.setLevel("DEBUG")
+    jenkins_logger.info("Logging In...")
     try:
         command = "oc login {} --username={} --password={} --insecure-skip-tls-verify=true".format(cluster_ip,username,password)
         r = subprocess.run(command,shell=True,stdout=subprocess.PIPE)
     except Exception as e:
-        logging.error(str(e))
+        jenkins_logger.error(str(e))
         sys.exit(1)
 
     # Create Kubernetes Client
-    logging.info("Creating Kube Client...")
+    jenkins_logger.info("Creating Kube Client...")
     config.load_kube_config()
     v1 = client.CoreV1Api()
 
     # Create OpsSight from Yaml File
-    logging.info("Creating OpsSight...")
+    jenkins_logger.info("Creating OpsSight...")
     try: 
         # Read yaml file and update fields
         with open('opssight-template.yaml') as opssight_file:
@@ -55,7 +55,7 @@ def main():
         r = subprocess.run(command,shell=True,stdout=subprocess.PIPE)
         namespaces = r.stdout.split(b'\n')
         ns_names = [ns.split()[0].decode("utf-8") for ns in namespaces if ns != b'']
-        print(ns_names)
+        jenkins_logger.info(ns_names)
         if namespace in ns_names:
             command = "oc delete ns {}".format(namespace)
             r = subprocess.run(command,shell=True,stdout=subprocess.PIPE)
@@ -65,7 +65,7 @@ def main():
         r = subprocess.run(command,shell=True,stdout=subprocess.PIPE)
         opssights = r.stdout.split(b'\n')
         opssight_names = [opssight.split()[0].decode("utf-8") for opssight in opssights if opssight != b'']
-        print(opssight_names)
+        jenkins_logger.info(opssight_names)
         if namespace in opssight_names:
             command = "oc delete opssight {}".format(namespace)
             r = subprocess.run(command,shell=True,stdout=subprocess.PIPE)
@@ -74,11 +74,11 @@ def main():
         command = "oc create -f {}".format("opssight-new.yaml")
         r = subprocess.run(command,shell=True,stdout=subprocess.PIPE)
     except Exception as e:
-        logging.error("Exception when creating OpsSight: %s\n" % e)
+        jenkins_logger.error("Exception when creating OpsSight: %s\n" % e)
         sys.exit(1)
 
     # Wait until all pods are running
-    logging.info("Waiting for OpsSight Pods...")
+    jenkins_logger.info("Waiting for OpsSight Pods...")
     try:
         good = False
         for i in range(15):
@@ -86,21 +86,21 @@ def main():
             r = subprocess.run(command,shell=True,stdout=subprocess.PIPE)
             pods = r.stdout.split(b'\n')
             pods_statuses = [pod.split()[2] == b'Running' for pod in pods if pod != b'']
-            print([pod.split()[0]+" : "+pod.split()[2] for pod in pods if pod != b''])
+            jenkins_logger.info([pod.split()[0].decode("utf-8")+" : "+pod.split()[2].decode("utf-8") for pod in pods if pod != b''])
             if pods_statuses != [] and False not in pods_statuses:
                 good = True
                 break
             time.sleep(5)
         if not good:
-            logging.error("Pods Did not Start")
+            jenkins_logger.error("Pods Did not Start")
             sys.exit(1)
     except Exception as e:
-        logging.error("Exception while waiting for OpsSight to start: %s\n" % e)
+        jenkins_logger.error("Exception while waiting for OpsSight to start: %s\n" % e)
         sys.exit(1)
 
 
     # Edit OpsSight Config to have hub url
-    logging.info("Adding Hub to OpsSight Config...")
+    jenkins_logger.info("Adding Hub to OpsSight Config...")
     try:
         # Read the current Config Map Body Object
         opssight_cm = v1.read_namespaced_config_map('opssight', namespace)
@@ -113,11 +113,11 @@ def main():
         opssight_cm.data = opssight_data
         v1.patch_namespaced_config_map('opssight', namespace, opssight_cm)
     except Exception as e:
-        logging.error("Exception when editing OpsSight Config: %s\n" % e)
+        jenkins_logger.error("Exception when editing OpsSight Config: %s\n" % e)
         sys.exit(1)
 
     # Get the route for Skyfire
-    logging.info("Getting Skyfire Route...")
+    jenkins_logger.info("Getting Skyfire Route...")
     skyfire_route = ""
     try: 
         # Expose the service if route doesn't exist
@@ -133,14 +133,14 @@ def main():
             routes = r.stdout.split(b'\n')
         routes = [route.split() for route in routes if route != b'']
         skyfire_route = [route[1] for route in routes if route[0] == b'skyfire'][0]
-        logging.info("Skyfire Route: %s",skyfire_route)
+        jenkins_logger.info("Skyfire Route: %s",skyfire_route)
     except Exception as e:
-        logging.error("Exception when exposing Skyfire Route: %s\n" % e)
+        jenkins_logger.error("Exception when exposing Skyfire Route: %s\n" % e)
         sys.exit(1)
 
     # curl to start skyfire tests
-    logging.info("Starting Skyfire Tests...")
-    print("Route: ",skyfire_route)
+    jenkins_logger.info("Starting Skyfire Tests...")
+    jenkins_logger.info("Route: ",skyfire_route)
     for i in range(10):
         try: 
             url = "http://{}/starttest".format(skyfire_route.decode("utf-8"))
@@ -150,17 +150,17 @@ def main():
                 break 
             time.sleep(2)
         except Exception as e:
-            logging.error("Exception when starting skyfire tests: %s\n" % e)
+            jenkins_logger.error("Exception when starting skyfire tests: %s\n" % e)
 
     # curl to get skyfire results
-    logging.info("Getting Skyfire Results...")
+    jenkins_logger.info("Getting Skyfire Results...")
     results = None
     try: 
         for i in range(100):
             url = "http://{}/testsuite".format(skyfire_route.decode("utf-8"))
             r = requests.get(url, verify=False)
             results = r.json()
-            print(results)
+            jenkins_logger.info(results)
             if 200 <= r.status_code <= 299:
                 if results['state'] == 'FINISHED':
                     break
@@ -168,11 +168,10 @@ def main():
                     time.sleep(2)
                     continue
     except Exception as e:
-        logging.error("Exception when getting skyfire results: %s\n" % e)
+        jenkins_logger.error("Exception when getting skyfire results: %s\n" % e)
         sys.exit(1)
 
     # print out the results
-    print(results)
     return results['summary']
 
 

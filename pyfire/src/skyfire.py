@@ -23,8 +23,8 @@ class MockSkyfire():
         return {'abc': 123}
 
 class Skyfire:
-    def __init__(self, logger=logging.getLogger("Skyfire"), skyfire_port=80, in_cluster=True):
-        self.logger = logger
+    def __init__(self, skyfire_port=80, in_cluster=True):
+        self.logger = logging.getLogger("Skyfire")
 
         # Thread for reading requests off the Queue
         self.q = queue.Queue()
@@ -68,7 +68,7 @@ class Skyfire:
 
     def enqueue_kube_scrape(self, scrape, err):
         if err is not None:
-            logging.error(str(err))
+            self.logger.error(str(err))
             metrics.record_error("Kube Scrape Error")
             return 
         def request():
@@ -79,7 +79,7 @@ class Skyfire:
 
     def enqueue_perceptor_scrape(self, host, scrape, err):
         if err is not None:
-            logging.error(str(err))
+            self.logger.error(str(err))
             metrics.record_error("Perceptor Scrape Error")
             return
         def request():
@@ -90,7 +90,7 @@ class Skyfire:
 
     def enqueue_hub_scrape(self, host, scrape, err):
         if err is not None:
-            logging.error(str(err))
+            self.logger.error(str(err))
             metrics.record_error("Hub Scrape Error")
             return 
         def request():

@@ -1,6 +1,7 @@
 from prometheus_client import start_http_server, Summary, Counter, Gauge, Histogram
 import random
 import time
+import logging 
 
 '''
 Metric Types:
@@ -33,12 +34,15 @@ Create a Coutner metric for dumps with 'kube dump', 'perceptor dump, and 'hub du
 Skyfire Metrics
 '''
 
+metrics_logger = logging.getLogger("Metrics")
+
 requests_counter = Counter(
     'SkyfireRequests',
     'Counts the requests that skyfire handles on the Queue',
     ['name'], 'perceptor', 'skyfire'
 )
 def record_skyfire_request_event(label):
+    metrics_logger.debug("record_skyfire_request_event: {}".format(label))
     requests_counter.labels(name=label).inc()
 
 scrape_counter = Counter(
@@ -47,6 +51,7 @@ scrape_counter = Counter(
     ['name'], 'perceptor', 'skyfire'
 )
 def record_scrape_event(label):
+    metrics_logger.debug("record_scrape_event: {}".format(label))
     scrape_counter.labels(name=label).inc()
 
 http_request_counter = Counter(
@@ -55,10 +60,12 @@ http_request_counter = Counter(
     ['name'], 'perceptor', 'skyfire'
 )
 def record_http_request_event(label):
+    metrics_logger.debug("record_http_request_event: {}".format(label))
     http_request_counter.labels(name=label).inc()
 
 error_counter = Counter('errors', 'internal skyfire errors', ['name'], 'perceptor', 'skyfire')
 def record_error(label):
+    metrics_logger.debug("record_error: {}".format(label))
     error_counter.labels(name=label).inc()
 
 
@@ -72,6 +79,7 @@ kube_report_gauge = Gauge(
     ['name'], 'perceptor', 'skyfire'
 )
 def record_kube_report(report):
+    metrics_logger.debug("record_kube_report")
     kube_report_gauge.labels(name="num_namespaces").set(report.num_namespaces)
     kube_report_gauge.labels(name="num_pods").set(report.num_pods)
     kube_report_gauge.labels(name="num_containers").set(report.num_containers)
@@ -87,6 +95,7 @@ opssight_report_gauge = Gauge(
     ['name'], 'perceptor', 'skyfire'
 )
 def record_opssight_report(report):
+    metrics_logger.debug("record_opssight_report")
     opssight_report_gauge.labels(name="num_hubs").set(report.num_hubs)
     opssight_report_gauge.labels(name="num_images_in_hubs").set(report.num_images_in_hubs)
     opssight_report_gauge.labels(name="num_pods").set(report.num_pods)
@@ -99,6 +108,7 @@ hub_report_gauge = Gauge(
     ['name'], 'perceptor', 'skyfire'
 )
 def record_hub_report(report):
+    metrics_logger.debug("record_hub_report")
     hub_report_gauge.labels(name="num_projects").set(report.num_projects)
     hub_report_gauge.labels(name="num_versions").set(report.num_versions)
     hub_report_gauge.labels(name="num_code_locs").set(report.num_code_locs)
