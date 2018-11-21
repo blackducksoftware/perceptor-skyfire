@@ -297,6 +297,8 @@ class MockClient():
         'hub2' : './src/staticDumps/staticHubScrape2.txt'
     }
     def __init__(self, name):
+        self.logger = logging.getLogger("MockClient")
+
         self.name = name
 
     def get_scrape(self):
@@ -308,11 +310,13 @@ class MockClient():
                     return KubeScrape(json.load(f)), None
                 else:
                     return HubScrape(json.load(f)), None
-        logging.error("Mock Client "+self.name+" does not exist")
+        self.logger.error("Mock Client "+self.name+" does not exist")
         return None, {'error' : 'Could not create Mock'}
 
 class PerceptorClient():
     def __init__(self, host_name, port):
+        self.logger = logging.getLogger("PerceptorClient")
+
         self.host_name = host_name
         self.port = port
 
@@ -326,14 +330,16 @@ class PerceptorClient():
         url = "http://{}:{}/model".format(self.host_name, self.port)
         r = requests.get(url)
         if 200 <= r.status_code <= 299:
-            logging.debug("Perceptor http Dump Request Status Code: %s - %s", r.status_code, url)
+            self.logger .debug("Perceptor http Dump Request Status Code: %s - %s", r.status_code, url)
             return json.loads(r.text), None
         else:
-            logging.error("Could not connect to Perceptor")
+            self.logger .error("Could not connect to Perceptor")
             return {}, {'error' : "Perceptor Connection Fail", 'status' : r.status_code, 'url' : url} 
 
 class HubClient():
     def __init__(self, host_name, port, username, password, client_timeout_seconds):
+        self.logger = logging.getLogger("HubClient")
+
         self.host_name = host_name
         self.port = port
         self.username = username
@@ -349,10 +355,10 @@ class HubClient():
         url = "https://{}:{}/j_spring_security_check".format(self.host_name, self.port) # verify=False does not verify SSL connection - insecure
         r = requests.post(url, verify=False, data=security_data, headers=security_headers)
         if 200 <= r.status_code <= 299:
-            logging.debug("Hub http Login Request Status Code: %s",r.status_code)
+            self.logger.debug("Hub http Login Request Status Code: %s",r.status_code)
             return r.cookies, None
         else:
-            logging.error("Could not Secure Login to the Hub")
+            self.logger.error("Could not Secure Login to the Hub")
             return None, {'error' : 'Could not Secure Login to the Hub', 'status' : r.status_code}
 
     def api_get(self, url):
@@ -362,17 +368,18 @@ class HubClient():
                 return None, err 
         r = requests.get(url, verify=False, cookies=self.secure_login_cookie)
         if 200 <= r.status_code <= 299:
-            logging.debug("Hub http Request Status Code: %s - %s", r.status_code, url)
+            self.logger.debug("Hub Request Status Code: %s - %s", r.status_code, url)
             return r, None
         else:
-            logging.error("Could not contact: "+url)
+            self.logger.error("Hub could not contact (Status Code: %s): %s", r.status_code, url)
             return None, {'error' : 'Hub Connection Fail', 'status' : r.status_code, 'url' : url}
 
     def get_scrape(self):
         dump, err = self.get_dump()
-        if err is None:
-            return HubScrape(dump), None 
-        return None, err 
+        if err is not None:
+            self.logger.error("Error in get_scrape when getting dump")
+            return None, err 
+        return HubScrape(dump), None 
 
     def get_dump(self):
         dump, err = self.api_get("https://"+self.host_name+":443/api"+"/projects?limit="+str(self.max_projects))
@@ -389,12 +396,14 @@ class HubClient():
                 project_links[link['rel']] = link['href']
             # get data from version url
             project_versions, err = self.crawl_version(project_links['versions'])
+            if err is not None:
+                self.logger.error("Error in get_dump when getting project version")
             projects[project_href] = {"name" : project_name, "versions" : project_versions}
         return projects, None 
     
     def crawl_version(self, version_url):
         dump, err = self.api_get(version_url)
-        if err is None:
+        if err is not None:
             return {}, err 
         dump = dump.json()
         versions = {}
@@ -405,8 +414,14 @@ class HubClient():
             for link in version['_meta']["links"]:
                 version_links[link['rel']] = link['href']
             version_risk_profile, err = self.crawl_risk_profile(version_links['riskProfile'])
+            if err is not None:
+                self.logger.error("Error in crawl_version when getting risk profile")
             version_policy_status, err = self.crawl_policy_status(version_links['policy-status'])
+            if err is not None:
+                self.logger.error("Error in crawl_version when getting policy status")
             version_code_locations, err = self.crawl_code_location(version_links['codelocations'])
+            if err is not None:
+                self.logger.error("Error in crawl_version when getting code locations")
             versions[version_href] = {
                 "policy-status" : version_policy_status,
                 "riskProfile" : version_risk_profile, 
@@ -416,7 +431,7 @@ class HubClient():
 
     def crawl_policy_status(self, policy_status_url):
         dump, err = self.api_get(policy_status_url)
-        if err is None:
+        if err is not None:
             return {}, err 
         dump = dump.json()
         policy_status_overall_status = dump['overallStatus']
@@ -435,14 +450,14 @@ class HubClient():
 
     def crawl_risk_profile(self, risk_profile_url):
         dump, err = self.api_get(risk_profile_url)
-        if err is None:
+        if err is not None:
             return {}, err
         dump = dump.json()
         return {'categories' : dump['categories']}, None
 
     def crawl_code_location(self, code_location_url):
         dump, err = self.api_get(code_location_url)
-        if err is None:
+        if err is not None:
             return {}, err
         dump = dump.json()
         code_locations = {}
@@ -461,7 +476,7 @@ class HubClient():
 
     def crawl_scan_summary(self, scan_summary_url):
         dump, err = self.api_get(scan_summary_url)
-        if err is None:
+        if err is not None:
             return {}, err 
         dump = dump.json()
         scan_summaries = {}
@@ -479,6 +494,8 @@ class HubClient():
 
 class KubeClient:
     def __init__(self, in_cluster):
+        self.logger = logging.getLogger("KubeClient")
+
         if in_cluster:
             config.load_incluster_config()
         else:
@@ -488,6 +505,7 @@ class KubeClient:
     def get_scrape(self):
         dump, err = self.get_dump()
         if err is not None:
+            self.logger.error("Error in get_scrape when getting kube dump")
             return None, err 
         return KubeScrape(dump), None
 
