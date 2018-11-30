@@ -534,3 +534,66 @@ class KubeClient:
                 'containers' : container_dict
             }
         return dump, None 
+
+    def namespace_exists(self, namespace):
+        try:
+            namespaces = self.v1.list_namespace()
+        except Exception as e:
+            self.logger.error("Could not get list of namespaces")
+            return False, e
+        if namespace in [ns.metadata.name for ns in namespaces.items]:
+            return True, None 
+        return False, None 
+
+    def create_namespace(self, namespace):
+        namespace_body = {
+            'apiVersion' : 'v1',
+            'kind' : 'Namespace',
+            'metadata' : {
+                'name' : namespace
+            }
+        }
+        try:
+            self.v1.create_namespace(body=namespace_body)
+            return None
+        except Exception as e:
+            self.logger.error("Could not create namespace: %s", e)
+            return e 
+
+    def create_pod(self, namespace, pod_name):
+        pod_body = {
+            'apiVersion': 'v1',
+            'kind': 'Pod',
+            'metadata': {
+                'name': pod_name
+            },
+            'spec': {
+                'containers': [{
+                    'image': 'rabbitmq:3.6',
+                    'name': 'rabbitmq36',
+                    'args': ['sleep', '3600']
+                }]
+            }
+        }
+        try:
+            self.v1.create_namespaced_pod(namespace=namespace, body=pod_body)
+            return None
+        except Exception as e:
+            self.logger.error("Could not create pod: %s", e)
+            return e
+
+    def delete_namespace(self, namespace):
+        try:
+            self.v1.delete_namespace(name=namespace, body={})
+            # Wait for Namespace to terminate
+            while True:
+                exists, err = self.namespace_exists(namespace)
+                if err is not None:
+                    self.logger.error("Could not test if namespace exists: %s", err)
+                    return err
+                if not exists:
+                    break
+            return None 
+        except Exception as e:
+            self.logger.error("Could not delete namespace: %s", e)
+            return e
