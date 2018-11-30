@@ -2,7 +2,7 @@ apiVersion: synopsys.com/v1
 kind: OpsSight
 metadata:
   clusterName: ''
-  name: opssight-de-jenkins
+  name: opssight-play
 spec:
   defaultCPU: 300m
   defaultMem: 1300Mi
@@ -23,7 +23,7 @@ spec:
     maxNoOfHubs: 4
     totalScanLimit: 1000
   logLevel: debug
-  namespace: opssight-de-jenkins
+  namespace: opssight-play
   perceiver:
     annotationIntervalSeconds: 30
     dumpIntervalMinutes: 30

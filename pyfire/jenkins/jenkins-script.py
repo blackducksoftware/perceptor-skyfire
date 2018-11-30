@@ -10,27 +10,75 @@ import requests
 client.rest.logger.setLevel("INFO")
 
 
+def deployOperator(v1, namespace, reg_key, version):
+    jenkins_logger = logging.getLogger("JenkinsScript2")
+    jenkins_logger.setLevel("DEBUG")
+
+    # Clean up if Operator already exists
+    pods_list = v1.list_pod_for_all_namespaces().items 
+    pod_names = [pod.metadata.name for pod in pods_list]
+    has_protoform = True in ["synopsys-operator-" in pod_name for pod_name in pod_names]
+    has_federator = True in ["federator-" in pod_name for pod_name in pod_names]
+    has_prometheus = True in ["prometheus-" in pod_name for pod_name in pod_names]
+    if has_protoform or has_federator or has_prometheus:
+        jenkins_logger.debug("Cleaning up old operator")
+        try:
+            command = "./clean-operator/clean-operator.sh {}".format(namespace)
+            r = subprocess.run(command,shell=True,stdout=subprocess.PIPE)
+        except Exception as e:
+            jenkins_logger.error(str(e))
+            sys.exit(1)
+
+    # Deploy the Operator
+    print("Creating new operator")
+    try:
+        command = "./install-operator/install-operator.sh {} {} {}".format(namespace,reg_key,version)
+        jenkins_logger.debug("Operator Command: %s", command)
+        r = subprocess.run(command,shell=True,stdout=subprocess.PIPE)
+    except Exception as e:
+        jenkins_logger.error(str(e))
+        sys.exit(1)
+
+    # Wait for Pods to appear
+    print("Waiting for pods to appear (not be running)") # TODO wait for running
+    while True:
+        pods_list = v1.list_pod_for_all_namespaces().items 
+        pod_names = [pod.metadata.name for pod in pods_list]
+        has_protoform = True in ["synopsys-operator-" in pod_name for pod_name in pod_names]
+        has_federator = True in ["federator-" in pod_name for pod_name in pod_names]
+        has_prometheus = True in ["prometheus-" in pod_name for pod_name in pod_names]
+        if has_protoform and has_federator and has_prometheus:
+            print("Found the operator pods")
+            break
+
+
 def main():
+    jenkins_logger = logging.getLogger("Jenkins")
+    jenkins_logger.setLevel("DEBUG")
+
     if len(sys.argv) != 5:
         print("Usage:\npython3 jenkins-script <hub-host> <cluster-ip:port> <username> <password>")
-        sys.exit(0)
+        sys.exit(1)
 
     # Parameters to be passed in
-    namespace = "opssight-de-jenkins"
+    namespace = "opssight-play"
     hub_host = sys.argv[1]
     cluster_ip = "https://" + sys.argv[2]
     username = sys.argv[3]
     password = sys.argv[4]
+    jenkins_logger.info("namespace: %s", namespace)
+    jenkins_logger.info("hub host: %s", hub_host)
+    jenkins_logger.info("cluster ip: %s", cluster_ip)
+    jenkins_logger.info("username: %s", username)
+    jenkins_logger.info("password: %s", password)
 
     # Login to the Cluster
-    jenkins_logger = logging.getLogger("JenkinsScript")
-    jenkins_logger.setLevel("DEBUG")
-    jenkins_logger.info("Logging In...")
+    logging.info("Logging In...")
     try:
         command = "oc login {} --username={} --password={} --insecure-skip-tls-verify=true".format(cluster_ip,username,password)
         r = subprocess.run(command,shell=True,stdout=subprocess.PIPE)
     except Exception as e:
-        jenkins_logger.error(str(e))
+        logging.error(str(e))
         sys.exit(1)
 
     # Create Kubernetes Client
@@ -38,8 +86,15 @@ def main():
     config.load_kube_config()
     v1 = client.CoreV1Api()
 
+    # Deploy the Synopsys Operator
+    operator_namespace = "mybd"
+    operator_reg_key = "abcd" # cannot be numbers
+    operator_version = "master"
+    deployOperator(v1, operator_namespace, operator_reg_key, operator_version)
+
     # Create OpsSight from Yaml File
     jenkins_logger.info("Creating OpsSight...")
+    time.sleep(10)
     try: 
         # Read yaml file and update fields
         with open('opssight-template.yaml') as opssight_file:
@@ -70,7 +125,7 @@ def main():
             command = "oc delete opssight {}".format(namespace)
             r = subprocess.run(command,shell=True,stdout=subprocess.PIPE)
 
-        # Create OpsSight from yaml
+        # oc client to create OpsSight from yaml
         command = "oc create -f {}".format("opssight-new.yaml")
         r = subprocess.run(command,shell=True,stdout=subprocess.PIPE)
     except Exception as e:
@@ -140,7 +195,7 @@ def main():
 
     # curl to start skyfire tests
     jenkins_logger.info("Starting Skyfire Tests...")
-    jenkins_logger.info("Route: ",skyfire_route)
+    jenkins_logger.info("Route: %s",skyfire_route)
     for i in range(10):
         try: 
             url = "http://{}/starttest".format(skyfire_route.decode("utf-8"))
