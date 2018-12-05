@@ -18,6 +18,19 @@ def kubeClientSetup(runInCluster=False):
     return kClient
 
 
+# Check if a namespace with name namespaceName exists in the cluster
+# Input: kubernetes client, name of namespace
+def doesNamespaceExist(kClient, namespaceName):
+    try:
+        namespaces = kClient.list_namespace()
+    except Exception as err:
+        logging.error("Error retrieving list of namespaces: {}".format(err))
+        return False
+    if namespaces in [ns.metadata.name for ns in namespaces.items]:
+        return True
+    return False
+
+
 # Create a namespace with name namespaceName
 # Input: kubernetes client, name of namespace
 def createNamespace(kClient, namespaceName):
@@ -34,6 +47,21 @@ def createNamespace(kClient, namespaceName):
         logging.debug(response)
     except Exception as err:
         logging.error("Exception when creating namespace {}".format(namespaceName))
+
+
+# Delete a namespace with name namespaceName
+# Input: kubernetes client, name of namespace
+def deleteNamespace(kClient, namespaceName):
+    logging.debug("Deleting namespace {}".format(namespaceName))
+    try:
+        kClient.delete_namespace(name=namespaceName, body={})
+        while True:
+            nsExists = doesNamespaceExist(kClient, namespaceName)
+            if not nsExists:
+                break
+    except Exception as err:
+        logging.error(
+            "Error occurred when deleting namespace {0}: {1}".format(namespaceName, err))
 
 
 # ===== Skyfire-related tasks =====

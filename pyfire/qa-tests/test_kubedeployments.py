@@ -3,6 +3,7 @@
 # Contains tests for the various ways one can deploy containers into a Kubernetes cluster.
 # Requirements: must be run using pytest and python3.
 # Also requires you to have logged into or be inside your cluster before running.
+# At the moment, it assumes OpsSight exists in your cluster already.
 # To run tests on the command line, run "pytest -v test_kubedeployments.py"
 
 from kubernetes import client, utils
@@ -24,13 +25,10 @@ assertTimeout = 180  # time in seconds before we give up trying to assert
 
 
 # Shared assertion template for test cases
-# TODO: add assertions to make sure pod is scanned, project exists in hub,
-# and # of vulns in hub matches labels/annotations
-# Input: name of pod, name of namespace it's located in
-def assertTemplate(podName, namespace):
+# Input: image name, name of pod, name of namespace it's located in
+def assertTemplate(imageName, podName, namespace):
     endTime = time.monotonic() + assertTimeout
-    podFoundInKube = False
-    podFoundInOpssight = False
+    podFoundInKube, podFoundInOpssight, podLabeled, podAnnotated, projectFoundInBD = False, False, False, False, False
     nsPodName = "{0}/{1}".format(namespace, podName)
     logging.info("Searching for pod {0} in Kube and OpsSight for {1} seconds".format(
         podName, assertTimeout))
@@ -41,23 +39,44 @@ def assertTemplate(podName, namespace):
             time.sleep(10)
             continue
 
-        if not podFoundInKube:
+        if not podFoundInKube:  # check that pod exists in the cluster
             nsPodsInKube = report['kube-report']['scrape']['ns_pod_names']
             podFoundInKube = nsPodName in nsPodsInKube
 
-        if not podFoundInOpssight:
+        if not podFoundInOpssight:  # check that pod was picked up by OpsSight
             for pScrape in report['mult-opssight-reports']['scrapes']:
                 nsPodsInOpssight = pScrape['ns_pod_names']
                 if nsPodName in nsPodsInOpssight:
                     podFoundInOpssight = True
                     break
 
-        if podFoundInKube and podFoundInOpssight:
+        if not podLabeled:  # check that pod was labeled with Black Duck info
+            nsPodsToLabels = report['kube-report']['scrape']['ns_pod_name_to_labels']
+            if nsPodName in nsPodsToLabels:
+                podLabels = nsPodsToLabels[nsPodName]
+                if "pod.overall-status" and "pod.policy-violations" and "pod.vulnerabilities" in podLabels:
+                    podLabeled = True
+
+        if not podAnnotated:  # check that pod was annotated with Black Duck info
+            nsPodsToAnnotations = report['kube-report']['scrape']['ns_pod_name_to_annotations']
+            if nsPodName in nsPodsToAnnotations:
+                podAnnotations = nsPodsToAnnotations[nsPodName]
+                if "pod.overall-status" and "pod.policy-violations" and "pod.vulnerabilities" in podAnnotations:
+                    podAnnotated = True
+
+        if not projectFoundInBD:  # check that a relative project exists in a Black Duck instance
+            for hScrape in report['mult-hub-reports']['scrapes']:
+                projectNames = hScrape['project_names']
+                if imageName in projectNames:
+                    projectFoundInBD = True
+                    break
+
+        if podFoundInKube and podFoundInOpssight and podLabeled and podAnnotated:
             break
         time.sleep(10)
 
-    assert podFoundInKube  # assert that pod exists in the cluster
-    assert podFoundInOpssight  # assert that pod was picked up by OpsSight
+    assert podFoundInKube
+    assert podFoundInOpssight
 
 
 # Shared test teardown template for test cases
@@ -67,15 +86,11 @@ def assertTemplate(podName, namespace):
 def teardownTemplate(request):
     def fin():
         logging.info("Teardown - deleting namespace {}".format(ns))
-        try:
-            response = kubeClient.delete_namespace(name=ns, body={})
-            logging.debug(response)
-        except ApiException as err:
-            logging.error(
-                "Error occurred when deleting namespace {0}: {1}".format(ns, err))
+        qa_opssight_tasks.deleteNamespace(kubeClient, ns)
     request.addfinalizer(fin)
 
 
+# Deploy a Pod from a file
 @pytest.mark.kubedeployment
 @pytest.mark.usefixtures("teardownTemplate")
 def testAddPodFromFile():
@@ -85,13 +100,14 @@ def testAddPodFromFile():
     try:
         response = utils.create_from_yaml(utilsClient, "./ibmjava.yml")
         logging.debug(response)
-        assertTemplate(podName, ns)
+        assertTemplate("ibmjava", podName, ns)
     except ApiException as err:
         logging.error(
             "Error occurred when testing deploying a pod with kubectl create -f: {}".format(err))
         assert False
 
 
+# Deploy a Pod using 'kubectl run'
 @pytest.mark.kubedeployment
 @pytest.mark.usefixtures("teardownTemplate")
 def testAddPodWithRun():
@@ -116,13 +132,14 @@ def testAddPodWithRun():
         response = kubeClient.create_namespaced_pod(
             namespace=ns, body=podManifest)
         logging.debug(response)
-        assertTemplate(podName, ns)
+        assertTemplate("docker.io/rabbitmq", podName, ns)
     except ApiException as err:
         logging.error(
             "Error occurred when testing deploying a pod with kubectl run: {}".format(err))
         assert False
 
 
+# Deploy a Pod by SHA instead of <imageName>:<tag>
 @pytest.mark.kubedeployment
 @pytest.mark.usefixtures("teardownTemplate")
 def testAddPodBySha():
@@ -147,7 +164,7 @@ def testAddPodBySha():
         response = kubeClient.create_namespaced_pod(
             namespace=ns, body=podManifest)
         logging.debug(response)
-        assertTemplate(podName, ns)
+        assertTemplate("gcr.io/gke-verification/blackducksoftware/perceptor", podName, ns)
     except ApiException as err:
         logging.error(
             "Error occurred when testing deploying a pod by SHA with kubectl run: {}".format(err))
