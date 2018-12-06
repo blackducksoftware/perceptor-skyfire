@@ -247,6 +247,12 @@ def main():
     print("Removing Skyfire Instance...")
     setSkyfireReplica(v1, opssight_namespace, 0)
 
+    # Remove OpsSight Instance by deleting the namespace
+    command = "oc delete ns opssight-test"
+    print("Command: {}".format(command))
+    r = subprocess.call(command,shell=True,stdout=subprocess.PIPE)
+    waitForNamespaceDelete("opssight-test")
+
     # print out the results
     return results['summary']
 
