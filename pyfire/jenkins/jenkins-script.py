@@ -188,10 +188,10 @@ def main():
     v1 = client.CoreV1Api()
 
     # Deploy the Synopsys Operator
-    operator_namespace = "synopsys-operator"
-    operator_reg_key = "abcd" # cannot be numbers
-    operator_version = "master"
-    deployOperator(operator_namespace, operator_reg_key, operator_version)
+    #operator_namespace = "synopsys-operator"
+    #operator_reg_key = "abcd" # cannot be numbers
+    #operator_version = "master"
+    #deployOperator(operator_namespace, operator_reg_key, operator_version)
 
     # Create OpsSight from Yaml File
     print("Creating OpsSight...")
