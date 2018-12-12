@@ -10,15 +10,14 @@
   revision = "3a771d992973f24aa725d07868b467d1ddfceafb"
 
 [[projects]]
-  branch = "master"
-  digest = "1:2193c9f5af356aad4028ab4a6c16a906055a770669db550123a86b5324a146d0"
+  digest = "1:a09ab5a4f5a410efea876fee6cba097906d80d15227c3d8bf7c349c55649fdde"
   name = "github.com/blackducksoftware/hub-client-go"
   packages = [
     "hubapi",
     "hubclient",
   ]
   pruneopts = "UT"
-  revision = "e27076af6370051227bbe0a09f2b3506e7126f32"
+  revision = "f1fdde519aec5ce540e9a42440fcce9bd641644a"
 
 [[projects]]
   digest = "1:8bc9576bb9923248f2594e19954afe352f57f53e0927441b648dc83d039079c1"
