@@ -6,8 +6,7 @@
 # At the moment, it assumes OpsSight exists in your cluster already.
 # To run tests on the command line, run "pytest -v test_kubedeployments.py"
 
-from kubernetes import client, utils
-from kubernetes.client.rest import ApiException
+from kubernetes import client
 import logging
 import pytest
 import qa_opssight_tasks
@@ -77,6 +76,8 @@ def assertTemplate(imageName, podName, namespace):
 
     assert podFoundInKube
     assert podFoundInOpssight
+    assert podLabeled
+    assert podAnnotated
 
 
 # Shared test teardown template for test cases
@@ -94,16 +95,11 @@ def teardownTemplate(request):
 @pytest.mark.kubedeployment
 @pytest.mark.usefixtures("teardownTemplate")
 def testAddPodFromFile():
-    logging.info(
-        "Deploying a pod with kubectl create -f in namespace: {}".format(ns))
     podName = "addpodfromfile-ibmjava"
-    try:
-        response = utils.create_from_yaml(utilsClient, "./ibmjava.yml")
-        logging.debug(response)
+    if qa_opssight_tasks.createPodFromFile(utilsClient, podName, ns, "./ibmjava.yml"):
         assertTemplate("ibmjava", podName, ns)
-    except ApiException as err:
-        logging.error(
-            "Error occurred when testing deploying a pod with kubectl create -f: {}".format(err))
+    else:
+        logging.debug("Issue deploying pod {} for testAddPodFromFile; asserting False".format(podName))
         assert False
 
 
@@ -111,8 +107,6 @@ def testAddPodFromFile():
 @pytest.mark.kubedeployment
 @pytest.mark.usefixtures("teardownTemplate")
 def testAddPodWithRun():
-    logging.info(
-        "Deploying a pod with kubectl run in namespace: {}".format(ns))
     podName = "addpodwithrun-rabbitmq36"
     podManifest = {
         'apiVersion': 'v1',
@@ -128,14 +122,10 @@ def testAddPodWithRun():
             }]
         }
     }
-    try:
-        response = kubeClient.create_namespaced_pod(
-            namespace=ns, body=podManifest)
-        logging.debug(response)
+    if qa_opssight_tasks.createPodWithRun(kubeClient, podName, ns, podManifest):
         assertTemplate("docker.io/rabbitmq", podName, ns)
-    except ApiException as err:
-        logging.error(
-            "Error occurred when testing deploying a pod with kubectl run: {}".format(err))
+    else:
+        logging.debug("Issue deploying pod {} for testAddPodWithRun; asserting False".format(podName))
         assert False
 
 
@@ -143,8 +133,6 @@ def testAddPodWithRun():
 @pytest.mark.kubedeployment
 @pytest.mark.usefixtures("teardownTemplate")
 def testAddPodBySha():
-    logging.info(
-        "Deploying a pod with kubectl run in namespace: {} using SHA instead of tag".format(ns))
     podName = "addpodbysha-perceptor"
     podManifest = {
         'apiVersion': 'v1',
@@ -160,12 +148,8 @@ def testAddPodBySha():
             }]
         }
     }
-    try:
-        response = kubeClient.create_namespaced_pod(
-            namespace=ns, body=podManifest)
-        logging.debug(response)
+    if qa_opssight_tasks.createPodWithRun(kubeClient, podName, ns, podManifest):
         assertTemplate("gcr.io/gke-verification/blackducksoftware/perceptor", podName, ns)
-    except ApiException as err:
-        logging.error(
-            "Error occurred when testing deploying a pod by SHA with kubectl run: {}".format(err))
+    else:
+        logging.debug("Issue deploying pod {} for testAddPodBySha; asserting False".format(podName))
         assert False
