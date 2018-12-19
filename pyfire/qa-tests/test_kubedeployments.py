@@ -96,7 +96,7 @@ def teardownTemplate(request):
 @pytest.mark.usefixtures("teardownTemplate")
 def testAddPodFromFile():
     podName = "addpodfromfile-ibmjava"
-    if qa_opssight_tasks.createPodFromFile(utilsClient, podName, ns, "./ibmjava.yml"):
+    if qa_opssight_tasks.createPodFromFile(kubeClient, utilsClient, podName, ns, "./ibmjava.yml"):
         assertTemplate("ibmjava", podName, ns)
     else:
         logging.debug("Issue deploying pod {} for testAddPodFromFile; asserting False".format(podName))

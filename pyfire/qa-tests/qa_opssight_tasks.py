@@ -49,7 +49,7 @@ def createNamespace(kClient, namespaceName):
     try:
         response = kClient.create_namespace(body=nsBody)
         logging.debug(response)
-        return True
+        return doesNamespaceExist(kClient, namespaceName)
     except Exception as err:
         logging.error("Exception when creating namespace {}".format(namespaceName))
         return False
@@ -87,18 +87,19 @@ def doesPodExist(kClient, podName, namespaceName):
     if podName in [pod.metadata.name for pod in nsPods.items]:  # need to check if this works
         logging.debug("Found pod {0} in namespace {1}".format(podName, namespaceName))
         return True
+    logging.debug("Pod {0} in namespace {1} does not exist".format(podName, namespaceName))
     return False
 
 
 # Create a pod by providing a file with the pod's definition
 # Input: kubernetes utils client, name of pod, name of namespace, path to pod definition file
 # Ouput: True/False
-def createPodFromFile(uClient, podName, namespaceName, filePath):
+def createPodFromFile(kClient, uClient, podName, namespaceName, filePath):
     logging.info("Deploying a pod with kubectl create -f in namespace: {}".format(namespaceName))
     try:
         response = utils.create_from_yaml(uClient, filePath)
         logging.debug(response)
-        return True
+        return doesPodExist(kClient, podName, namespaceName)
     except Exception as err:
         logging.error(
             "Error occurred when deploying a pod with kubectl create -f: {}".format(err))
@@ -113,7 +114,7 @@ def createPodWithRun(kClient, podName, namespaceName, podManifest):
     try:
         response = kClient.create_namespaced_pod(namespace=namespaceName, body=podManifest)
         logging.debug(response)
-        return True
+        return doesPodExist(kClient, podName, namespaceName)
     except Exception as err:
         logging.error(
             "Error occurred when testing deploying a pod with kubectl run: {}".format(err))
